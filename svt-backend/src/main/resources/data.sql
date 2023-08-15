@@ -93,3 +93,10 @@ values (null, null, '2023-05-13', false, 3, 1);
 
 insert into banned (is_deleted, timestamp, by_group_admin_id, towards_user_id, for_group_id)
 values (false, '2023-05-13', null, 1, null);
+
+insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
+values (false, 'https://shorturl.at/fLPR9', 1, null);
+insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
+values (false, '../../assets/images/profile-p.png', null, 1);
+insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
+values (false, '../../assets/images/profile-m.png', null, 2);

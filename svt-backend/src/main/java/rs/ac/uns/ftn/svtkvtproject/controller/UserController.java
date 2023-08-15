@@ -19,9 +19,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.FriendRequest;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.Image;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.FriendRequestService;
+import rs.ac.uns.ftn.svtkvtproject.service.ImageService;
 import rs.ac.uns.ftn.svtkvtproject.service.UserService;
 import rs.ac.uns.ftn.svtkvtproject.service.implementation.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +48,8 @@ public class UserController {
 
     FriendRequestService friendRequestService;
 
+    ImageService imageService;
+
 
     AuthenticationManager authenticationManager;
 
@@ -57,11 +61,12 @@ public class UserController {
     //Ili preporucen nacin: Constructor Dependency Injection
     @Autowired
     public UserController(UserServiceImpl userService, AuthenticationManager authenticationManager,
-                          UserDetailsService userDetailsService, FriendRequestService friendRequestService, TokenUtils tokenUtils) {
+                          UserDetailsService userDetailsService, FriendRequestService friendRequestService, ImageService imageService, TokenUtils tokenUtils) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.friendRequestService = friendRequestService;
+        this.imageService = imageService;
         this.tokenUtils = tokenUtils;
     }
 
@@ -128,6 +133,13 @@ public class UserController {
             oldUser.setDisplayName(editedUser.getDisplayName());
         if (editedUser.getDescription() != null)
             oldUser.setDescription(editedUser.getDescription());
+        Image oldImage = imageService.findProfileImageForUser(user.getId());
+        if (editedUser.getProfileImage() != null && oldImage == null)
+            imageService.createImage(editedUser.getProfileImage());
+        else if (editedUser.getProfileImage() != null){
+            oldImage.setPath(editedUser.getProfileImage().getPath());
+            imageService.updateImage(oldImage);
+        }
         oldUser = userService.saveUser(oldUser);
         logger.info("Creating response");
         UserDTO updatedUser = new UserDTO(oldUser);
@@ -422,4 +434,49 @@ public class UserController {
 
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<ImageDTO> getProfileImage(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding profile image for user with id: " + id);
+        Image image = imageService.findProfileImageForUser(Long.parseLong(id));
+        if (image == null) {
+            logger.info("Image not found for user with id: " + id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        logger.info("Creating response");
+        ImageDTO imageDTO = new ImageDTO(image);
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(imageDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/image/{id}")
+    public ResponseEntity deleteImage(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Deleting image with id: " + id);
+        Integer deleted = imageService.deleteImage(Long.parseLong(id));
+        if (deleted != 0) {
+            logger.info("Successfully deleted image with id: " + id);
+            return new ResponseEntity(deleted, HttpStatus.NO_CONTENT);
+        }
+        logger.error("Failed to delete image with id: " + id);
+
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
 }
