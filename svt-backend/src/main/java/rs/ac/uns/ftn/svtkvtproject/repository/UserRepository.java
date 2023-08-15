@@ -41,5 +41,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(nativeQuery = true,
             value = "select * from `user` where is_deleted = false;")
     Optional<List<User>> findAllActiveUsers();
+
+    @Query(nativeQuery = true,
+            value = "select * from `user` where id in (select user_id from user_friends where friend_id = :userId)" +
+                    "or id in (select friend_id from user_friends where user_id = :userId)")
+    Optional<List<User>> findFriendsByUserId(@Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,
+            value = "insert into user_friends(user_id, friend_id) values (:userId, :friendId);")
+    Integer saveFriendship(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
+
 }
 

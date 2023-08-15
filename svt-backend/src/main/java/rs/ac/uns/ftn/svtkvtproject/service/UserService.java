@@ -23,4 +23,8 @@ public interface UserService {
 
     List<User> searchUsersByNames(String firstName, String lastName);
 
+    Integer createFriendship(Long userId, Long friendId);
+
+    List<User> findFriendsForUser(Long userId);
+
 }

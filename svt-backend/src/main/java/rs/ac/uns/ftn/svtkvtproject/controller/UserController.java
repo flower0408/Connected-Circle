@@ -18,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.FriendRequest;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
+import rs.ac.uns.ftn.svtkvtproject.service.FriendRequestService;
 import rs.ac.uns.ftn.svtkvtproject.service.UserService;
 import rs.ac.uns.ftn.svtkvtproject.service.implementation.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +44,8 @@ public class UserController {
 
     UserDetailsService userDetailsService;
 
+    FriendRequestService friendRequestService;
+
 
     AuthenticationManager authenticationManager;
 
@@ -53,10 +57,11 @@ public class UserController {
     //Ili preporucen nacin: Constructor Dependency Injection
     @Autowired
     public UserController(UserServiceImpl userService, AuthenticationManager authenticationManager,
-                          UserDetailsService userDetailsService, TokenUtils tokenUtils) {
+                          UserDetailsService userDetailsService, FriendRequestService friendRequestService, TokenUtils tokenUtils) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.friendRequestService = friendRequestService;
         this.tokenUtils = tokenUtils;
     }
 
@@ -297,5 +302,124 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public User user(Principal user) {
         return this.userService.findByUsername(user.getName());
+    }
+
+    @GetMapping("/friend-request")
+    public ResponseEntity<List<FriendRequestDTO>> getFriendRequests(@RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding friend requests for user with id: " + user.getId());
+        List<FriendRequest> friendRequestsFromUser = friendRequestService.findAllRequestsFromUser(user.getId());
+        List<FriendRequest> friendRequestsToUser = friendRequestService.findAllRequestsToUser(user.getId());
+        List<FriendRequestDTO> friendRequestDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (FriendRequest friendRequest: friendRequestsFromUser)
+            friendRequestDTOS.add(new FriendRequestDTO(friendRequest));
+        for (FriendRequest friendRequest: friendRequestsToUser)
+            friendRequestDTOS.add(new FriendRequestDTO(friendRequest));
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(friendRequestDTOS, HttpStatus.OK);
+    }
+
+    @PatchMapping("/friend-request")
+    public ResponseEntity<FriendRequestDTO> updateFriendRequest(@RequestBody @Validated FriendRequestDTO friendRequestDTO, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding original friend request for id: " + friendRequestDTO.getId());
+        FriendRequest oldFriendRequest = friendRequestService.findById(friendRequestDTO.getId());
+        if (oldFriendRequest == null) {
+            logger.error("Original friend request not found for id: " + friendRequestDTO.getId());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Applying changes");
+        if (friendRequestDTO.isApproved())
+            userService.createFriendship(friendRequestDTO.getFromUserId(), friendRequestDTO.getToUserId());
+        oldFriendRequest.setApproved(friendRequestDTO.isApproved());
+        oldFriendRequest.setAt(LocalDateTime.parse(friendRequestDTO.getAt()));
+        oldFriendRequest = friendRequestService.updateFriendRequest(oldFriendRequest);
+        logger.info("Creating response");
+        FriendRequestDTO newFriendRequest = new FriendRequestDTO(oldFriendRequest);
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(newFriendRequest, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/friend-request/{id}")
+    public ResponseEntity deleteFriendRequest(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Deleting friend request with id: " + id);
+        Integer deleted = friendRequestService.deleteFriendRequest(Long.parseLong(id));
+        if (deleted != 0) {
+            logger.info("Successfully deleted friend request with id: " + id);
+            return new ResponseEntity(deleted, HttpStatus.NO_CONTENT);
+        }
+        logger.error("Failed to delete friend request with id: " + id);
+
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/{id}/friend-request")
+    public ResponseEntity<Boolean> saveFriendRequest(@PathVariable String id, @RequestBody @Validated FriendRequestDTO friendRequestDTO,
+                                                     @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Creating friend request from DTO");
+        FriendRequest friendRequest = friendRequestService.createFriendRequest(friendRequestDTO);
+
+        if (friendRequest == null) {
+            logger.error("Friend request couldn't be created from DTO");
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Successfully saved friend request for user with id: " + id);
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @GetMapping("/friends")
+    public ResponseEntity<List<UserDTO>> getUserFriends(@RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user1 = userService.findByUsername(username);
+        if (user1 == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding friends of user with id: " + user1.getId());
+        List<User> user = userService.findFriendsForUser(user1.getId());
+        List<UserDTO> userDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (User temp: user) {
+            userDTOS.add(new UserDTO(temp));
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 }
