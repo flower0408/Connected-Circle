@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.svtkvtproject.model.entity.Group;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.GroupRequest;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
+import rs.ac.uns.ftn.svtkvtproject.service.GroupRequestService;
 import rs.ac.uns.ftn.svtkvtproject.service.GroupService;
 import rs.ac.uns.ftn.svtkvtproject.service.PostService;
 import rs.ac.uns.ftn.svtkvtproject.service.UserService;
@@ -31,6 +32,7 @@ public class GroupController {
     UserService userService;
 
     PostService postService;
+    GroupRequestService groupRequestService;
 
     AuthenticationManager authenticationManager;
 
@@ -39,11 +41,12 @@ public class GroupController {
     private static final Logger logger = LogManager.getLogger(GroupController.class);
 
     @Autowired
-    public GroupController(GroupService groupService, UserService userService, PostService postService,
+    public GroupController(GroupService groupService, UserService userService, PostService postService, GroupRequestService groupRequestService,
                            AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
         this.groupService = groupService;
         this.userService = userService;
         this.postService = postService;
+        this.groupRequestService = groupRequestService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
     }
@@ -232,5 +235,101 @@ public class GroupController {
         logger.error("Failed to delete group admin with id: " + id + " for group with id: " + groupId);
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{id}/group-requests")
+    public ResponseEntity<List<GroupRequestDTO>> getGroupRequests(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding group requests for group with id: " + id);
+        List<GroupRequest> groupRequests = groupRequestService.findAllRequestsForGroup(Long.parseLong(id));
+        List<GroupRequestDTO> groupRequestDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (GroupRequest groupRequest: groupRequests)
+            groupRequestDTOS.add(new GroupRequestDTO(groupRequest));
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(groupRequestDTOS, HttpStatus.OK);
+    }
+
+    @PatchMapping("/group-request")
+    public ResponseEntity<GroupRequestDTO> updateGroupRequest(@RequestBody @Validated GroupRequestDTO groupRequestDTO, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding original group request for id: " + groupRequestDTO.getId());
+        GroupRequest oldGroupRequest = groupRequestService.findById(groupRequestDTO.getId());
+        if (oldGroupRequest == null) {
+            logger.error("Original group request not found for id: " + groupRequestDTO.getId());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Adding new group member if request is approved");
+        if (groupRequestDTO.getApproved())
+            groupService.addGroupMember(groupRequestDTO.getForGroupId(), groupRequestDTO.getCreatedByUserId());
+        logger.info("Applying changes");
+        oldGroupRequest.setApproved(groupRequestDTO.getApproved());
+        oldGroupRequest.setAt(LocalDateTime.parse(groupRequestDTO.getAt()));
+        oldGroupRequest = groupRequestService.updateGroupRequest(oldGroupRequest);
+        logger.info("Creating response");
+        GroupRequestDTO newGroupRequest = new GroupRequestDTO(oldGroupRequest);
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(newGroupRequest, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/group-request/{id}")
+    public ResponseEntity deleteGroupRequest(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Deleting group request with id: " + id);
+        Integer deleted = groupRequestService.deleteGroupRequest(Long.parseLong(id));
+        if (deleted != 0) {
+            logger.info("Successfully deleted group request with id: " + id);
+            return new ResponseEntity(deleted, HttpStatus.NO_CONTENT);
+        }
+        logger.error("Failed to delete group request with id: " + id);
+
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/{id}/group-request")
+    public ResponseEntity<GroupRequestDTO> createGroupRequest(@PathVariable String id, @RequestBody @Validated GroupRequestDTO newGroupRequest,
+                                                              @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Creating group request from DTO");
+        GroupRequest createdGroupRequest = groupRequestService.createGroupRequest(newGroupRequest);
+        if (createdGroupRequest == null) {
+            logger.error("Group request couldn't be created from DTO");
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+        logger.info("Creating response");
+        GroupRequestDTO groupRequestDTO = new GroupRequestDTO(createdGroupRequest);
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(groupRequestDTO, HttpStatus.CREATED);
     }
 }
