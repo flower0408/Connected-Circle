@@ -32,6 +32,8 @@ public class PostController {
 
     CommentService commentService;
 
+    ReactionService reactionService;
+
     AuthenticationManager authenticationManager;
 
     TokenUtils tokenUtils;
@@ -40,12 +42,13 @@ public class PostController {
 
     @Autowired
     public PostController(PostService postService, UserService userService, GroupService groupService, ImageService imageService,
-                          CommentService commentService, AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
+                          CommentService commentService, ReactionService reactionService, AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
         this.postService = postService;
         this.userService = userService;
         this.groupService = groupService;
         this.imageService = imageService;
         this.commentService = commentService;
+        this.reactionService = reactionService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
     }
@@ -300,6 +303,7 @@ public class PostController {
         Integer deletedFromAll = postService.deletePost(Long.parseLong(id));
         imageService.deletePostImages(Long.parseLong(id));
         commentService.deletePostComments(Long.parseLong(id));
+        reactionService.deletePostReactions(Long.parseLong(id));
         if (deletedFromAll != 0) {
             logger.info("Successfully deleted post with id: " + id);
             return new ResponseEntity(deletedFromAll, HttpStatus.NO_CONTENT);

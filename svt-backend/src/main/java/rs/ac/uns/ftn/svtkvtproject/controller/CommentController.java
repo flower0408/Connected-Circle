@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.CommentService;
 import rs.ac.uns.ftn.svtkvtproject.service.PostService;
+import rs.ac.uns.ftn.svtkvtproject.service.ReactionService;
 import rs.ac.uns.ftn.svtkvtproject.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +33,7 @@ public class CommentController {
 
     UserService userService;
 
-    //ReactionService reactionService;
+    ReactionService reactionService;
 
     AuthenticationManager authenticationManager;
 
@@ -42,11 +43,11 @@ public class CommentController {
 
     @Autowired
     public CommentController(CommentService commentService, PostService postService, UserService userService,
-                             /*ReactionService reactionService,*/ AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
+                             ReactionService reactionService, AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
         this.commentService = commentService;
         this.postService = postService;
         this.userService = userService;
-        //this.reactionService = reactionService;
+        this.reactionService = reactionService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
     }
@@ -159,7 +160,7 @@ public class CommentController {
         logger.info("Deleting comment with id: " + id);
         commentService.deleteCommentReply(Long.parseLong(id));
         Integer deleted = commentService.deleteComment(Long.parseLong(id));
-        //reactionService.deleteCommentReactions(Long.parseLong(id));
+        reactionService.deleteCommentReactions(Long.parseLong(id));
         if (deleted != 0) {
             logger.info("Successfully deleted comment with id: " + id);
             return new ResponseEntity(deleted, HttpStatus.NO_CONTENT);

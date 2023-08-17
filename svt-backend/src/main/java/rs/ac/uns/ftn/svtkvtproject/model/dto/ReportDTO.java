@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ReportDTO {
 
-    private Long id;
+    private Long id = -1L;
 
     @NotBlank
     private String reason;
@@ -40,6 +40,7 @@ public class ReportDTO {
     public ReportDTO(Report report){
         this.id = report.getId();
         this.reason = report.getReason().toString();
+        this.accepted = report.getAccepted();
         this.timestamp = report.getTimestamp().toString();
         this.byUserId = report.getByUser().getId();
         if (report.getOnUser() != null)

@@ -53,7 +53,7 @@ values (true, false, 'HARASSMENT', '2023-05-12', 3, null, null, 4);
 insert into report (accepted, is_deleted, reason, timestamp, by_user_id, on_comment_id, on_post_id, on_user_id)
 values (true, false, 'HARASSMENT', '2023-05-12', 2, 1, null, null);
 insert into report (accepted, is_deleted, reason, timestamp, by_user_id, on_comment_id, on_post_id, on_user_id)
-values (true, false, 'HARASSMENT', '2023-05-12', 5, null, 2, null);
+values (true, false, 'HARASSMENT', '2023-05-12', 1, null, 2, null);
 
 insert into reaction (is_deleted, timestamp, type, made_by_user_id, on_comment_id, on_post_id)
 values (false, '2023-05-12', 'HEART', 3, null, 1);
