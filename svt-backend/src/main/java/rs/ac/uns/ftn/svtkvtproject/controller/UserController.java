@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.Comment;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.FriendRequest;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Image;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
@@ -301,13 +302,26 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public List<User> loadAll(@RequestHeader("authorization") String token)  {
+    public ResponseEntity<List<UserDTO>> getAll(@RequestHeader("authorization") String token) {
         logger.info("Authentication check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
-        return this.userService.findAll();
+        if (userService.checkUserIsAdmin(user.getId())) {
+            logger.info("User is system admin and has access to all users");
+            logger.info("Finding all users");
+            List<User> users = userService.findAll();
+            List<UserDTO> usersDTOS = new ArrayList<>();
+            logger.info("Creating response");
+            for (User user1: users) {
+                usersDTOS.add(new UserDTO(user1));
+            }
+            logger.info("Created and sent response");
+
+            return new ResponseEntity<>(usersDTOS, HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/whoami")

@@ -30,6 +30,8 @@ public class PostController {
 
     ImageService imageService;
 
+    CommentService commentService;
+
     AuthenticationManager authenticationManager;
 
     TokenUtils tokenUtils;
@@ -38,11 +40,12 @@ public class PostController {
 
     @Autowired
     public PostController(PostService postService, UserService userService, GroupService groupService, ImageService imageService,
-                          AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
+                          CommentService commentService, AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
         this.postService = postService;
         this.userService = userService;
         this.groupService = groupService;
         this.imageService = imageService;
+        this.commentService = commentService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
     }
@@ -209,10 +212,6 @@ public class PostController {
             logger.info("User is system admin and has access to group");
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        if (user == null) {
-            logger.error("User not found for username: " + username);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         logger.info("Checking if user is in group with id: " + id);
         Boolean userInGroup = groupService.checkUser(Long.parseLong(id), user.getId());
         if (!userInGroup) {
@@ -300,6 +299,7 @@ public class PostController {
         postService.deletePostFromGroup(Long.parseLong(id));
         Integer deletedFromAll = postService.deletePost(Long.parseLong(id));
         imageService.deletePostImages(Long.parseLong(id));
+        commentService.deletePostComments(Long.parseLong(id));
         if (deletedFromAll != 0) {
             logger.info("Successfully deleted post with id: " + id);
             return new ResponseEntity(deletedFromAll, HttpStatus.NO_CONTENT);
