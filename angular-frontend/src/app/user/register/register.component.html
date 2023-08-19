@@ -1,1 +1,58 @@
-<p>register works!</p>
+<div class="parent clearfix">
+  <div class="bg-illustration">
+    <img src="https://i.ibb.co/Pcg0Pk1/logo.png" alt="logo">
+
+    <div class="burger-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+  </div>
+
+  <div class="login">
+    <div class="container">
+      <h1>Login to access to<br />your account</h1>
+
+      <div class="login-form">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <label for="username"><b>Username:</b></label>
+          <div>
+            <input type="text" id="username" name="username" placeholder="Username" [formControl]="form.controls['username']">
+            <small class="text-danger"  *ngIf="form.controls.username.touched && form.controls.username.errors?.required">
+              This field can't be empty!</small>
+          </div>
+          <label for="password"><b>Password:</b></label>
+          <div>
+            <input type="password" id="password" name="password" placeholder="Password" [formControl]="form.controls.password">
+            <small class="text-danger"  *ngIf="form.controls.password.touched && form.controls.password.errors?.required">
+              This field can't be empty!</small>
+          </div>
+          <label for="email"><b>Email:</b></label>
+          <div>
+            <input type="email" id="email" name="email" placeholder="Email" [formControl]="form.controls['email']">
+            <small class="text-danger"  *ngIf="form.controls.email.touched && form.controls.email.errors?.email">
+              This is not a valid email!</small>
+          </div>
+          <label for="firstName"><b>First Name:</b></label>
+          <div>
+            <input type="text" id="firstName" name="firstName" placeholder="First Name" [formControl]="form.controls['firstName']">
+            <small class="text-danger"  *ngIf="form.controls.firstName.touched && form.controls.firstName.errors?.required">
+              This field can't be empty!</small>
+          </div>
+          <label for="lastName"><b>Last Name:</b></label>
+          <div>
+            <input type="text" id="lastName" name="lastName" placeholder="Last Name" [formControl]="form.controls['lastName']">
+            <small class="text-danger"  *ngIf="form.controls.lastName.touched && form.controls.lastName.errors?.required">
+              This field can't be empty!</small>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Register</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
