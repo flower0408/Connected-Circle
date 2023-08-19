@@ -11,7 +11,10 @@ import { GroupListComponent } from './group/group-list/group-list.component';
 import { UserComponent } from './user/user.component';
 import { RegisterComponent } from './user/register/register.component';
 import { PostComponent } from './post/post.component';
+import { NavbarComponent } from './core/navbar/navbar.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HeaderComponent } from './core/header/header.component';
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -21,14 +24,17 @@ import { HttpClientModule } from '@angular/common/http';
     GroupListComponent,
     UserComponent,
     RegisterComponent,
-    PostComponent
+    PostComponent,
+    NavbarComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgOptimizedImage
   ],
   providers: [],
   bootstrap: [AppComponent]

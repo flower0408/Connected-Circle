@@ -33,7 +33,7 @@
             <input type="checkbox">
             <span>Remember me</span>
           </div>
-          <a href="http://localhost:4200/users/register">Create your account</a>
+          <a [routerLink]="['/users/register']">Create your account</a>
 
           <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Login</button>
         </form>

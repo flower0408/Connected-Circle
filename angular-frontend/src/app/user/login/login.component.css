@@ -115,7 +115,7 @@ img {
   position: relative;
 }
 .login .container h1 {
-  margin-top: 100px;
+  margin-top: 90px;
   font-size: 35px;
   font-weight: bolder;
 }
@@ -141,7 +141,7 @@ img {
   background: -o-linear-gradient(110deg, #f794a4 0%, #fdd6bd 100%);
   background: linear-gradient(-20deg, #f794a4 0%, #fdd6bd 100%);
   border: none;
-  margin-top: 84px;
+  margin-top: 74px;
   margin-bottom: 20px;
   width: 241px;
   height: 58px;

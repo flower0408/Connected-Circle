@@ -7,6 +7,7 @@ import { RegisterComponent } from '../user/register/register.component';
 export const routes :Routes = [
   {path: 'groups', component: GroupListComponent},
   {path: 'users/login', component: LoginComponent},
-  {path: 'users/register', component: RegisterComponent}
+  {path: 'users/register', component: RegisterComponent},
+  {path: '', pathMatch: 'full', redirectTo: 'users/login', title: 'Connected Circle'}
 
 ];

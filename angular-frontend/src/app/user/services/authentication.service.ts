@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import {HttpHeaders, HttpClient, HttpResponse} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UserToken } from '../model/userToken.model';
+import { Login } from '../model/login.model';
+import { Register } from '../model/register.model';
+import {User} from "../model/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +15,19 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) {}
 
-  login(auth: any): Observable<any> {
-    return this.http.post('api/users/login', {username: auth.username, password: auth.password}, {headers: this.headers, responseType: 'json'});
+  login(auth: Login): Observable<HttpResponse<UserToken>> {
+    return this.http.post('api/users/login', {username: auth.username, password: auth.password}, {headers: this.headers, responseType: 'json'}) as Observable<HttpResponse<UserToken>>;
   }
 
-  logout(): Observable<any> {
-    return this.http.get('api/users/logout', {headers: this.headers, responseType: 'text'});
+  logout(): Observable<string> {
+    const authorizedHeaders = new HttpHeaders({'authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken, 'Content-Type': 'application/json'})
+    return this.http.get('', {headers: authorizedHeaders, responseType: 'text'});
   }
 
-  register(auth: any): Observable<any> {
-    return this.http.post('/api/users/signup',
+  register(auth: Register): Observable<HttpResponse<User>> {
+    return this.http.post('api/users/signup',
       {username: auth.username, password: auth.password, email: auth.email, firstName: auth.firstName, lastName: auth.lastName},
-      {headers: this.headers, responseType: 'json'});
+      {headers: this.headers, responseType: 'json'}) as Observable<HttpResponse<User>>;
   }
 
 

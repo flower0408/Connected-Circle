@@ -1,0 +1,46 @@
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #F3CFC6;
+  display: flex;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+ul li a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 17px 17px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+ul li a:hover {
+  background-color: #FFF5EE;
+  color: black;
+  cursor: pointer;
+}
+nav{
+  overflow: hidden;
+  background-color: #F3CFC6;
+  display: flex;
+}
+.image{
+  widht: 105px;
+  height: 105px;
+}
+.image-container {
+  display: flex;
+  justify-content: center; /* Horizontally center */
+  align-items: center; /* Vertically center */
+  height: 15vh; /* You might need to adjust this depending on your layout */
+}
+p{
+  font-size: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+

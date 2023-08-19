@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
+import { Login } from '../model/login.model';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,7 @@ export class LoginComponent implements OnInit{
   }
 
   submit() {
-    const auth: any = {};
+    const auth: Login = new Login();
     auth.username = this.form.value.username;
     auth.password = this.form.value.password;
 
@@ -39,6 +40,7 @@ export class LoginComponent implements OnInit{
         this.router.navigate(['groups']);
       },
       error => {
+        window.alert('Username or password are incorrect!');
         console.log(error);
       }
     );

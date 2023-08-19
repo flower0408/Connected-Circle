@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
+import { Register } from '../model/register.model';
 
 @Component({
   selector: 'app-register',
@@ -31,7 +32,7 @@ export class RegisterComponent {
   }
 
   submit() {
-    const auth: any = {};
+    const auth: Register = new Register();
     auth.username = this.form.value.username;
     auth.password = this.form.value.password;
     auth.email = this.form.value.email;
