@@ -8,6 +8,8 @@ import { Image } from 'src/app/post/model/image.model';
 import { Group } from '../group/model/group.model';
 import {UserService} from "./services/user.service";
 import {User} from "./model/user.model";
+import {AuthenticationService} from "./services/authentication.service";
+import {ChangePassword} from "./model/changePassword.model";
 
 @Component({
   selector: 'app-user',
@@ -27,12 +29,16 @@ export class UserComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private authenticationService: AuthenticationService,
     private router: Router
   ) {
     this.form = this.fb.group({
       displayName: [null, Validators.minLength(3)],
       description: [null, Validators.maxLength(100)],
-      image: [null, Validators.nullValidator]
+      image: [null, Validators.nullValidator],
+      oldPassword: [null],
+      newPassword1: [null],
+      newPassword2: [null]
     });
   }
 
@@ -76,7 +82,7 @@ export class UserComponent implements OnInit {
   toggleEditMode(): void {
     this.isEditing = !this.isEditing;
   }
-
+/*
   submit(): void {
     if (this.form.value.displayName != '')
       this.user.displayName = this.form.value.displayName;
@@ -87,6 +93,26 @@ export class UserComponent implements OnInit {
       this.image.belongsToUserId = this.user.id;
       this.user.profileImage = this.image;
     }
+    if (this.form.value.newPassword1 != this.form.value.newPassword2) {
+      window.alert('Inputs for new password do not match!');
+      return;
+    }
+
+    const auth: ChangePassword = new ChangePassword();
+    auth.oldPassword = this.form.value.oldPassword;
+    auth.newPassword = this.form.value.newPassword1;
+
+    this.authenticationService.changePassword(auth).subscribe(
+      result => {
+        window.alert('Successfully changed password!');
+        localStorage.removeItem('user');
+        this.router.navigate(['/users/login']).then(() => window.location.reload());
+      },
+      error => {
+        window.alert('Current password is incorrect!');
+        console.log(error);
+      }
+    )
 
     this.userService.updateUser(this.user).subscribe(
       result => {
@@ -99,4 +125,78 @@ export class UserComponent implements OnInit {
       }
     );
   }
+*/
+  submit(): void {
+    const isPasswordEdited = this.form.value.oldPassword || this.form.value.newPassword1 || this.form.value.newPassword2;
+    const arePasswordsMatching = this.form.value.newPassword1 === this.form.value.newPassword2;
+
+    if (isPasswordEdited) {
+      if (!arePasswordsMatching) {
+        window.alert('Inputs for new password do not match!');
+        return;
+      }
+
+      const auth: ChangePassword = new ChangePassword();
+      auth.oldPassword = this.form.value.oldPassword;
+      auth.newPassword = this.form.value.newPassword1;
+
+      this.authenticationService.changePassword(auth).subscribe(
+        result => {
+          window.alert('Successfully changed password!');
+          //localStorage.removeItem('user');
+          this.router.navigate(['/users/profile']).then(() => window.location.reload());
+        },
+        error => {
+          window.alert('Current password is incorrect!');
+          console.log(error);
+        }
+      );
+    } else {
+      // Password is not edited
+
+      if (this.form.dirty) {
+        if (this.form.value.displayName) {
+          this.user.displayName = this.form.value.displayName;
+        }
+        if (this.form.value.description) {
+          this.user.description = this.form.value.description;
+        }
+
+        this.userService.updateUser(this.user).subscribe(
+          result => {
+            window.alert('Successfully edited your profile');
+            this.router.navigate(['/users/profile']);
+          },
+          error => {
+            window.alert('Error while editing your profile');
+            console.log(error);
+          }
+        );
+      }
+
+      if (this.imagePath) {
+        this.image.path = '../../assets/images/' + this.imagePath;
+        this.image.belongsToUserId = this.user.id;
+        this.user.profileImage = this.image;
+
+        this.userService.updateUser(this.user).subscribe(
+          result => {
+            if (!this.form.dirty) { // If only the profile image was updated
+              window.alert('Successfully edited your profile');
+            }
+            this.router.navigate(['/users/profile']);
+          },
+          error => {
+            window.alert('Error while editing your profile');
+            console.log(error);
+          }
+        );
+      }
+    }
+  }
 }
+
+
+
+
+

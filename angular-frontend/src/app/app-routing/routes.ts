@@ -10,7 +10,8 @@ export const routes :Routes = [
   {path: 'groups', component: GroupListComponent},
   {path: 'users/login', component: LoginComponent},
   {path: 'users/register', component: RegisterComponent},
-  {path: 'users/profile', component: UserComponent, title: 'Social Network'},
+  {path: 'users/profile', component: UserComponent},
+  {path: 'users/change-password', component: UserComponent},
   {path: '', pathMatch: 'full', redirectTo: 'users/login', title: 'Connected Circle'}
 
 ];

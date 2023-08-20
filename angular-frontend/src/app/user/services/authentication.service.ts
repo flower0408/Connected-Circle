@@ -5,6 +5,7 @@ import { UserToken } from '../model/userToken.model';
 import { Login } from '../model/login.model';
 import { Register } from '../model/register.model';
 import {User} from "../model/user.model";
+import {ChangePassword} from "../model/changePassword.model";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,11 @@ export class AuthenticationService {
     return this.http.post('api/users/signup',
       {username: auth.username, password: auth.password, email: auth.email, firstName: auth.firstName, lastName: auth.lastName},
       {headers: this.headers, responseType: 'json'}) as Observable<HttpResponse<User>>;
+  }
+
+  changePassword(auth: ChangePassword): Observable<HttpResponse<User>> {
+    const authorizedHeaders = new HttpHeaders({'authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken, 'Content-Type': 'application/json'})
+    return this.http.post('api/users/change-password', {oldPassword: auth.oldPassword, newPassword: auth.newPassword}, {headers: authorizedHeaders, responseType: 'json'}) as Observable<HttpResponse<User>>;
   }
 
 
