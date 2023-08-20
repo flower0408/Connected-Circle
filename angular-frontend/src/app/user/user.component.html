@@ -1,1 +1,179 @@
-<p>user works!</p>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
+      xmlns="http://www.w3.org/1999/html">
+<div class="container">
+  <div class="row flex-lg-nowrap">
+
+
+    <div class="col">
+      <div class="row">
+        <div class="col mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="e-profile">
+                <div class="row">
+                  <div class="col-12 col-sm-auto mb-3">
+                    <div class="mx-auto" style="width: 140px;">
+                      <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px;">
+                        <img *ngIf="!isEditing && image.path" class="profile-image" [src]="image.path" alt="Profile Image">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                      <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap"  *ngIf="!isEditing">
+                        {{user.firstName + ' ' + user.lastName}}
+                      </h4>
+                      <h3 class="mb-0" *ngIf="!isEditing && user.displayName">{{user.displayName}}</h3>
+                      <div class="text-muted"  *ngIf="!isEditing"><small>{{'Last login: ' + (user.lastLogin | date: 'MMMM d, y, HH:mm')}}</small></div>
+                      <div class="mt-2">
+                        <label for="image">Profile image</label>
+                        <i class="fa fa-fw fa-camera"></i>
+                        <input type="file" id="image" name="image" (change)="onFileChange($event)" accept="image/*">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-content pt-3">
+                  <div class="tab-pane active">
+                    <form class="form" novalidate="" [formGroup]="form" (ngSubmit)="submit()" >
+                      <div class="row">
+                        <div class="col">
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Full Name</label>
+                                <input *ngIf="!isEditing" class="form-control" type="text" name="name" placeholder="{{user.firstName + ' ' + user.lastName}}" value="{{user.firstName + ' ' + user.lastName}}" [attr.readonly]="!isEditing ? true : null" >
+                              </div>
+                            </div>
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Username</label>
+                                <input *ngIf="!isEditing" class="form-control" type="text" name="username" placeholder="{{user.username}}" value="{{user.username}}" [attr.readonly]="!isEditing ? true : null">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Email</label>
+                                <input *ngIf="!isEditing" class="form-control" type="text" placeholder="{{user.email}}" value="{{user.email}}" [attr.readonly]="!isEditing ? true : null">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col mb-3">
+                              <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" class="form-control" name="description" [formControl]="form.controls['description']" cols="50"></textarea>
+                                <small class="text-danger"  *ngIf="form.controls.description.touched && form.controls.description.errors?.maxlength">
+                                  Max length for description is 100 characters</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-6 mb-3">
+                          <div class="mb-2"><b>Change Password</b></div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Current Password</label>
+                                <input class="form-control" type="password" placeholder="••••••">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>New Password</label>
+                                <input class="form-control" type="password" placeholder="••••••">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                <input class="form-control" type="password" placeholder="••••••"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-5 offset-sm-1 mb-3">
+                          <div class="mb-2"><b>Change display name</b></div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label for="displayName"></label>
+                                <input type="text" class="form-control" name="displayName" id="displayName" [formControl]="form.controls['displayName']" style="font-size: large;">
+                                <small class="text-danger"  *ngIf="form.controls.displayName.touched && form.controls.displayName.errors?.minlength">
+                                  Minimum length of display name is 3 characters</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col d-flex justify-content-end">
+                          <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Save</button>
+                        </div>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--<div class="card rounded center">
+  <img *ngIf="!isEditing && image.path" class="profile-image" [src]="image.path" alt="Profile Image">
+  <h1 *ngIf="!isEditing">{{user.firstName + ' ' + user.lastName}}</h1>
+  <h3 *ngIf="!isEditing">{{'Username: ' + user.username}}</h3>
+  <h3 *ngIf="!isEditing && user.displayName">{{'Display Name: ' + user.displayName}}</h3>
+  <h4 *ngIf="!isEditing">{{'Email: ' + user.email}}</h4>
+  <h5 *ngIf="!isEditing && user.description">{{user.description}}</h5>
+  <h6 *ngIf="!isEditing">{{'Last login: ' + (user.lastLogin | date: 'MMMM d, y, HH:mm')}}</h6>
+
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div>
+        <label for="displayName"><b>Display Name: </b></label>
+        <input type="text" name="displayName" id="displayName" [formControl]="form.controls['displayName']" style="font-size: large;">
+        <small class="text-danger"  *ngIf="form.controls.displayName.touched && form.controls.displayName.errors?.minlength">
+          Minimum length of display name is 3 characters</small>
+      </div>
+      <br>
+      <div>
+        <label for="description"><b>Description:</b></label>
+        <div>
+          <textarea id="description" name="description" [formControl]="form.controls['description']" cols="50"></textarea>
+          <small class="text-danger"  *ngIf="form.controls.description.touched && form.controls.description.errors?.maxlength">
+            Max length for description is 100 characters</small>
+        </div>
+      </div>
+      <br>
+      <div>
+        <label for="image">Profile Image:</label>
+        <input type="file" id="image" name="image" (change)="onFileChange($event)" accept="image/*">
+      </div>
+      <br>
+      <div>
+        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Save</button>
+      </div>
+    </form>
+
+
+  <button class="show-btn" *ngIf="!isEditing" (click)="toggleEditMode()">Edit Profile</button>
+  <button class="show-btn" *ngIf="isEditing" (click)="toggleEditMode()">Cancel</button>
+</div>-->
+
