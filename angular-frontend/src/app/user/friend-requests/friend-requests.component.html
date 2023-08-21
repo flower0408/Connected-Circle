@@ -1,0 +1,85 @@
+<br>
+<h1 class="center" style="font-style: italic;">~ Sent Requests ~</h1>
+
+<div class="container justify-content-center">
+  <div class="row justify-content-center">
+    <div class="col-md-8 justify-content-center">
+      <div class="people-nearby justify-content-center">
+        <div class="nearby-user justify-content-center">
+          <div  *ngFor="let request of sentRequests">
+            <div class="col-md-2 col-sm-2" *ngIf="requestUsers.get(request.fromUserId)" >
+              <img {{requestUsers.get(request.toUserId).profilePicture}} alt="Profile Image" class="profile-photo-lg">
+            </div>
+            <div class="text-center" >
+              <h4  *ngIf="requestUsers.get(request.toUserId)">{{requestUsers.get(request.toUserId).firstName + ' ' + requestUsers.get(request.toUserId).lastName}}</h4>
+              <h3  *ngIf="requestUsers.get(request.toUserId)">{{requestUsers.get(request.toUserId).displayName || requestUsers.get(request.toUserId).username}}</h3>
+              <p >{{request.createdAt | date: 'MMMM d, y, HH:mm'}}</p>
+              <h5  *ngIf="request.at">{{request.approved ? 'User accepted the request' : 'User declined the request'}}</h5>
+              <p *ngIf="request.at">Datetime of response: <br>{{ request.at }}</p>
+              <button class="btn btn1" *ngIf="request.at == null" (click)="deleteRequest(request.id)">Delete Request</button>
+              <hr class="separator">
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div *ngFor="let request of sentRequests" class="card">
+    <h3 *ngIf="requestUsers.get(request.toUserId)" class="blue-bold">
+        {{requestUsers.get(request.toUserId).displayName || requestUsers.get(request.toUserId).username}}
+    </h3>
+    <h3 *ngIf="requestUsers.get(request.toUserId)" class="blue-bold">
+        {{requestUsers.get(request.toUserId).firstName + ' ' + requestUsers.get(request.toUserId).lastName}}
+    </h3>
+    <h3>{{request.createdAt | date: 'MMMM d, y, HH:mm'}}</h3>
+    <h4 *ngIf="request.at">{{request.approved ? 'User accepted the request' : 'User declined the request'}}</h4>
+    <h5 *ngIf="request.at">{{'Datetime of response: ' + request.at}}</h5>
+    <button *ngIf="request.at == null" (click)="deleteRequest(request.id)">Delete Request</button>
+</div>-->
+<br>
+<h1 class="center" style="font-style: italic;">~ Recieved Requests ~</h1>
+
+<div class="container justify-content-center">
+  <div class="row justify-content-center">
+    <div class="col-md-8 justify-content-center">
+      <div class="people-nearby">
+
+        <div class="nearby-user justify-content-center">
+          <div *ngFor="let request of recievedRequests">
+            <div class="col-md-2 col-sm-2" *ngIf="requestUsers.get(request.fromUserId)" >
+              <img {{requestUsers.get(request.toUserId).profilePicture}} alt="Profile Image" class="profile-photo-lg">
+            </div>
+            <div class="text-center">
+              <h4 class="center" *ngIf="requestUsers.get(request.fromUserId)" > {{requestUsers.get(request.fromUserId).firstName + ' ' + requestUsers.get(request.fromUserId).lastName}}</h4>
+              <h3 class="center" *ngIf="requestUsers.get(request.fromUserId)" >{{requestUsers.get(request.fromUserId).displayName || requestUsers.get(request.fromUserId).username}}</h3>
+              <p>{{request.createdAt | date: 'MMMM d, y, HH:mm'}}</p>
+              <button class="btn btn2" *ngIf="request.at == null" (click)="respondToRequest(request.id, 'accept')">Accept</button>
+              <button  class="btn btn2" *ngIf="request.at == null" (click)="respondToRequest(request.id, 'decline')">Decline</button>
+              <button class="btn btn2" *ngIf="request.at != null && request.approved == true" disabled>You accepted this request</button>
+              <button class="btn btn2" *ngIf="request.at != null && request.approved == false" disabled>You declined this request</button>
+              <hr class="separator">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div *ngFor="let request of recievedRequests" class="card">
+    <h3 *ngIf="requestUsers.get(request.fromUserId)" class="blue-bold">
+        {{requestUsers.get(request.fromUserId).displayName || requestUsers.get(request.fromUserId).username}}
+    </h3>
+    <h3 *ngIf="requestUsers.get(request.fromUserId)" class="blue-bold">
+        {{requestUsers.get(request.fromUserId).firstName + ' ' + requestUsers.get(request.fromUserId).lastName}}
+    </h3>
+    <h3>{{request.createdAt | date: 'MMMM d, y, HH:mm'}}</h3>
+    <button *ngIf="request.at == null" (click)="respondToRequest(request.id, 'accept')">Accept</button>
+    <button *ngIf="request.at == null" (click)="respondToRequest(request.id, 'decline')">Decline</button>
+    <button *ngIf="request.at != null && request.approved == true" disabled>You accepted this request</button>
+    <button *ngIf="request.at != null && request.approved == false" disabled>You declined this request</button>
+</div>-->
+

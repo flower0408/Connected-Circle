@@ -17,7 +17,7 @@ insert into user_friends(user_id, friend_id) values (1, 2);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
 values (null, null, '2023-05-13', false, 1, 3);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
-values (null, null, '2023-05-13', false, 2, 5);
+values (null, null, '2023-05-13', false, 2, 3);
 
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is first post by me. I am glad if you can see it.',

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../model/user.model';
 import { Image } from 'src/app/post/model/image.model';
 import { Group } from 'src/app/group/model/group.model';
+import {FriendRequest} from "../model/friendRequest.model";
 
 
 @Injectable({
@@ -54,6 +55,25 @@ export class UserService {
 
   updateUser(user: User): Observable<string> {
     return this.http.patch('api/users/edit/', user, {headers: this.headers, responseType: 'text'});
+  }
+
+  getFriendRequests(): Observable<HttpResponse<FriendRequest[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/users/friend-request', queryParams) as Observable<HttpResponse<FriendRequest[]>>;
+  }
+
+  updateFriendRequest(request: FriendRequest): Observable<string> {
+    return this.http.patch('api/users/friend-request', request, {headers: this.headers, responseType: 'text'});
+  }
+
+  deleteFriendRequest(id: number): Observable<HttpResponse<Number>> {
+    return this.http.delete('api/users/friend-request/' + id, {headers: this.headers}) as Observable<HttpResponse<Number>>;
   }
 
 

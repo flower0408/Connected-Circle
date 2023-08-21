@@ -12,6 +12,7 @@ import { UserComponent } from './user/user.component';
 import { RegisterComponent } from './user/register/register.component';
 import { PostComponent } from './post/post.component';
 import { NavbarComponent } from './core/navbar/navbar.component';
+import { FriendRequestsComponent } from './user/friend-requests/friend-requests.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './core/header/header.component';
 import {NgOptimizedImage} from "@angular/common";
@@ -26,7 +27,8 @@ import {NgOptimizedImage} from "@angular/common";
     RegisterComponent,
     PostComponent,
     NavbarComponent,
-    HeaderComponent
+    HeaderComponent,
+    FriendRequestsComponent,
   ],
   imports: [
     BrowserModule,
