@@ -7,6 +7,7 @@ import { UserComponent } from '../user/user.component';
 import { PostComponent } from '../post/post.component';
 import { FriendRequestsComponent } from '../user/friend-requests/friend-requests.component';
 import { FriendsComponent } from '../user/friends/friends.component';
+import { PostListComponent } from '../post/post-list/post-list.component';
 
 export const routes :Routes = [
   {path: 'groups', component: GroupListComponent},
@@ -16,6 +17,7 @@ export const routes :Routes = [
   {path: 'users/change-password', component: UserComponent},
   {path: 'users/friends/requests', component: FriendRequestsComponent},
   {path: 'users/friends', component: FriendsComponent},
+  {path: 'posts', component: PostListComponent},
   {path: '', pathMatch: 'full', redirectTo: 'users/login', title: 'Connected Circle'}
 
 ];

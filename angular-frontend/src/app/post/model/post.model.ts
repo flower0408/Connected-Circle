@@ -1,15 +1,31 @@
-import { User } from "src/app/user/model/user.model";
+import { Image } from "./image.model";
 
 export class Post {
   _id: number;
-  content: String;
-  creationDate: Date;
-  postedBy: User;
+  content: string;
+  creationDate: string;
+  postedByUserId: number;
+  images: Image[] = [];
+  belongsToGroupId: number;
 
-  constructor(obj?: any) {
-    this._id = obj && obj._id || null;
-    this.content = obj && obj.content || null;
-    this.creationDate = obj && obj.creationDate || null;
-    this.postedBy = obj && obj.postedBy || null;
+
+  constructor(obj: {
+    _id?: number,
+    content?: string,
+    creationDate?: string,
+    postedByUserId?: number,
+    images?: Image[],
+    belongsToGroupId?: number
+  } = {}) {
+    this._id = obj._id || null as unknown as number;
+    this.content = obj.content || null as unknown as string;
+    this.creationDate = obj.creationDate || null as unknown as string;
+    this.postedByUserId = obj.postedByUserId || null as unknown as number;
+    this.images = obj.images || [];
+    this.belongsToGroupId = obj.belongsToGroupId || null as unknown as number;
+  }
+
+  get id() {
+    return this._id;
   }
 }

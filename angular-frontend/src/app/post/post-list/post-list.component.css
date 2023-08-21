@@ -1,0 +1,83 @@
+/* Post List Styles */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sort-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sort-heading {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.sort-button {
+  background-color: #F88379;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.post-container {
+  width: 100%;
+  max-width: 600px;
+}
+
+.post-card {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0;
+  background-color: #FFF5EE;
+}
+
+.post-username {
+  color: #F88379;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.post-content {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-date {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.button-group {
+  display: flex;
+}
+
+.post-button {
+  background-color: #F88379;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.post-button:hover {
+  background-color: #F3CFC6;
+  color: black;
+}
+
+

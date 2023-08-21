@@ -14,7 +14,7 @@
               <h4  *ngIf="requestUsers.get(request.toUserId)">{{requestUsers.get(request.toUserId).firstName + ' ' + requestUsers.get(request.toUserId).lastName}}</h4>
               <h3  *ngIf="requestUsers.get(request.toUserId)">{{requestUsers.get(request.toUserId).displayName || requestUsers.get(request.toUserId).username}}</h3>
               <p >{{request.createdAt | date: 'MMMM d, y, HH:mm'}}</p>
-              <h5  *ngIf="request.at">{{request.approved ? 'User accepted the request' : 'User declined the request'}}</h5>
+              <h5 class="pink-bold" *ngIf="request.at">{{request.approved ? 'User accepted the request' : 'User declined the request'}}</h5>
               <p *ngIf="request.at">Datetime of response: <br>{{ request.at }}</p>
               <button class="btn btn1" *ngIf="request.at == null" (click)="deleteRequest(request.id)">Delete Request</button>
               <hr class="separator">

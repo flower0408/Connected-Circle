@@ -7,7 +7,7 @@ values (false, 'mika@mail.com', 'Mika', false, null, 'Mikic', '$2a$12$15ymkpdnVT
 insert into `user`(is_deleted, email, first_name, is_admin, last_login, last_name, password, username, role)
 values (false, 'ana@mail.com', 'Ana', false, null, 'Anic', '$2a$12$uVuGNCVu62e8v7YtlF9yZurtYkvWgOj9N5UEdb51eB1EM959We.v.', 'ana', 'USER');
 insert into `user`(is_deleted, email, first_name, is_admin, last_login, last_name, password, username, role)
-values (true, 'zika@mail.com', 'Zika', false, null, 'Zikic', '$2a$12$TeQF.oCNjgTsl9rFWA9Tb.zA3716nzJZ5wwxONeu1tTzHoqBkk7FK', 'zika', 'USER');
+values (false, 'zika@mail.com', 'Zika', false, null, 'Zikic', '$2a$12$TeQF.oCNjgTsl9rFWA9Tb.zA3716nzJZ5wwxONeu1tTzHoqBkk7FK', 'zika', 'USER');
 insert into `user`(is_deleted, email, first_name, is_admin, last_login, last_name, password, username, role)
 values (true, 'djura@mail.com', 'Djura', false, null, 'Djuric', '$2a$12$TeQF.oCNjgTsl9rFWA9Tb.zA3716nzJZ5wwxONeu1tTzHoqBkk7FK', 'djurica', 'USER');
 
@@ -17,7 +17,7 @@ insert into user_friends(user_id, friend_id) values (1, 2);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
 values (null, null, '2023-05-13', false, 1, 3);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
-values (null, null, '2023-05-13', false, 2, 3);
+values (null, null, '2023-05-13', false, 2, 4);
 
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is first post by me. I am glad if you can see it.',

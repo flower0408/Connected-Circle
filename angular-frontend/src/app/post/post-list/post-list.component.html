@@ -1,0 +1,25 @@
+<br>
+<div class="post-list">
+  <div class="sort-section">
+    <h3 class="sort-heading">Sort By Date:</h3>
+    <button class="sort-button" (click)="sortPosts('asc')">Ascending</button>
+    <button class="sort-button" (click)="sortPosts('desc')">Descending</button>
+  </div>
+  <div class="post-container" *ngFor="let post of posts">
+    <div class="post-card">
+      <h1 class="post-username" *ngIf="users.get(post.postedByUserId)">
+        {{users.get(post.postedByUserId).displayName || users.get(post.postedByUserId).username}}
+      </h1>
+      <p class="post-content">{{post.content}}</p>
+      <div class="post-footer">
+        <div class="post-date">{{post.creationDate | date: 'MMMM d, y, HH:mm'}}</div>
+        <div class="button-group">
+          <button class="post-button" [routerLink]="['/posts', post.id]">Read More</button>
+          <button *ngIf="post.belongsToGroupId" class="post-button" [routerLink]="['/groups', post.belongsToGroupId]">Explore Group</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

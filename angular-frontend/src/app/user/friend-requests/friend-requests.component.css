@@ -35,13 +35,13 @@ img.profile-photo-lg{
 }
 
 .btn1{
-  background-color: #F3CFC6;
-  color: black;
+  background-color: #F88379;
+  color: white;
   margin-bottom: 10px;
 }
 .btn1:hover{
-  background-color: blue;
-  color: white;
+  background-color: #F3CFC6;
+  color: black;
 }
 .center{
   text-align: center;
@@ -50,15 +50,15 @@ img.profile-photo-lg{
   text-align: center;
 }
 .btn2{
-  background-color: #F3CFC6;
-  color: black;
+  background-color: #F88379;
+  color: white;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
 }
 .btn2:hover{
-  background-color: blue;
-  color: white;
+  background-color: #F3CFC6;
+  color: black;
 }
 .separator {
   width: 100%;
