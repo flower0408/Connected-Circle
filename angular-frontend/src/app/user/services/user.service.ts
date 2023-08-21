@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../model/user.model';
 import { Image } from 'src/app/post/model/image.model';
 import { Group } from 'src/app/group/model/group.model';
+import { UserSearch } from '../model/userSearch.model';
 import {FriendRequest} from "../model/friendRequest.model";
 
 
@@ -76,5 +77,37 @@ export class UserService {
     return this.http.delete('api/users/friend-request/' + id, {headers: this.headers}) as Observable<HttpResponse<Number>>;
   }
 
+  getUserFriends(): Observable<HttpResponse<User[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/users/friends', queryParams) as Observable<HttpResponse<User[]>>;
+  }
+
+  searchUsers(query: UserSearch): Observable<HttpResponse<User[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.post('api/users/search', query, queryParams) as Observable<HttpResponse<User[]>>;
+  }
+
+  sendFriendRequest(friendRequest: FriendRequest): Observable<HttpResponse<boolean>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.post('api/users/' + friendRequest.toUserId + '/friend-request', friendRequest, queryParams) as Observable<HttpResponse<boolean>>;
+  }
 
 }

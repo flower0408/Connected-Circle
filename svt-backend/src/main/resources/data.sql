@@ -97,6 +97,6 @@ values (false, '2023-05-13', null, 1, null);
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
 values (false, 'https://shorturl.at/fLPR9', 1, null);
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
-values (false, '../../assets/images/profile-p.png', null, 1);
+values (false, '../../assets/images/rsz_1male-avatar-1_2.jpg', null, 1);
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
-values (false, '../../assets/images/profile-m.png', null, 2);
+values (false, '../../assets/images/rsz_male-avatar-2_2.jpg', null, 2);

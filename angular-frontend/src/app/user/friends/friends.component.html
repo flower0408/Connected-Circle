@@ -1,0 +1,63 @@
+<br>
+<div  class="search-container">
+    <input  class="search-input" id="user-search" type="text" placeholder="Find New Friends">
+    <button class="search-button" (click)="findUsers()">Search</button>
+</div>
+
+<br>
+<div  *ngIf="foundUsers.length > 0" class="container justify-content-center">
+  <div class="row justify-content-center">
+    <div class="col-md-8 justify-content-center">
+      <div class="people-nearby justify-content-center">
+        <div class="nearby-user justify-content-center">
+          <div *ngIf="foundUsers.length > 0">
+          <div  *ngFor="let user of foundUsers">
+            <div class="image-container2" >
+              <img *ngIf="images.get(user.id)" [src]="images.get(user.id).path" alt="Profile Image" class="profile-photo-lg">
+            </div>
+            <div class="text-center" >
+              <h4>{{user.firstName + ' ' + user.lastName}}</h4>
+              <h3>{{user.displayName || user.username}}</h3>
+              <p *ngIf="user.description">{{user.description}}</p>
+              <button class="btn btn1" *ngIf="!checkIfFriend(user.id) && checkIfSentOrRecievedRequest(user.id) == ''" (click)="sendFriendRequest(user.id)">Send Friend Request</button>
+              <button class="btn btn1" *ngIf="checkIfFriend(user.id)" disabled>You are already friends</button>
+              <button class="btn btn1" *ngIf="checkIfSentOrRecievedRequest(user.id) == 'sent'" disabled>You already sent a request</button>
+              <button class="btn btn1" *ngIf="checkIfSentOrRecievedRequest(user.id) == 'recieved'" disabled>You recieved a request from this user. Check your friend requests</button>
+              <hr class="separator">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<br>
+<h1 class="center" style="font-style: italic;">~ Friends of {{user.username}} ~</h1>
+<h4 class="pink-bold center" *ngIf="friends.length == 0">You have no friends </h4>
+<div *ngIf="friends.length > 0" class="container justify-content-center">
+  <div class="row justify-content-center">
+    <div class="col-md-8 justify-content-center">
+      <div class="people-nearby justify-content-center">
+        <div class="nearby-user justify-content-center">
+          <div *ngFor="let friend of friends" class="friend-container">
+            <div class="image-container">
+              <img *ngIf="images.get(friend.id)" [src]="images.get(friend.id).path" alt="Profile Image" class="profile-photo-lg">
+              <h3 class="pink-bold">{{friend.displayName || friend.username}}</h3>
+            </div>
+            <div class="info-container">
+              <h3>{{friend.email}}</h3>
+              <h5>{{friend.firstName +' '+ friend.lastName}}</h5>
+              <h6 *ngIf="friend.description">{{friend.description}}</h6>
+              <p *ngIf="friend.lastLogin">{{'Last login: ' + friend.lastLogin}}</p>
+              <hr class="separator">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
