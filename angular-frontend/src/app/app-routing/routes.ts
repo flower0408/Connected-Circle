@@ -18,6 +18,7 @@ export const routes :Routes = [
   {path: 'users/friends/requests', component: FriendRequestsComponent},
   {path: 'users/friends', component: FriendsComponent},
   {path: 'posts', component: PostListComponent},
+  {path: 'posts/:id', component: PostComponent},
   {path: '', pathMatch: 'full', redirectTo: 'users/login', title: 'Connected Circle'}
 
 ];

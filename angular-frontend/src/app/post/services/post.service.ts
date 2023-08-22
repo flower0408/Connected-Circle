@@ -37,4 +37,26 @@ export class PostService {
 
     return this.http.get('api/posts/homepage/sort/' + order, queryParams) as Observable<HttpResponse<Post[]>>;
   }
+
+  getOne(id: number): Observable<HttpResponse<Post>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/' + id, queryParams) as Observable<HttpResponse<Post>>;
+  }
+
+  getImages(id: number): Observable<HttpResponse<Image[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/' + id + '/images', queryParams) as Observable<HttpResponse<Image[]>>;
+  }
 }
