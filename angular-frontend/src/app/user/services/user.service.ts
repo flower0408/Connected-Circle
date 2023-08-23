@@ -110,4 +110,23 @@ export class UserService {
     return this.http.post('api/users/' + friendRequest.toUserId + '/friend-request', friendRequest, queryParams) as Observable<HttpResponse<boolean>>;
   }
 
+  extractUser(): Promise<User> {
+    let sub: string;
+    const item = localStorage.getItem('user') || "";
+    const jwt: JwtHelperService = new JwtHelperService();
+    const decodedToken = jwt.decodeToken(item);
+    sub = decodedToken.sub;
+
+    return new Promise<User>((resolve, reject) => {
+      this.getOneByUsername(sub).subscribe(
+        result => {
+          const user = result.body as User;
+          resolve(user);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  }
 }

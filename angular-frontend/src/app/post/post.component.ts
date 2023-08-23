@@ -10,6 +10,8 @@ import { CommentService } from './services/comment.service';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../user/services/authentication.service";
+import {Reaction} from "./model/reaction.model";
+import {ReactionService} from "./services/reaction.service";
 
 @Component({
   selector: 'app-post',
@@ -29,12 +31,20 @@ export class PostComponent implements OnInit {
   users: Map<number, User> = new Map();
   profileImage : Image = new Image();
   profileImageForm: FormGroup;
+  reactions: Reaction[] = [];
+
+  likes: number = 0;
+  hearts: number = 0;
+  dislikes: number = 0;
+
+  commentsReactions: Map<number, Map<number, Reaction>> = new Map(); //Map<idKomentara, Map<idReakcije, Reakcija>> zbog brisanja reakcija na komentar
 
   constructor(
     private postService: PostService,
     private userService: UserService,
     private commentService: CommentService,
     private router: Router,
+    private reactionService: ReactionService,
     private fb: FormBuilder,
 
   ) {
@@ -87,6 +97,25 @@ export class PostComponent implements OnInit {
           }
         );
 
+        this.reactionService.getReactionsForPost(this.post.id).subscribe(
+          result => {
+            this.reactions = result.body as Reaction[];
+
+            this.reactions.forEach(reaction => {
+              if (reaction.reactionType == 'LIKE')
+                this.likes++;
+              else if (reaction.reactionType == 'HEART')
+                this.hearts++;
+              else if (reaction.reactionType == 'DISLIKE')
+                this.dislikes++;
+            });
+          },
+          error => {
+            window.alert('Error while retriving reactions for post');
+            console.log(error);
+          }
+        );
+
         this.postService.getComments(this.post.id).subscribe(
           result => {
             let temp: Comment[] = result.body as unknown as Comment[];
@@ -96,6 +125,23 @@ export class PostComponent implements OnInit {
                 this.replies.push(comment);
               else
                 this.comments.push(comment);
+            });
+
+            temp.forEach(comment => {
+              this.reactionService.getReactionsForComment(comment.id).subscribe(
+                result => {
+                  const reactions: Reaction[] = result.body as Reaction[];
+                  const reactionsMap: Map<number, Reaction> = new Map();
+                  reactions.forEach(reaction => {
+                    reactionsMap.set(reaction.id, reaction);
+                  });
+                  this.commentsReactions.set(comment.id, reactionsMap);
+                },
+                error => {
+                  window.alert('Error while retriving reactions to comment ' + comment.id);
+                  console.log(error);
+                }
+              );
             });
 
 
@@ -318,5 +364,179 @@ export class PostComponent implements OnInit {
     );
   }
 
+  getReactionCount(commentId: number, reactionType: string): number {
+    const reactions: Reaction[] = [];
+    this.commentsReactions.get(commentId)?.forEach(reaction => {
+      reactions.push(reaction);
+    });
+    let reactionCount: number = 0;
 
+    reactions.forEach(reaction => {
+      if (reaction.reactionType == reactionType)
+        reactionCount++;
+    });
+
+    return reactionCount;
+  }
+
+  async reactedPost(postId: number, reactionType: string) {
+    let reactorId: number = (await this.userService.extractUser() as User).id;
+    let reaction = this.reactions.find(
+      reaction => reaction.onPostId == postId && reaction.reactionType == reactionType && reaction.madeByUserId == reactorId);
+    let previousReaction = this.reactions.find(reaction => reaction.onPostId == postId && reaction.madeByUserId == reactorId);
+
+    if (reaction === undefined && previousReaction !== undefined) {
+      this.reactionService.delete(previousReaction.id).subscribe(
+        result => {
+          if (reactionType == 'LIKE')
+            this.likes--;
+          else if (reactionType == 'HEART')
+            this.hearts--;
+          else if (reactionType == 'DISLIKE')
+            this.dislikes--;
+        },
+        error => {
+          window.alert('Error while removing reaction on post ' + postId);
+          console.log(error);
+        }
+      );
+
+      reaction = new Reaction();
+      reaction.reactionType = reactionType;
+      reaction.timestamp = new Date().toISOString().slice(0, 10);
+      reaction.madeByUserId = reactorId;
+      reaction.onPostId = postId;
+
+      this.reactionService.add(reaction).subscribe(
+        result => {
+          if (reactionType == 'LIKE')
+            this.likes++;
+          else if (reactionType == 'HEART')
+            this.hearts++;
+          else if (reactionType == 'DISLIKE')
+            this.dislikes++;
+          location.reload();
+        },
+        error => {
+          window.alert('Error while reacting on post ' + postId);
+          console.log(error);
+        }
+      );
+
+    } else if (reaction === undefined) {
+      reaction = new Reaction();
+      reaction.reactionType = reactionType;
+      reaction.timestamp = new Date().toISOString().slice(0, 10);
+      reaction.madeByUserId = reactorId;
+      reaction.onPostId = postId;
+
+      this.reactionService.add(reaction).subscribe(
+        result => {
+          if (reactionType == 'LIKE')
+            this.likes++;
+          else if (reactionType == 'HEART')
+            this.hearts++;
+          else if (reactionType == 'DISLIKE')
+            this.dislikes++;
+          location.reload();
+        },
+        error => {
+          window.alert('Error while reacting on post ' + postId);
+          console.log(error);
+        }
+      );
+    } else {
+      this.reactionService.delete(reaction.id).subscribe(
+        result => {
+          if (reactionType == 'LIKE')
+            this.likes--;
+          else if (reactionType == 'HEART')
+            this.hearts--;
+          else if (reactionType == 'DISLIKE')
+            this.dislikes--;
+          location.reload();
+        },
+        error => {
+          window.alert('Error while removing reaction on post ' + postId);
+          console.log(error);
+        }
+      );
+    }
+  }
+
+  async reactedComment(commentId: number, reactionType: string) {
+    let reactorId: number = (await this.userService.extractUser() as User).id;
+    let reaction: Reaction = new Reaction();
+    let previousReaction: Reaction = new Reaction();
+
+    this.commentsReactions.get(commentId)?.forEach(temp => {
+      if (temp.onCommentId == commentId && temp.reactionType == reactionType && temp.madeByUserId == reactorId)
+        reaction = temp;
+    });
+
+    this.commentsReactions.get(commentId)?.forEach(temp => {
+      if (temp.onCommentId == commentId && temp.madeByUserId == reactorId)
+        previousReaction = temp;
+    });
+
+    if (reaction.id == null && previousReaction.id != null) {
+      this.reactionService.delete(previousReaction.id).subscribe(
+        result => {
+          this.commentsReactions.get(commentId)?.delete(previousReaction.id);
+        },
+        error => {
+          window.alert('Error while removing reaction on comment ' + commentId);
+          console.log(error);
+        }
+      );
+
+      reaction = new Reaction();
+      reaction.reactionType = reactionType;
+      reaction.timestamp = new Date().toISOString().slice(0, 10);
+      reaction.madeByUserId = reactorId;
+      reaction.onCommentId = commentId;
+
+      this.reactionService.add(reaction).subscribe(
+        result => {
+          this.commentsReactions.get(commentId)?.set(reaction.id, reaction);
+          location.reload();
+        },
+        error => {
+          window.alert('Error while reacting on comment ' + commentId);
+          console.log(error);
+        }
+      );
+
+    } else if (reaction.id == null) {
+      reaction = new Reaction();
+      reaction.reactionType = reactionType;
+      reaction.timestamp = new Date().toISOString().slice(0, 10);
+      reaction.madeByUserId = reactorId;
+      reaction.onCommentId = commentId;
+
+      this.reactionService.add(reaction).subscribe(
+        result => {
+          this.commentsReactions.get(commentId)?.set(reaction.id, reaction);
+          location.reload();
+        },
+        error => {
+          window.alert('Error while reacting on comment ' + commentId);
+          console.log(error);
+        }
+      );
+
+    } else {
+      this.reactionService.delete(reaction.id).subscribe(
+        result => {
+          this.commentsReactions.get(commentId)?.delete(previousReaction.id);
+          location.reload();
+        },
+        error => {
+          window.alert('Error while removing reaction on comment ' + commentId);
+          console.log(error);
+        }
+      );
+    }
+  }
 }
+

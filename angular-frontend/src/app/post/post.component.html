@@ -30,9 +30,9 @@
           <img [src]="image.path" [alt]="'Image ' + image.id">
         </div>
         <div class="btn-group">
-          <button class="btn btn-white btn-xs"><i class="fa fa-heart"></i> Heart</button>
-          <button class="btn btn-white btn-xs"><i class="fa fa-thumbs-up"></i> Like</button>
-          <button class="btn btn-white btn-xs"><i class="fa fa-thumbs-down"></i> Dislike</button>
+          <button class="btn btn-white btn-xs" (click)="reactedPost(post.id, 'HEART')"><i class="fa fa-heart"></i>  {{hearts}}</button>
+          <button class="btn btn-white btn-xs" (click)="reactedPost(post.id, 'LIKE')"><i class="fa fa-thumbs-up"></i> {{likes}}</button>
+          <button class="btn btn-white btn-xs" (click)="reactedPost(post.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i>  {{dislikes}}</button>
           <div><button class="btn btn1" (click)="addComment()">Add Comment</button></div>
           <button *ngIf="hasAuthority()" class="btn btn1" (click)="deletePost()">Delete Post</button>
         </div>
@@ -45,6 +45,9 @@
             </p>
             <p class="comment-text">{{ comment.text }}</p>
             <small class="text-muted">{{ comment.timestamp | date: 'MM.dd.yyyy' }}</small>
+            <button class="btn btn-white btn-xs" (click)="reactedComment(comment.id, 'HEART')"><i class="fa fa-heart"></i> {{getReactionCount(comment.id, 'HEART')}}</button>
+            <button class="btn btn-white btn-xs" (click)="reactedComment(comment.id, 'LIKE')"><i class="fa fa-thumbs-up"></i> {{getReactionCount(comment.id, 'LIKE')}}</button>
+            <button class="btn btn-white btn-xs" (click)="reactedComment(comment.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i> {{getReactionCount(comment.id, 'DISLIKE')}}</button>
             <button *ngIf="canReply(comment.id)" class="btn btn1" (click)="reply(comment.id)">Reply</button>
             <button class="btn btn1" *ngIf="canDeleteComment(comment.id)" (click)="deleteComment(comment.id)">Delete Comment</button>
           </div>
@@ -56,6 +59,9 @@
                 </p>
                 <p class="comment-text">{{ reply.text }}</p>
                 <small class="text-muted">{{ reply.timestamp | date: 'MM.dd.yyyy' }}</small>
+                <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'HEART')"><i class="fa fa-heart"></i>  {{getReactionCount(reply.id, 'HEART')}}</button>
+                <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'LIKE')"><i class="fa fa-thumbs-up"></i>  {{getReactionCount(reply.id, 'LIKE')}}</button>
+                <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i>  {{getReactionCount(reply.id, 'DISLIKE')}}</button>
                 <button class="btn btn1" *ngIf="canDeleteReply()" (click)="deleteComment(reply.id)">Delete Reply</button>
               </div>
             </ng-container>

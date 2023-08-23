@@ -98,7 +98,7 @@ insert into banned (is_deleted, timestamp, by_group_admin_id, towards_user_id, f
 values (false, '2023-05-13', null, 1, null);
 
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
-values (false, 'https://shorturl.at/fLPR9', 1, null);
+values (false, '../../assets/images/rsz_nature.jpg', 1, null);
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
 values (false, '../../assets/images/rsz_1male-avatar-1_2.jpg', null, 1);
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
