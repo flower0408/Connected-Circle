@@ -23,8 +23,11 @@ insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is first post by me. I am glad if you can see it.',
         '2023-08-12 12:00:00', false, 1);
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
+values ('This is second post by me. I am glad if you can see it.',
+        '2023-08-20 12:00:00', false, 1);
+insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is new post for today, happy to be here.',
-        '2023-08-08 18:20:30', true, 2);
+        '2023-08-08 18:20:30', false, 2);
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is a post in a group. If you see it, you are inside a group',
         '2023-05-14 15:23:35', false, 1);

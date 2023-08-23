@@ -33,61 +33,56 @@
           <button class="btn btn-white btn-xs"><i class="fa fa-heart"></i> Heart</button>
           <button class="btn btn-white btn-xs"><i class="fa fa-thumbs-up"></i> Like</button>
           <button class="btn btn-white btn-xs"><i class="fa fa-thumbs-down"></i> Dislike</button>
+          <div><button class="btn btn1" (click)="addComment()">Add Comment</button></div>
+          <button *ngIf="hasAuthority()" class="btn btn1" (click)="deletePost()">Delete Post</button>
         </div>
       </div>
       <div class="social-footer">
-        <div class="social-comment">
-          <a href="" class="pull-left">
-            <img alt="image" src="https://bootdey.com/img/Content/avatar/avatar1.png">
-          </a>
+        <div class="social-comment" *ngFor="let comment of comments">
           <div class="media-body">
-            <a href="#">
-              Andrew Williams
-            </a>
-            Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words.
-            <br>
-            <a href="#" class="small"><i class="fa fa-thumbs-up"></i> 26 Like this!</a> -
-            <small class="text-muted">12.06.2014</small>
+            <p class="comment-user">
+              {{ users.get(comment.belongsToUserId)?.displayName || users.get(comment.belongsToUserId)?.username }}
+            </p>
+            <p class="comment-text">{{ comment.text }}</p>
+            <small class="text-muted">{{ comment.timestamp | date: 'MM.dd.yyyy' }}</small>
+            <button *ngIf="canReply(comment.id)" class="btn btn1" (click)="reply(comment.id)">Reply</button>
+            <button class="btn btn1" *ngIf="canDeleteComment(comment.id)" (click)="deleteComment(comment.id)">Delete Comment</button>
           </div>
+          <div class="social-comment" *ngFor="let reply of replies">
+            <ng-container *ngIf="reply.repliesToCommentId == comment.id">
+              <div class="media-body">
+                <p class="comment-user">
+                  {{ users.get(reply.belongsToUserId)?.displayName || users.get(reply.belongsToUserId)?.username }}
+                </p>
+                <p class="comment-text">{{ reply.text }}</p>
+                <small class="text-muted">{{ reply.timestamp | date: 'MM.dd.yyyy' }}</small>
+                <button class="btn btn1" *ngIf="canDeleteReply()" (click)="deleteComment(reply.id)">Delete Reply</button>
+              </div>
+            </ng-container>
+            <!--<div class="social-comment" *ngFor="let reply2   of getReplies(reply.id)">
+              <ng-container *ngIf="reply2  .repliesToCommentId === comment.id" class="card rounded indented">
+                <a href="" class="pull-left">
+                  <img alt="image" src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                </a>
+                <div class="media-body">
+                <p *ngIf="users.get(reply2  .belongsToUserId)">{{users.get(reply2  .belongsToUserId).displayName|| users.get(reply2  .belongsToUserId).username}}</p>
+                  <p>{{reply2  .text}}</p>
+                  <small class="text-muted">{{reply2  .timestamp | date: 'MMMM d, y'}}</small>
+                  <button class="show-btn" (click)="replyToReply(comment.id, reply2 .id)">Reply</button>
+                </div>
+              </ng-container>
+            </div>-->
+          </div>
+
         </div>
 
-        <div class="social-comment">
-          <a href="" class="pull-left">
-            <img alt="image" src="https://bootdey.com/img/Content/avatar/avatar1.png">
-          </a>
-          <div class="media-body">
-            <a href="#">
-              Andrew Williams
-            </a>
-            Making this the first true generator on the Internet. It uses a dictionary of.
-            <br>
-            <a href="#" class="small"><i class="fa fa-thumbs-up"></i> 11 Like this!</a> -
-            <small class="text-muted">10.07.2014</small>
-          </div>
-        </div>
-
-        <div class="social-comment">
-          <a href="" class="pull-left">
-            <img alt="image" src="https://bootdey.com/img/Content/avatar/avatar1.png">
-          </a>
-          <div class="media-body">
-            <a href="#">
-              Andrew Williams
-            </a>
-            Making this the first true generator on the Internet. It uses a dictionary of.
-            <br>
-            <a href="#" class="small"><i class="fa fa-thumbs-up"></i> 11 Like this!</a> -
-            <small class="text-muted">10.07.2014</small>
-          </div>
-        </div>
-
-        <div class="social-comment">
+        <!--<div class="social-comment">
           <div class="media-body">
             <textarea class="form-control" placeholder="Write comment..."></textarea>
           </div>
         </div>
+      </div>-->
 
-      </div>
 
     </div>
   </div>

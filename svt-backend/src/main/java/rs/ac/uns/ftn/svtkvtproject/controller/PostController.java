@@ -312,4 +312,29 @@ public class PostController {
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentDTO>> getCommentsForPost(@PathVariable String id,
+                                                               @RequestHeader("authorization") String token) {
+        logger.info("Checking authorization");
+        String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
+        String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
+        User user = userService.findByUsername(username); //provera da li postoji u bazi
+
+        if (user == null) {
+            logger.error("User not found for token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        logger.info("Finding comments for post with id: " + id);
+        List<Comment> comments = commentService.findCommentsForPost(Long.parseLong(id));
+        List<CommentDTO> commentDTOS = new ArrayList<>();
+
+        logger.info("Creating response");
+        for (Comment comment: comments) {
+            commentDTOS.add(new CommentDTO(comment));
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(commentDTOS, HttpStatus.OK);
+    }
 }

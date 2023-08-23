@@ -59,4 +59,19 @@ export class PostService {
 
     return this.http.get('api/posts/' + id + '/images', queryParams) as Observable<HttpResponse<Image[]>>;
   }
+
+  getComments(id: number): Observable<HttpResponse<Comment[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/' + id + '/comments', queryParams) as Observable<HttpResponse<Comment[]>>;
+  }
+
+  delete(id: number): Observable<HttpResponse<Post>> {
+    return this.http.delete('api/posts/delete/' + id, {headers: this.headers}) as Observable<HttpResponse<Post>>;
+  }
 }

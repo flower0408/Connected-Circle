@@ -67,15 +67,32 @@
   padding: 10px 15px;
   background: #FFF5EE;
 }
-.social-footer .social-comment img {
-  width: 32px;
-  margin-right: 10px;
-}
 .social-comment:first-child {
   margin-top: 0;
 }
 .social-comment {
   margin-top: 15px;
+}
+.comment-user {
+  font-weight: bold;
+}
+.comment-text {
+  background-color: #FAF9F6;
+  display: flex;
+  align-items: center; /* Vertically center the content */
+  height: 50px;
+  overflow-y: auto;
+  margin-bottom: 5px; /* Add some space between comments */
+}
+.btn1 {
+  margin-right: 5px;
+  margin-left: 15px;
+  background-color: #F88379;
+  color: white;
+}
+.bt1:hover {
+  background-color: #F3CFC6;
+  color: black;
 }
 .social-comment textarea {
   font-size: 12px;
