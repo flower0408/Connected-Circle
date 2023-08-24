@@ -50,7 +50,7 @@
               <h3>{{friend.email}}</h3>
               <h5>{{friend.firstName +' '+ friend.lastName}}</h5>
               <h6 *ngIf="friend.description">{{friend.description}}</h6>
-              <p *ngIf="friend.lastLogin">{{'Last login: ' + friend.lastLogin}}</p>
+              <p *ngIf="friend.lastLogin">Last login: {{ friend.lastLogin | date: 'MM.dd.yyyy HH:mm' }} </p>
               <hr class="separator">
             </div>
           </div>

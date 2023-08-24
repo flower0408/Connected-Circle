@@ -14,6 +14,7 @@ import { FriendsComponent } from '../user/friends/friends.component';
 import { PostListComponent } from '../post/post-list/post-list.component';
 
 export const routes :Routes = [
+  {path: 'groups/:id/add-post', component: AddPostComponent},
   {path: 'groups/:id/group-requests', component: GroupRequestsComponent},
   {path: 'groups/:id', component: GroupComponent},
   {path: 'groups', component: GroupListComponent},

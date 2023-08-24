@@ -16,7 +16,7 @@ import { Image } from '../model/image.model';
 export class AddPostComponent implements OnInit{
 
   form: FormGroup;
-  //postForGroup: number = Number.parseInt(this.router.url.split('/')[2]) || 0;
+  postForGroup: number = Number.parseInt(this.router.url.split('/')[2]) || 0;
   imagePaths: string[] = [];
   images: Image[] = [];
 
@@ -75,15 +75,15 @@ export class AddPostComponent implements OnInit{
 
           post.images = this.images;
 
-          //if (this.postForGroup > 0)
-          //  post.belongsToGroupId = this.postForGroup;
+          if (this.postForGroup > 0)
+            post.belongsToGroupId = this.postForGroup;
 
           this.postService.add(post).subscribe(
             result => {
               window.alert('Successfully added a post!');
-              // if (this.postForGroup > 0)
-              //  this.router.navigate(['groups/' + this.postForGroup]);
-              //  else
+               if (this.postForGroup > 0)
+                this.router.navigate(['groups/' + this.postForGroup]);
+                else
               this.router.navigate(['posts']);
             },
             error => {
