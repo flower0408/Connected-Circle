@@ -34,6 +34,7 @@
           <button class="btn btn-white btn-xs" (click)="reactedPost(post.id, 'LIKE')"><i class="fa fa-thumbs-up"></i> {{likes}}</button>
           <button class="btn btn-white btn-xs" (click)="reactedPost(post.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i>  {{dislikes}}</button>
           <div><button class="btn btn1" (click)="addComment()">Add Comment</button></div>
+          <button *ngIf="hasAuthority()" class="btn btn1" [routerLink]="['/posts/edit', post.id]">Edit Post</button>
           <button *ngIf="hasAuthority()" class="btn btn1" (click)="deletePost()">Delete Post</button>
         </div>
       </div>

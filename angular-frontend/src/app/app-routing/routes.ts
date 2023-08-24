@@ -5,6 +5,8 @@ import { LoginComponent } from '../user/login/login.component';
 import { RegisterComponent } from '../user/register/register.component';
 import { UserComponent } from '../user/user.component';
 import { PostComponent } from '../post/post.component';
+import { EditPostComponent } from '../post/edit-post/edit-post.component';
+import { AddPostComponent } from '../post/add-post/add-post.component';
 import { FriendRequestsComponent } from '../user/friend-requests/friend-requests.component';
 import { FriendsComponent } from '../user/friends/friends.component';
 import { PostListComponent } from '../post/post-list/post-list.component';
@@ -17,8 +19,10 @@ export const routes :Routes = [
   {path: 'users/change-password', component: UserComponent},
   {path: 'users/friends/requests', component: FriendRequestsComponent},
   {path: 'users/friends', component: FriendsComponent},
-  {path: 'posts', component: PostListComponent},
+  {path: 'posts/add-new-post', component: AddPostComponent},
+  {path: 'posts/edit/:id', component: EditPostComponent},
   {path: 'posts/:id', component: PostComponent},
+  {path: 'posts', component: PostListComponent},
   {path: '', pathMatch: 'full', redirectTo: 'users/login', title: 'Connected Circle'}
 
 ];

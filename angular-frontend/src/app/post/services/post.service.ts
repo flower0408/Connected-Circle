@@ -74,4 +74,12 @@ export class PostService {
   delete(id: number): Observable<HttpResponse<Post>> {
     return this.http.delete('api/posts/delete/' + id, {headers: this.headers}) as Observable<HttpResponse<Post>>;
   }
+
+  add(newPost: Post): Observable<string> {
+    return this.http.post('api/posts/add', newPost, {headers: this.headers, responseType: 'text'});
+  }
+
+  edit(editedPost: Post): Observable<string> {
+    return this.http.patch('api/posts/edit/' + editedPost.id, editedPost, {headers: this.headers, responseType: 'text'});
+  }
 }

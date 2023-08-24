@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.repository.ImageRepository;
 import rs.ac.uns.ftn.svtkvtproject.service.ImageService;
 //import rs.ac.uns.ftn.svtkvtproject.service.PostService;
+import rs.ac.uns.ftn.svtkvtproject.service.PostService;
 import rs.ac.uns.ftn.svtkvtproject.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,12 +22,12 @@ public class ImageServiceImpl implements ImageService {
 
     private ImageRepository imageRepository;
 
-    //private PostService postService;
+    private PostService postService;
 
     @Autowired
-   // public void setPostService(PostService postService) {
-   //     this.postService = postService;
-   // }
+    public void setPostService(PostService postService) {
+        this.postService = postService;
+    }
 
     private UserService userService;
 
@@ -81,10 +82,10 @@ public class ImageServiceImpl implements ImageService {
         Image newImage = new Image();
         newImage.setPath(imageDTO.getPath());
 
-        /*if (imageDTO.getBelongsToPostId() != null) {
+        if (imageDTO.getBelongsToPostId() != null) {
             Post post = postService.findById(imageDTO.getBelongsToPostId());
             newImage.setBelongsToPost(post);
-        }*/
+        }
 
         if (imageDTO.getBelongsToUserId() != null) {
             User user = userService.findById(imageDTO.getBelongsToUserId());

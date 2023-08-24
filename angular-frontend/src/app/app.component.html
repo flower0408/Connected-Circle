@@ -10,6 +10,7 @@
   <app-wc-header></app-wc-header>
   <!--<h1>{{title}}</h1>-->
   <app-navbar *ngIf="logedIn"></app-navbar>
+  <!--<small>{{info}}</small>-->
   <router-outlet (activate)="checkLogin()"></router-outlet>
 </body>
 </html>

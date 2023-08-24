@@ -79,7 +79,7 @@ public class TokenUtils {
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    public int getExpiredIn() {
-        return expiration.intValue();
+    public Long getExpiredIn() {
+        return expiration;
     }
 }

@@ -15,6 +15,8 @@ import { NavbarComponent } from './core/navbar/navbar.component';
 import { FriendRequestsComponent } from './user/friend-requests/friend-requests.component';
 import { FriendsComponent } from './user/friends/friends.component';
 import { PostListComponent } from './post/post-list/post-list.component';
+import { EditPostComponent } from './post/edit-post/edit-post.component';
+import { AddPostComponent } from './post/add-post/add-post.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './core/header/header.component';
 import {NgOptimizedImage} from "@angular/common";
@@ -33,6 +35,8 @@ import {NgOptimizedImage} from "@angular/common";
     FriendRequestsComponent,
     FriendsComponent,
     PostListComponent,
+    EditPostComponent,
+    AddPostComponent
   ],
   imports: [
     BrowserModule,
