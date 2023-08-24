@@ -82,4 +82,14 @@ export class PostService {
   edit(editedPost: Post): Observable<string> {
     return this.http.patch('api/posts/edit/' + editedPost.id, editedPost, {headers: this.headers, responseType: 'text'});
   }
+  getAllForGroup(id: number): Observable<HttpResponse<Post[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/group/' + id, queryParams) as Observable<HttpResponse<Post[]>>;
+  }
 }

@@ -2,8 +2,6 @@
       xmlns="http://www.w3.org/1999/html">
 <div class="container">
   <div class="row flex-lg-nowrap">
-
-
     <div class="col">
       <div class="row">
         <div class="col mb-3">
@@ -126,17 +124,32 @@
                         </div>
                       </div>
                     </form>
-
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
-
     </div>
   </div>
 </div>
+<h1 class="center" style="font-style: italic;">~ Groups of {{user.username}} ~</h1>
+<h4 class="pink-bold center" *ngIf="groups.length == 0">You don't have a groups </h4>
+<div class="post-list">
+  <div class="post-container" *ngFor="let group of groups">
+    <div class="post-card">
+      <h1 class="post-username" >
+        {{group.name}}
+      </h1>
+      <p class="post-content">{{group.description}}</p>
+      <div class="post-footer">
+        <div class="post-date">{{group.creationDate | date: 'MMMM d, y, HH:mm'}}</div>
+        <div class="button-group">
+          <button  class="post-button" [routerLink]="['/groups', group.id]">Explore Group</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>

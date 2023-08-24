@@ -18,12 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.Comment;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.FriendRequest;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.Image;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.FriendRequestService;
+import rs.ac.uns.ftn.svtkvtproject.service.GroupService;
 import rs.ac.uns.ftn.svtkvtproject.service.ImageService;
 import rs.ac.uns.ftn.svtkvtproject.service.UserService;
 import rs.ac.uns.ftn.svtkvtproject.service.implementation.UserServiceImpl;
@@ -44,7 +42,7 @@ public class UserController {
 
     UserService userService;
 
-
+    GroupService groupService;
     UserDetailsService userDetailsService;
 
     FriendRequestService friendRequestService;
@@ -62,12 +60,13 @@ public class UserController {
     //Ili preporucen nacin: Constructor Dependency Injection
     @Autowired
     public UserController(UserServiceImpl userService, AuthenticationManager authenticationManager,
-                          UserDetailsService userDetailsService, FriendRequestService friendRequestService, ImageService imageService, TokenUtils tokenUtils) {
+                          UserDetailsService userDetailsService, FriendRequestService friendRequestService, ImageService imageService, GroupService groupService, TokenUtils tokenUtils) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.friendRequestService = friendRequestService;
         this.imageService = imageService;
+        this.groupService = groupService;
         this.tokenUtils = tokenUtils;
     }
 
@@ -491,6 +490,32 @@ public class UserController {
         logger.error("Failed to delete image with id: " + id);
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{id}/groups")
+    public ResponseEntity<List<GroupDTO>> getUserGroups(@PathVariable String id,
+                                                        @RequestHeader("authorization") String token) {
+        logger.info("Checking authorization");
+        String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
+        String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
+        User user = userService.findByUsername(username); //provera da li postoji u bazi
+
+        if (user == null) {
+            logger.error("User not found for token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        logger.info("Finding groups user with id: " + id + " is member of");
+        List<Group> groups = groupService.findGroupsForUser(Long.parseLong(id));
+        List<GroupDTO> groupDTOS = new ArrayList<>();
+
+        logger.info("Creating response");
+        for (Group group: groups) {
+            groupDTOS.add(new GroupDTO(group));
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(groupDTOS, HttpStatus.OK);
     }
 
 }

@@ -21,4 +21,7 @@ export class Group {
     this.suspended = obj.suspended || null as unknown as boolean;
     this.suspendedReason = obj.suspendedReason || null as unknown as string;
   }
+  get id(): number {
+    return this._id;
+  }
 }

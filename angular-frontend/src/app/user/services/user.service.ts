@@ -129,4 +129,25 @@ export class UserService {
       );
     });
   }
+  getUserGroups(userId: number): Observable<HttpResponse<Group[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/users/' + userId + '/groups', queryParams) as Observable<HttpResponse<Group[]>>;
+  }
+
+  getGroupAdmins(groupId: number): Observable<HttpResponse<User[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/users/group/' + groupId + '/admins', queryParams) as Observable<HttpResponse<User[]>>;
+  }
 }

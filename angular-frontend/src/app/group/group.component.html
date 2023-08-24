@@ -1,2 +1,37 @@
-<p>group works!</p>
 
+<div class="group-actions">
+  <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" [routerLink]="['/groups/' + group.id + '/group-requests']">View Group Requests</button>
+  <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" [routerLink]="['/groups/edit', group.id]">Edit Group</button>
+  <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" (click)="deleteGroup()">Delete Group</button>
+  <button *ngIf="hasAuthority()" class="post-button" (click)="suspendGroup()">Suspend Group</button>
+  <button *ngIf="hasAuthority()" class="post-button" (click)="deleteGroupAdmin()">Delete Group Admin</button>
+  <button *ngIf="canPost" class="post-button" [routerLink]="['/groups/'+ group.id + '/add-post']">Add Post to Group</button>
+</div>
+<br>
+<div class="group-info">
+  <h1 class="group-name">{{group.name}}</h1>
+  <h3 class="creation-date">{{group.creationDate | date: 'MMMM d, y, HH:mm'}}</h3>
+  <div class="description-container">
+    <p class="description">{{group.description}}</p>
+  </div>
+</div>
+
+
+
+<br>
+<div class="post-list">
+  <div class="post-container" *ngFor="let post of posts">
+    <div class="post-card">
+      <h1 class="post-username" *ngIf="users.get(post.postedByUserId)">
+        {{users.get(post.postedByUserId).displayName || users.get(post.postedByUserId).username}}
+      </h1>
+      <p class="post-content">{{post.content}}</p>
+      <div class="post-footer">
+        <div class="post-date">{{post.creationDate | date: 'MMMM d, y, HH:mm'}}</div>
+        <div class="button-group">
+          <button class="post-button" [routerLink]="['/posts', post.id]">Read More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

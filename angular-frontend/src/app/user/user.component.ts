@@ -63,6 +63,16 @@ export class UserComponent implements OnInit {
           }
         );
 
+        this.userService.getUserGroups(this.user.id).subscribe(
+          result => {
+            this.groups = result.body as Group[];
+          },
+          error => {
+            window.alert('Error while retriving groups user is member of');
+            console.log(error);
+          }
+        );
+
       },
       error => {
         window.alert('Error while retrieving profile info');
