@@ -1,0 +1,26 @@
+<br>
+<div class="centered-container">
+  <h1 style="font-style: italic;">~ Create post ~</h1>
+  <br>
+  <div class="postForm">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label class="color center" for="name"><b>Name: </b></label>
+        <input type="text" name="name" id="name" class="form-control" [formControl]="form.controls['name']" style="font-size: large;">
+        <small class="text-danger"  *ngIf="form.controls.name.touched && form.controls.name.errors?.required">
+          This field can't be empty!</small>
+      </div>
+      <div class="form-group">
+        <label class="color center" for="description"><b>Description:</b></label>
+        <textarea id="description" name="description" class="form-control" [formControl]="form.controls['description']"></textarea>
+        <small class="text-danger" *ngIf="form.controls.description.touched && form.controls.description.errors?.required">
+          This field can't be empty!
+        </small>
+      </div>
+      <div class="center">
+        <button *ngIf="editing" type="submit" class="btn btn1" [disabled]="!form.valid">Save</button>
+
+      </div>
+    </form>
+  </div>
+</div>

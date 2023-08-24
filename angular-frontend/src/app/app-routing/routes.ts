@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import {EditGroupComponent} from "../group/edit-group/edit-group.component";
 import { AddGroupComponent } from '../group/add-group/add-group.component';
 import { GroupRequestsComponent } from '../group/group-requests/group-requests.component';
 import { GroupListComponent } from '../group/group-list/group-list.component';
@@ -18,6 +19,7 @@ export const routes :Routes = [
   {path: 'groups/:id/add-post', component: AddPostComponent},
   {path: 'groups/:id/group-requests', component: GroupRequestsComponent},
   {path: 'groups/add', component: AddGroupComponent},
+  {path: 'groups/edit/:id', component: EditGroupComponent},
   {path: 'groups/:id', component: GroupComponent},
   {path: 'groups', component: GroupListComponent},
   {path: 'users/login', component: LoginComponent},

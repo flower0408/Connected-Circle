@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { GroupListComponent } from './group/group-list/group-list.component';
 import { AddGroupComponent } from './group/add-group/add-group.component';
+import { EditGroupComponent } from './group/edit-group/edit-group.component';
 import { GroupRequestsComponent } from './group/group-requests/group-requests.component';
 import { GroupComponent } from './group/group.component';
 import { LoginComponent } from './user/login/login.component';
@@ -29,6 +30,7 @@ import {NgOptimizedImage} from "@angular/common";
     GroupComponent,
     GroupRequestsComponent,
     AddGroupComponent,
+    EditGroupComponent,
     LoginComponent,
     GroupListComponent,
     UserComponent,
