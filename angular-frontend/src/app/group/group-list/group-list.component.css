@@ -67,14 +67,13 @@
 .post-button {
   background-color: #F88379;
   color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  margin-right: 15px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 
 .post-button:hover {
   background-color: #F3CFC6;
   color: black;
 }
+

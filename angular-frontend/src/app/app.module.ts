@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { GroupListComponent } from './group/group-list/group-list.component';
+import { GroupRequestsComponent } from './group/group-requests/group-requests.component';
 import { GroupComponent } from './group/group.component';
 import { LoginComponent } from './user/login/login.component';
 import { UserComponent } from './user/user.component';
@@ -25,6 +26,7 @@ import {NgOptimizedImage} from "@angular/common";
   declarations: [
     AppComponent,
     GroupComponent,
+    GroupRequestsComponent,
     LoginComponent,
     GroupListComponent,
     UserComponent,

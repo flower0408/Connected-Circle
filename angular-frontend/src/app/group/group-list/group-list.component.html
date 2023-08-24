@@ -9,7 +9,9 @@
       <div class="post-footer">
         <div class="post-date">{{group.creationDate | date: 'MMMM d, y, HH:mm'}}</div>
         <div class="button-group">
-          <button *ngIf="canAccess(group.id) || isAdmin" class="post-button" [routerLink]="['/groups', group.id]">Explore Group</button>
+          <button *ngIf="canAccess(group.id) || isAdmin" class="btn post-button" [routerLink]="['/groups', group.id]">View Group</button>
+          <button *ngIf="canSendRequest(group.id)" class="btn post-button" (click)="sendRequest(group.id)">Send Request to join</button>
+          <button *ngIf="!canSendRequest(group.id) && !canAccess(group.id)" class="btn post-button" disabled>You already sent a request</button>
         </div>
       </div>
     </div>

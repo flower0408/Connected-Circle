@@ -4,6 +4,7 @@ import {User} from "../../user/model/user.model";
 import {GroupService} from "../services/group.service";
 import {UserService} from "../../user/services/user.service";
 import {JwtHelperService} from "@auth0/angular-jwt";
+import {GroupRequest} from "../model/groupRequest.model";
 
 @Component({
   selector: 'app-group-list',
@@ -14,7 +15,8 @@ export class GroupListComponent implements OnInit {
   groups: Group[] = [];
   user: User = new User();
   isAdmin: boolean = false;
-  userGroups: Group[] = []; //grupe kojih je ulogovani korisnik clan
+  userGroups: Group[] = [];
+  groupRequests: Map<number, GroupRequest[]> = new Map();
 
 
   constructor(private groupService: GroupService,
@@ -27,6 +29,13 @@ export class GroupListComponent implements OnInit {
       result => {
         this.groups = result.body as Group[];
 
+        this.groups.forEach(group => {
+          this.groupService.getGroupRequests(group.id).subscribe(
+            result => {
+              this.groupRequests.set(group.id, result.body as GroupRequest[]);
+            }
+          );
+        });
       }
     );
 
@@ -62,5 +71,38 @@ export class GroupListComponent implements OnInit {
     });
 
     return access;
+  }
+
+  canSendRequest(groupId: number): boolean {
+    let canSend: boolean = true;
+    this.groupRequests.forEach(requests => {
+      requests.forEach(request => {
+        if (request.createdByUserId == this.user.id && request.forGroupId == groupId)
+          canSend = false;
+      });
+    });
+
+    if (this.canAccess(groupId))
+      canSend = false;
+
+    return canSend;
+  }
+
+  sendRequest(groupId: number): void {
+    const groupRequest: GroupRequest = new GroupRequest();
+    groupRequest.createdAt = new Date().toISOString().slice(0, -1);
+    groupRequest.createdByUserId = this.user.id;
+    groupRequest.forGroupId = groupId;
+
+    this.groupService.sendGroupRequest(groupRequest).subscribe(
+      result => {
+        window.alert('Successfully sent request to join group');
+        location.reload();
+      },
+      error => {
+        window.alert('Error while sending group request');
+        console.log(error);
+      }
+    );
   }
 }
