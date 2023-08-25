@@ -7,8 +7,24 @@
           <i class="fa fa-angle-down"></i>
         </button>
         <ul class="social-action-dropdown-menu">
-          <li><button>Report user</button></li>
-          <li><button>Report post</button></li>
+          <li>
+            <!-- Add the report reason dropdown here -->
+            <div *ngIf="showReportDropdown">
+              <label for="reportReason">Select a report reason:</label>
+              <select id="reportReason" [(ngModel)]="selectedReason">
+                <option *ngFor="let reason of reportReasons" [value]="reason">{{ reason }}</option>
+              </select>
+              <button class="btn btn1" (click)="submitReport()">Submit</button>
+            </div>
+            <!-- End of report reason dropdown -->
+
+            <!-- Keep the existing "Report post" button here -->
+            <button class="btn btn1" (click)="openReportDropdown()" *ngIf="!reportDropdownOpened && !showReportDropdown">Report post</button>
+          </li>
+          <li>
+            <button class="btn btn1" *ngIf="!reportDropdownOpened && !showReportDropdown">Report user</button>
+          </li>
+
         </ul>
       </div>
       <div class="social-avatar">
@@ -66,31 +82,9 @@
                 <button class="btn btn1" *ngIf="canDeleteReply()" (click)="deleteComment(reply.id)">Delete Reply</button>
               </div>
             </ng-container>
-            <!--<div class="social-comment" *ngFor="let reply2   of getReplies(reply.id)">
-              <ng-container *ngIf="reply2  .repliesToCommentId === comment.id" class="card rounded indented">
-                <a href="" class="pull-left">
-                  <img alt="image" src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                </a>
-                <div class="media-body">
-                <p *ngIf="users.get(reply2  .belongsToUserId)">{{users.get(reply2  .belongsToUserId).displayName|| users.get(reply2  .belongsToUserId).username}}</p>
-                  <p>{{reply2  .text}}</p>
-                  <small class="text-muted">{{reply2  .timestamp | date: 'MMMM d, y'}}</small>
-                  <button class="show-btn" (click)="replyToReply(comment.id, reply2 .id)">Reply</button>
-                </div>
-              </ng-container>
-            </div>-->
-          </div>
-
-        </div>
-
-        <!--<div class="social-comment">
-          <div class="media-body">
-            <textarea class="form-control" placeholder="Write comment..."></textarea>
           </div>
         </div>
-      </div>-->
-
-
     </div>
   </div>
+</div>
 </div>

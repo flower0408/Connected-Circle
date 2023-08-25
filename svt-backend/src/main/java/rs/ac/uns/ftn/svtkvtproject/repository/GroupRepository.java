@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.Report;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,6 +57,48 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(nativeQuery = true,
             value = "select id from post p where p.id in (select post_id from group_posts where group_id = :groupId)")
     Optional<List<Long>> findPostsByGroupId(@Param("groupId") Long groupId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT *\n" +
+                    "FROM report r\n" +
+                    "WHERE r.on_comment_id IN (\n" +
+                    "    SELECT id\n" +
+                    "    FROM comment c\n" +
+                    "    WHERE c.belongs_to_post_id IN (\n" +
+                    "        SELECT id\n" +
+                    "        FROM post p\n" +
+                    "        WHERE p.id IN (\n" +
+                    "            SELECT post_id\n" +
+                    "            FROM group_posts\n" +
+                    "            WHERE group_id = :groupId\n" +
+                    "        )\n" +
+                    "    )\n" +
+                    ") OR r.on_comment_id IN (\n" +
+                    "    SELECT replies_to_comment_id\n" +
+                    "    FROM comment c\n" +
+                    "    WHERE c.belongs_to_post_id IN (\n" +
+                    "        SELECT id\n" +
+                    "        FROM post p\n" +
+                    "        WHERE p.id IN (\n" +
+                    "            SELECT post_id\n" +
+                    "            FROM group_posts\n" +
+                    "            WHERE group_id = :groupId\n" +
+                    "        )\n" +
+                    "    )\n" +
+                    ")\n" +
+                    "UNION\n" +
+                    "SELECT *\n" +
+                    "FROM report r\n" +
+                    "WHERE r.on_post_id IN (\n" +
+                    "    SELECT id\n" +
+                    "    FROM post p\n" +
+                    "    WHERE p.id IN (\n" +
+                    "        SELECT post_id\n" +
+                    "        FROM group_posts\n" +
+                    "        WHERE group_id = :groupId\n" +
+                    "    )\n" +
+                    ");")
+    Optional<List<Long>> findReportsByGroupId(@Param("groupId") Long groupId);
 
     @Query(nativeQuery = true,
             value = "select * from `group` where id in (select group_id from group_members where member_id = :memberId)")

@@ -1,0 +1,22 @@
+<br>
+<div class="post-list">
+  <div class="post-container" *ngFor="let report of reports">
+    <div class="post-card">
+      <div class="post-field">
+        <span class="field-label">Reason:</span>
+        <span class="field-value">{{ report.reason }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Timestamp:</span>
+        <span class="field-value-timestamp">{{ report.timestamp | date: 'MM.dd.yyyy' }}</span>
+      </div>
+      <div class="button-group">
+        <button class="post-button" [routerLink]="['/reports', report.id]">Read More</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

@@ -15,7 +15,21 @@ import java.util.Optional;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    @Query(nativeQuery = true,
+   /* @Query(nativeQuery = true,
+            value = "SELECT DISTINCT r FROM report r WHERE r.is_deleted = false")
+    List<Report> findAll();*/
+   @Query(nativeQuery = true,
+           value = "SELECT r.*\n" +
+                   "FROM report r\n" +
+                   "LEFT JOIN comment c ON r.on_comment_id = c.id\n" +
+                   "LEFT JOIN post p ON r.on_post_id = p.id\n" +
+                   "LEFT JOIN group_posts gp ON p.id = gp.post_id OR c.belongs_to_post_id = gp.post_id\n" +
+                   "WHERE gp.group_id IS NULL\n" +
+                   "AND r.is_deleted = false;") // Add the condition for is_deleted
+   Optional<List<Report>> findAllReports();
+
+
+ @Query(nativeQuery = true,
             value = "select * from report where on_post_id = :postId and is_deleted = false")
     Optional<List<Report>> findAllByOnPostId(@Param("postId") Long postId);
 
@@ -47,6 +61,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     @Query(nativeQuery = true,
             value = "update reaction set is_deleted = true where by_user_id = :userId")
     Integer deleteReportsMadeByUserId(@Param("userId") Long userId);
+
 
 
 }

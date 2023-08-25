@@ -6,12 +6,15 @@ import { User } from '../user/model/user.model';
 import { PostService } from '../post/services/post.service';
 import { UserService } from '../user/services/user.service';
 import { Comment } from './model/comment.model';
+import { Report } from 'src/app/report/model/report.model';
 import { CommentService } from './services/comment.service';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../user/services/authentication.service";
 import {Reaction} from "./model/reaction.model";
 import {ReactionService} from "./services/reaction.service";
+import {ReportService} from "../report/services/report.service";
+import {ReportReason} from "../report/model/reportReason";
 
 @Component({
   selector: 'app-post',
@@ -19,7 +22,9 @@ import {ReactionService} from "./services/reaction.service";
   styleUrls: ['./post.component.css']
 })
 export class PostComponent implements OnInit {
-
+  reportReasons: ReportReason[] = Object.values(ReportReason);
+  selectedReason: ReportReason | undefined;
+  showReportDropdown: boolean = false;
   form: FormGroup;
   imagePath: string = '';
   image: Image = new Image();
@@ -42,6 +47,7 @@ export class PostComponent implements OnInit {
   constructor(
     private postService: PostService,
     private userService: UserService,
+    private reportService: ReportService,
     private commentService: CommentService,
     private router: Router,
     private reactionService: ReactionService,
@@ -56,6 +62,11 @@ export class PostComponent implements OnInit {
     });
 
   }
+  openReportDropdown() {
+    this.showReportDropdown = true;
+  }
+  reportDropdownOpened: boolean = false;
+
 
   ngOnInit(): void {
     const url: String = this.router.url;
@@ -262,6 +273,70 @@ export class PostComponent implements OnInit {
       }
     );
   }
+
+  submitReport() {
+    if (!this.selectedReason) {
+      window.alert('Please select a valid report reason');
+      return;
+    }
+
+    let report: Report = new Report();
+    report.reason = this.selectedReason;
+    report.timestamp = new Date().toISOString().slice(0, 10);
+
+    report.onPostId = this.post.id;
+
+    let sub: string;
+    const item = localStorage.getItem('user') || "";
+
+    const jwt: JwtHelperService = new JwtHelperService();
+    const decodedToken = jwt.decodeToken(item);
+    sub = decodedToken.sub;
+
+    this.userService.getOneByUsername(sub).subscribe(
+      result => {
+        const user: User = result.body as User;
+        report.byUserId = user.id;
+
+        this.reportService.add(report).subscribe(
+          result => {
+            window.alert('Successfully added a report');
+            location.reload();
+          },
+          error => {
+            window.alert('Error while adding a report');
+            console.log(error);
+          }
+        );
+      }
+    );
+    this.showReportDropdown = false;
+  }
+
+
+  getReportReasonFromString(reason: string): ReportReason | undefined {
+    switch (reason.trim()) {
+      case ReportReason.BREAKS_RULES:
+      case ReportReason.HARASSMENT:
+      case ReportReason.HATE:
+      case ReportReason.SHARING_PERSONAL_INFORMATION:
+      case ReportReason.IMPERSONATION:
+      case ReportReason.COPYRIGHT_VIOLATION:
+      case ReportReason.TRADEMARK_VIOLATION:
+      case ReportReason.SPAM:
+      case ReportReason.SELF_HARM_OR_SUICIDE:
+      case ReportReason.OTHER:
+        return reason.trim() as ReportReason;
+      default:
+        return undefined; // Invalid reason
+    }
+  }
+
+
+
+
+
+
 
   canDeleteComment(commentId: number): boolean {
     let sub: string;

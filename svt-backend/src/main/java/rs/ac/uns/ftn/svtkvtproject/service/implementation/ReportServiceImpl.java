@@ -4,12 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.ReactionDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ReportDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
-import rs.ac.uns.ftn.svtkvtproject.model.enums.ReactionType;
 import rs.ac.uns.ftn.svtkvtproject.model.enums.ReportReason;
-import rs.ac.uns.ftn.svtkvtproject.repository.ReactionRepository;
 import rs.ac.uns.ftn.svtkvtproject.repository.ReportRepository;
 import rs.ac.uns.ftn.svtkvtproject.service.*;
 
@@ -48,6 +45,7 @@ public class ReportServiceImpl implements ReportService {
         this.userService = userService;
     }
 
+
     private static final Logger logger = LogManager.getLogger(ReactionServiceImpl.class);
 
 
@@ -60,9 +58,19 @@ public class ReportServiceImpl implements ReportService {
         return null;
     }
 
+
     @Override
     public List<Report> findAll() {
         return this.reportRepository.findAll();
+    }
+
+    @Override
+    public List<Report> findAllReports() {
+        Optional<List<Report>> reports = reportRepository.findAllReports();
+        if (!reports.isEmpty())
+            return reports.get();
+        logger.error("Repository search for reports  returned null");
+        return null;
     }
 
     @Override
@@ -149,7 +157,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Report saveReport(Report report) {
-        return null;
+        return reportRepository.save(report);
     }
 
     @Override

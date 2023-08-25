@@ -23,6 +23,8 @@ public interface ReportService {
 
     List<Report> findAll();
 
+    List<Report> findAllReports();
+
     List<Report> findReportsForPost(Long postId);
 
     List<Report> findReportsForComment(Long commentId);

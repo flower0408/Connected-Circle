@@ -49,7 +49,18 @@ public class Report {
     @JoinColumn(name = "on_post_id", referencedColumnName = "id")
     private Post onPost;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "on_comment_id", referencedColumnName = "id")
     private Comment onComment;
+
+    public Long getOnPostId() {
+        return onPost != null ? onPost.getId() : null;
+    }
+
+    public Long getOnCommentId() {
+        return onComment != null ? onComment.getId() : null;
+    }
+
+
 }

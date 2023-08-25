@@ -75,6 +75,15 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Long> findReportsByGroupId(Long id) {
+        Optional<List<Long>> postsIds = groupRepository.findReportsByGroupId(id);
+        if (!postsIds.isEmpty())
+            return postsIds.get();
+        logger.error("Repository search for reports for group with id: " + id + " returned null");
+        return null;
+    }
+
+    @Override
     public List<Group> findGroupsForUser(Long userId) {
         Optional<List<Group>> groups = groupRepository.findGroupsByMemberId(userId);
         if (!groups.isEmpty())

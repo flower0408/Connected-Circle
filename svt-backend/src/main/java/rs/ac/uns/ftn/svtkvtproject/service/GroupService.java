@@ -18,6 +18,8 @@ public interface GroupService {
 
     List<Long> findPostsByGroupId(Long id);
 
+    List<Long> findReportsByGroupId(Long id);
+
     List<Group> findGroupsForUser(Long userId);
 
     Group checkIfPostInGroup(Long postId);

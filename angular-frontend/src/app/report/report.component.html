@@ -1,0 +1,40 @@
+<!-- report.component.html -->
+<div class="post-list">
+  <div class="post-container" *ngIf="report">
+    <div class="post-card">
+      <div class="post-field">
+        <span class="field-label">Reason:</span>
+        <span class="field-value">{{ report.reason }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Timestamp:</span>
+        <span class="field-value-timestamp">{{ report.timestamp | date: 'MM.dd.yyyy' }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">By User ID:</span>
+        <span class="field-value">{{ report.byUserId }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Accepted:</span>
+        <span class="field-value">{{ report.accepted ? 'Yes' : 'No' }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">On User ID:</span>
+        <span class="field-value">{{ report.onUserId }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">On Post ID:</span>
+        <span class="field-value">{{ report.onPostId }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">On Comment ID:</span>
+        <span class="field-value">{{ report.onCommentId }}</span>
+      </div>
+      <div class="button-group">
+        <button class="post-button" [routerLink]="['/reports/edit', report.id]">Edit Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

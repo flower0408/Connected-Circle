@@ -2,14 +2,11 @@ package rs.ac.uns.ftn.svtkvtproject.controller;
 
 import rs.ac.uns.ftn.svtkvtproject.model.dto.GroupDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.GroupRequestDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.Group;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.GroupRequest;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.ReportDTO;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
-import rs.ac.uns.ftn.svtkvtproject.service.GroupRequestService;
-import rs.ac.uns.ftn.svtkvtproject.service.GroupService;
-import rs.ac.uns.ftn.svtkvtproject.service.PostService;
-import rs.ac.uns.ftn.svtkvtproject.service.UserService;
+import rs.ac.uns.ftn.svtkvtproject.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,8 @@ public class GroupController {
     PostService postService;
     GroupRequestService groupRequestService;
 
+    ReportService reportService;
+
     AuthenticationManager authenticationManager;
 
     TokenUtils tokenUtils;
@@ -41,12 +40,13 @@ public class GroupController {
     private static final Logger logger = LogManager.getLogger(GroupController.class);
 
     @Autowired
-    public GroupController(GroupService groupService, UserService userService, PostService postService, GroupRequestService groupRequestService,
+    public GroupController(GroupService groupService, UserService userService, PostService postService, GroupRequestService groupRequestService, ReportService reportService,
                            AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
         this.groupService = groupService;
         this.userService = userService;
         this.postService = postService;
         this.groupRequestService = groupRequestService;
+        this.reportService = reportService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
     }
@@ -95,6 +95,38 @@ public class GroupController {
 
         return new ResponseEntity<>(groupDTO, HttpStatus.OK);
     }
+
+    @GetMapping("reports/{groupId}")
+    public ResponseEntity<List<ReportDTO>> getReportsForGroup(@PathVariable String groupId, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        logger.info("Finding reports for group with id: " + groupId);
+        List<Long> reportsIds = groupService.findReportsByGroupId(Long.parseLong(groupId));
+        if (reportsIds == null) {
+            logger.error("Reports not found for group with id: " + groupId);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+            List<ReportDTO> reportDTOS = new ArrayList<>();
+            logger.info("Creating response");
+            for (Long reportId: reportsIds) {
+                Report report = reportService.findById(reportId);
+                ReportDTO reportDTO = new ReportDTO(report);
+                reportDTOS.add(reportDTO);
+            }
+            logger.info("Created and sent response");
+
+        return new ResponseEntity<>(reportDTOS, HttpStatus.OK);
+    }
+
+
+
 
     @PostMapping("/add")
     public ResponseEntity<GroupDTO> createGroup(@RequestBody @Validated GroupDTO newGroup, @RequestHeader("authorization") String token) {

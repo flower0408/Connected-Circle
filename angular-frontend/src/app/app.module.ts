@@ -20,6 +20,9 @@ import { FriendsComponent } from './user/friends/friends.component';
 import { PostListComponent } from './post/post-list/post-list.component';
 import { EditPostComponent } from './post/edit-post/edit-post.component';
 import { AddPostComponent } from './post/add-post/add-post.component';
+import { ReportComponent } from './report/report.component';
+import { ReportListComponent } from './report/report-list/report-list.component';
+import { EditReportComponent } from './report/edit-report/edit-report.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './core/header/header.component';
 import {NgOptimizedImage} from "@angular/common";
@@ -42,7 +45,10 @@ import {NgOptimizedImage} from "@angular/common";
     FriendsComponent,
     PostListComponent,
     EditPostComponent,
-    AddPostComponent
+    AddPostComponent,
+    ReportComponent,
+    ReportListComponent,
+    EditReportComponent
   ],
   imports: [
     BrowserModule,

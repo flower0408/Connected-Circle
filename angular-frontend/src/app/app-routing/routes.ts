@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 
+import { ReportComponent } from '../report/report.component';
+import { EditReportComponent } from '../report/edit-report/edit-report.component';
+import { ReportListComponent } from '../report/report-list/report-list.component';
 import {EditGroupComponent} from "../group/edit-group/edit-group.component";
 import { AddGroupComponent } from '../group/add-group/add-group.component';
 import { GroupRequestsComponent } from '../group/group-requests/group-requests.component';
@@ -16,6 +19,9 @@ import { FriendsComponent } from '../user/friends/friends.component';
 import { PostListComponent } from '../post/post-list/post-list.component';
 
 export const routes :Routes = [
+  {path: 'reports/edit/:id', component: EditReportComponent},
+  {path: 'reports/:id', component: ReportComponent},
+  {path: 'reports', component: ReportListComponent},
   {path: 'groups/:id/add-post', component: AddPostComponent},
   {path: 'groups/:id/group-requests', component: GroupRequestsComponent},
   {path: 'groups/add', component: AddGroupComponent},
