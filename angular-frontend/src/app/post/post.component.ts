@@ -48,6 +48,10 @@ export class PostComponent implements OnInit {
 
   commentsReactions: Map<number, Map<number, Reaction>> = new Map(); //Map<idKomentara, Map<idReakcije, Reakcija>> zbog brisanja reakcija na komentar
 
+  defaultSortType: 'date' | 'likes' | 'hearts' | 'dislikes' = 'date';
+  defaultSortDirection: 'asc' | 'desc' = 'desc';
+
+
   constructor(
     private postService: PostService,
     private userService: UserService,
@@ -183,9 +187,52 @@ export class PostComponent implements OnInit {
             window.alert('Error while retrieving comments for post');
           }
         );
+
+        this.sortComments();
       }
     );
   }
+
+  toggleSortDirection() {
+    this.defaultSortDirection = this.defaultSortDirection === 'asc' ? 'desc' : 'asc';
+  }
+
+
+  sortComments() {
+    this.comments.sort((a, b) => {
+      let valueA: number;
+      let valueB: number;
+
+      switch (this.defaultSortType) {
+        case 'date':
+          valueA = new Date(a.timestamp).getTime();
+          valueB = new Date(b.timestamp).getTime();
+          break;
+        case 'likes':
+          valueA = this.getReactionCount(a.id, 'LIKE');
+          valueB = this.getReactionCount(b.id, 'LIKE');
+          break;
+        case 'hearts':
+          valueA = this.getReactionCount(a.id, 'HEART');
+          valueB = this.getReactionCount(b.id, 'HEART');
+          break;
+        case 'dislikes':
+          valueA = this.getReactionCount(a.id, 'DISLIKE');
+          valueB = this.getReactionCount(b.id, 'DISLIKE');
+          break;
+        default:
+          valueA = new Date(a.timestamp).getTime();
+          valueB = new Date(b.timestamp).getTime();
+      }
+
+      if (this.defaultSortDirection === 'asc') {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    });
+  }
+
 
   canReply(id: number): boolean {
     const commentDiv = document.getElementById('comment' + id);

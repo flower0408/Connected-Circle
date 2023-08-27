@@ -54,7 +54,18 @@
           <button *ngIf="hasAuthority()" class="btn btn1" (click)="deletePost()">Delete Post</button>
         </div>
       </div>
-      <div class="social-footer">
+      <div class="sort-controls" *ngIf="comments.length > 0" >
+        <select class="btn btn2" [(ngModel)]="defaultSortType" (change)="sortComments()">
+          <option value="date">Sort by Date</option>
+          <option value="likes">Sort by Likes</option>
+          <option value="hearts">Sort by Hearts</option>
+          <option value="dislikes">Sort by Dislikes</option>
+        </select>
+        <button class="btn btn2" (click)="toggleSortDirection(); sortComments()">
+          {{ defaultSortDirection | uppercase }}
+        </button>
+      </div>
+      <div class="social-footer"  *ngIf="comments.length > 0" >
         <div class="social-comment" *ngFor="let comment of comments">
           <div class="media-body">
             <p class="comment-user">
