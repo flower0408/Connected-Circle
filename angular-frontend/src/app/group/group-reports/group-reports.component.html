@@ -1,6 +1,7 @@
-<!-- report.component.html -->
-<div class="post-list">
-  <div class="post-container" *ngIf="report">
+<br>
+<h4 class="pink-bold center" *ngIf="reports.length == 0">There are no reports for group</h4>
+<div class="post-list" *ngIf="reports.length > 0">
+  <div class="post-container" *ngFor="let report of reports">
     <div class="post-card">
       <div class="post-field">
         <span class="field-label">Report id:</span>
@@ -35,10 +36,8 @@
         <span class="field-value">{{ report.onCommentId }}</span>
       </div>
       <div class="button-group">
-        <button class="post-button" [routerLink]="['/reports/edit', report.id]">Edit Report</button>
+        <button class="post-button" [routerLink]="['/groups/reports/edit', report.id]">Edit report</button>
       </div>
     </div>
   </div>
 </div>
-
-

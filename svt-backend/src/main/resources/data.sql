@@ -96,8 +96,8 @@ values (2, 5);
 insert into group_request (approved, at, created_at, is_deleted, created_by_user_id, for_group_id)
 values (null, null, '2023-05-13', false, 3, 1);
 
-insert into banned (is_deleted, timestamp, by_group_admin_id, towards_user_id, for_group_id)
-values (false, '2023-05-13', null, 1, null);
+insert into banned (is_deleted, timestamp, by_admin_id, towards_user_id, blocked)
+values (false, '2023-08-26', null, 1, false);
 
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)
 values (false, '../../assets/images/rsz_nature.jpg', 1, null);

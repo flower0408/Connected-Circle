@@ -3,6 +3,7 @@
   <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" [routerLink]="['/groups/' + group.id + '/group-requests']">View Group Requests</button>
   <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" [routerLink]="['/groups/edit', group.id]">Edit Group</button>
   <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" (click)="deleteGroup()">Delete Group</button>
+  <button *ngIf="hasAuthority() || isGroupAdmin()" class="post-button" [routerLink]="['/groups/reports', + group.id]">View Group Reports</button>
   <button *ngIf="hasAuthority()" class="post-button" (click)="suspendGroup()">Suspend Group</button>
   <button *ngIf="hasAuthority()" class="post-button" (click)="deleteGroupAdmin()">Delete Group Admin</button>
   <button *ngIf="canPost" class="post-button" [routerLink]="['/groups/'+ group.id + '/add-post']">Add Post to Group</button>

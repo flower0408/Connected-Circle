@@ -1,0 +1,19 @@
+<br>
+<div class="centered-container">
+  <h1 style="font-style: italic;">~ Edit Report ~</h1>
+  <br>
+  <div class="postForm">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label class="color center" for="accepted"><b>Accepted: </b></label>
+        <input type="text" name="accepted" id="accepted" class="form-control" [formControl]="form.controls['accepted']" style="font-size: large;">
+        <small class="text-danger" *ngIf="form.controls.accepted.touched && form.controls.accepted.errors?.required">
+          This field can't be empty!</small>
+      </div>
+      <div class="center">
+        <button *ngIf="editing" type="submit" class="btn btn1" [disabled]="!form.valid">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+

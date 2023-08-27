@@ -26,21 +26,16 @@ public class Banned {
     @Column(nullable = false)
     private LocalDate timestamp;
 
-   // @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "by_admin_id")
-    //private Administrator admin;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "by_group_admin_id", referencedColumnName = "id")
-    private GroupAdmin groupAdmin;
+    @JoinColumn(name = "by_admin_id", referencedColumnName = "id")
+    private User byAdmin;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "towards_user_id", referencedColumnName = "id")
     private User towardsUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "for_group_id", referencedColumnName = "id")
-    private Group group;
+    @Column(nullable = false)
+    private boolean blocked;
 
     @Column(nullable = false)
     private boolean isDeleted;

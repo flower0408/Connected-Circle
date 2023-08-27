@@ -25,7 +25,7 @@
       <li>
         <a class="nav-link" [routerLink]="['/groups/add']">Create Group</a>
       </li>
-      <li>
+      <li *ngIf="isAdmin">
         <a class="nav-link" [routerLink]="['/reports']">Reports</a>
       </li>
     </ul>

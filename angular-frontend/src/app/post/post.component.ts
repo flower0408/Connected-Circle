@@ -24,7 +24,11 @@ import {ReportReason} from "../report/model/reportReason";
 export class PostComponent implements OnInit {
   reportReasons: ReportReason[] = Object.values(ReportReason);
   selectedReason: ReportReason | undefined;
-  showReportDropdown: boolean = false;
+  showReportDropdownForPost: boolean = false;
+  showReportDropdownForComment: boolean = false;
+  showReportDropdownForReply: boolean = false;
+  reportedCommentId: number | null = null;
+  reportedReplyId: number | null = null;
   form: FormGroup;
   imagePath: string = '';
   image: Image = new Image();
@@ -63,7 +67,7 @@ export class PostComponent implements OnInit {
 
   }
   openReportDropdown() {
-    this.showReportDropdown = true;
+    this.showReportDropdownForPost = true;
   }
   reportDropdownOpened: boolean = false;
 
@@ -310,7 +314,99 @@ export class PostComponent implements OnInit {
         );
       }
     );
-    this.showReportDropdown = false;
+    this.showReportDropdownForPost = false;
+    this.showReportDropdownForComment = false;
+    this.showReportDropdownForReply = false;
+  }
+  submitReportComment(commentId: number) {
+    if (!this.selectedReason) {
+      window.alert('Please select a valid report reason');
+      return;
+    }
+
+    let report: Report = new Report();
+    report.reason = this.selectedReason;
+    report.timestamp = new Date().toISOString().slice(0, 10);
+
+    report.onCommentId = commentId;
+
+    let sub: string;
+    const item = localStorage.getItem('user') || "";
+
+    const jwt: JwtHelperService = new JwtHelperService();
+    const decodedToken = jwt.decodeToken(item);
+    sub = decodedToken.sub;
+
+    this.userService.getOneByUsername(sub).subscribe(
+      result => {
+        const user: User = result.body as User;
+        report.byUserId = user.id;
+
+        this.reportService.add(report).subscribe(
+          result => {
+            window.alert('Successfully reported the comment');
+            location.reload();
+          },
+          error => {
+            window.alert('Error while reporting the comment');
+            console.log(error);
+          }
+        );
+      }
+    );
+    this.showReportDropdownForPost = false;
+    this.showReportDropdownForComment = false;
+    this.showReportDropdownForReply = false;
+    this.reportedCommentId = null;
+  }
+  openReportCommentDropdown(commentId: number) {
+    this.reportedCommentId = commentId;
+  }
+
+  submitReportReply(replyId: number) {
+    if (!this.selectedReason) {
+      window.alert('Please select a valid report reason');
+      return;
+    }
+
+    let report: Report = new Report();
+    report.reason = this.selectedReason;
+    report.timestamp = new Date().toISOString().slice(0, 10);
+
+    report.onCommentId = replyId;
+
+    let sub: string;
+    const item = localStorage.getItem('user') || "";
+
+    const jwt: JwtHelperService = new JwtHelperService();
+    const decodedToken = jwt.decodeToken(item);
+    sub = decodedToken.sub;
+
+    this.userService.getOneByUsername(sub).subscribe(
+      result => {
+        const user: User = result.body as User;
+        report.byUserId = user.id;
+
+        this.reportService.add(report).subscribe(
+          result => {
+            window.alert('Successfully reported the comment');
+            location.reload();
+          },
+          error => {
+            window.alert('Error while reporting the comment');
+            console.log(error);
+          }
+        );
+      }
+    );
+    this.showReportDropdownForPost = false;
+    this.showReportDropdownForComment = false;
+    this.showReportDropdownForReply = false;
+    this.reportedReplyId = null;
+  }
+
+  openReportReplyDropdown(replyId: number) {
+    this.reportedReplyId = replyId;
   }
 
 

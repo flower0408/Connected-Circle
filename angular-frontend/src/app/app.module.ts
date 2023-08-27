@@ -9,6 +9,7 @@ import { GroupListComponent } from './group/group-list/group-list.component';
 import { AddGroupComponent } from './group/add-group/add-group.component';
 import { EditGroupComponent } from './group/edit-group/edit-group.component';
 import { GroupRequestsComponent } from './group/group-requests/group-requests.component';
+import { GroupReportsComponent } from './group/group-reports/group-reports.component';
 import { GroupComponent } from './group/group.component';
 import { LoginComponent } from './user/login/login.component';
 import { UserComponent } from './user/user.component';
@@ -23,6 +24,7 @@ import { AddPostComponent } from './post/add-post/add-post.component';
 import { ReportComponent } from './report/report.component';
 import { ReportListComponent } from './report/report-list/report-list.component';
 import { EditReportComponent } from './report/edit-report/edit-report.component';
+import { EditReportGroupComponent } from './group/edit-report-group/edit-report-group.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './core/header/header.component';
 import {NgOptimizedImage} from "@angular/common";
@@ -36,6 +38,7 @@ import {NgOptimizedImage} from "@angular/common";
     EditGroupComponent,
     LoginComponent,
     GroupListComponent,
+    GroupReportsComponent,
     UserComponent,
     RegisterComponent,
     PostComponent,
@@ -48,7 +51,8 @@ import {NgOptimizedImage} from "@angular/common";
     AddPostComponent,
     ReportComponent,
     ReportListComponent,
-    EditReportComponent
+    EditReportComponent,
+    EditReportGroupComponent
   ],
   imports: [
     BrowserModule,

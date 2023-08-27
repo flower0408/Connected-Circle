@@ -55,7 +55,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     Integer deleteGroupAdmins(@Param("id") Long id);
 
     @Query(nativeQuery = true,
-            value = "select id from post p where p.id in (select post_id from group_posts where group_id = :groupId)")
+            value = "SELECT p.id FROM post p " +
+                    "WHERE p.id IN (SELECT post_id FROM group_posts WHERE group_id = :groupId) " +
+                    "AND p.is_deleted = false")
     Optional<List<Long>> findPostsByGroupId(@Param("groupId") Long groupId);
 
     @Query(nativeQuery = true,

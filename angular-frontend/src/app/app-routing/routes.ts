@@ -6,6 +6,8 @@ import { ReportListComponent } from '../report/report-list/report-list.component
 import {EditGroupComponent} from "../group/edit-group/edit-group.component";
 import { AddGroupComponent } from '../group/add-group/add-group.component';
 import { GroupRequestsComponent } from '../group/group-requests/group-requests.component';
+import { GroupReportsComponent } from '../group/group-reports/group-reports.component';
+import { EditReportGroupComponent } from '../group/edit-report-group/edit-report-group.component';
 import { GroupListComponent } from '../group/group-list/group-list.component';
 import { GroupComponent } from '../group/group.component';
 import { LoginComponent } from '../user/login/login.component';
@@ -19,15 +21,17 @@ import { FriendsComponent } from '../user/friends/friends.component';
 import { PostListComponent } from '../post/post-list/post-list.component';
 
 export const routes :Routes = [
-  {path: 'reports/edit/:id', component: EditReportComponent},
-  {path: 'reports/:id', component: ReportComponent},
-  {path: 'reports', component: ReportListComponent},
   {path: 'groups/:id/add-post', component: AddPostComponent},
   {path: 'groups/:id/group-requests', component: GroupRequestsComponent},
   {path: 'groups/add', component: AddGroupComponent},
   {path: 'groups/edit/:id', component: EditGroupComponent},
+  {path: 'groups/reports/:id', component: GroupReportsComponent},
+  {path: 'groups/reports/edit/:id', component: EditReportGroupComponent},
   {path: 'groups/:id', component: GroupComponent},
   {path: 'groups', component: GroupListComponent},
+  {path: 'reports/edit/:id', component: EditReportComponent},
+  {path: 'reports/:id', component: ReportComponent},
+  {path: 'reports', component: ReportListComponent},
   {path: 'users/login', component: LoginComponent},
   {path: 'users/register', component: RegisterComponent},
   {path: 'users/profile', component: UserComponent},

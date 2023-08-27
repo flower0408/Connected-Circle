@@ -1,5 +1,6 @@
 <br>
-<div class="post-list">
+<h4 class="pink-bold center" *ngIf="reports.length == 0">There are no reports</h4>
+<div class="post-list" *ngIf="reports.length > 0">
   <div class="post-container" *ngFor="let report of reports">
     <div class="post-card">
       <div class="post-field">
@@ -9,6 +10,10 @@
       <div class="post-field">
         <span class="field-label">Timestamp:</span>
         <span class="field-value-timestamp">{{ report.timestamp | date: 'MM.dd.yyyy' }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Accepted:</span>
+        <span class="field-value">{{ report.accepted ? 'Yes' : 'No' }}</span>
       </div>
       <div class="button-group">
         <button class="post-button" [routerLink]="['/reports', report.id]">Read More</button>

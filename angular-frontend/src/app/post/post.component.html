@@ -8,21 +8,21 @@
         </button>
         <ul class="social-action-dropdown-menu">
           <li>
-            <!-- Add the report reason dropdown here -->
-            <div *ngIf="showReportDropdown">
+            <!-- Add the report reason dropdown for reporting posts -->
+            <div *ngIf="showReportDropdownForPost">
               <label for="reportReason">Select a report reason:</label>
               <select id="reportReason" [(ngModel)]="selectedReason">
                 <option *ngFor="let reason of reportReasons" [value]="reason">{{ reason }}</option>
               </select>
               <button class="btn btn1" (click)="submitReport()">Submit</button>
             </div>
-            <!-- End of report reason dropdown -->
+            <!-- End of report reason dropdown for reporting posts -->
 
             <!-- Keep the existing "Report post" button here -->
-            <button class="btn btn1" (click)="openReportDropdown()" *ngIf="!reportDropdownOpened && !showReportDropdown">Report post</button>
+            <button class="btn btn1" (click)="openReportDropdown()" *ngIf="!reportDropdownOpened && !showReportDropdownForPost">Report post</button>
           </li>
           <li>
-            <button class="btn btn1" *ngIf="!reportDropdownOpened && !showReportDropdown">Report user</button>
+            <button class="btn btn1" *ngIf="!reportDropdownOpened && !showReportDropdownForPost">Report user</button>
           </li>
 
         </ul>
@@ -67,6 +67,17 @@
             <button class="btn btn-white btn-xs" (click)="reactedComment(comment.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i> {{getReactionCount(comment.id, 'DISLIKE')}}</button>
             <button *ngIf="canReply(comment.id)" class="btn btn1" (click)="reply(comment.id)">Reply</button>
             <button class="btn btn1" *ngIf="canDeleteComment(comment.id)" (click)="deleteComment(comment.id)">Delete Comment</button>
+            <!-- Add the report reason dropdown for reporting comments -->
+            <div *ngIf="reportedCommentId === comment.id">
+              <label for="reportReason">Select a report reason:</label>
+              <select id="reportReason" [(ngModel)]="selectedReason">
+                <option *ngFor="let reason of reportReasons" [value]="reason">{{ reason }}</option>
+              </select>
+              <button class="btn btn1" (click)="submitReportComment(comment.id)">Submit</button>
+            </div>
+            <!-- End of report reason dropdown for reporting comments -->
+
+            <button class="btn btn1" (click)="openReportCommentDropdown(comment.id)" *ngIf="!reportedCommentId">Report comment</button>
           </div>
           <div class="social-comment" *ngFor="let reply of replies">
             <ng-container *ngIf="reply.repliesToCommentId == comment.id">
@@ -80,6 +91,17 @@
                 <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'LIKE')"><i class="fa fa-thumbs-up"></i>  {{getReactionCount(reply.id, 'LIKE')}}</button>
                 <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i>  {{getReactionCount(reply.id, 'DISLIKE')}}</button>
                 <button class="btn btn1" *ngIf="canDeleteReply()" (click)="deleteComment(reply.id)">Delete Reply</button>
+                <!-- Add the report reason dropdown for reporting comments -->
+                <div *ngIf="reportedReplyId === reply.id">
+                  <label for="reportReason">Select a report reason:</label>
+                  <select id="reportReason" [(ngModel)]="selectedReason">
+                    <option *ngFor="let reason of reportReasons" [value]="reason">{{ reason }}</option>
+                  </select>
+                  <button class="btn btn1" (click)="submitReportReply(reply.id)">Submit</button>
+                </div>
+                <!-- End of report reason dropdown for reporting comments -->
+
+                <button class="btn btn1" (click)="openReportReplyDropdown(reply.id)" *ngIf="!reportedReplyId">Report reply</button>
               </div>
             </ng-container>
           </div>

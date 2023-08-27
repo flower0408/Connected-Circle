@@ -7,6 +7,8 @@ import {UserService} from "../user/services/user.service";
 import {PostService} from "../post/services/post.service";
 import {Router} from "@angular/router";
 import {JwtHelperService} from "@auth0/angular-jwt";
+import {Report} from "../report/model/report.model";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-group',
@@ -21,19 +23,20 @@ export class GroupComponent implements OnInit{
   posts: Post[] = [];
   users: Map<number, User> = new Map();
   canPost: boolean = false;
+  report: Report | null = null;
 
   groupAdmins: User[] = [];
 
   constructor( private groupService: GroupService,
                private postService: PostService,
                private userService: UserService,
-               private router: Router) {
+               private router: Router,
+               private route: ActivatedRoute,) {
 
   }
 
   ngOnInit(): void {
-    const url: String = this.router.url;
-    const id: number = Number.parseInt(url.split('/')[2]);
+    const id: number = this.route.snapshot.params['id'];
 
     this.groupService.getOne(id).subscribe(
       result => {
@@ -46,6 +49,15 @@ export class GroupComponent implements OnInit{
         );
       }
     );
+
+    /*this.groupService.getReportsForGroup(id).subscribe(
+      result => {
+        const reports = result.body as Report[];
+      },
+      error => {
+        console.log('Error fetching reports for group:', error);
+      }
+    );*/
 
     this.postService.getAllForGroup(id).subscribe(
       result => {

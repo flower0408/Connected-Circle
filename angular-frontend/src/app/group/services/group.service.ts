@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Group } from '../model/group.model';
 import {GroupRequest} from "../model/groupRequest.model";
+import {Report} from "../../report/model/report.model";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,17 @@ export class GroupService {
     };
 
     return this.http.get('api/groups/' + id, queryParams) as Observable<HttpResponse<Group>>;
+  }
+
+  getReportsForGroup(groupId: number): Observable<HttpResponse<Report[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/groups/reports/' + groupId, queryParams) as Observable<HttpResponse<Report[]>>;
   }
 
   getAll(): Observable<HttpResponse<Group[]>> {
