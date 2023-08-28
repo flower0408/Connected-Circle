@@ -9,24 +9,23 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/users/friends/requests']">Friend Requests</a>
-      </li>
-      <li>
+
         <a class="nav-link" [routerLink]="['/users/friends']">Friends</a>
       </li>
       <li>
         <a class="nav-link" [routerLink]="['/posts']">Posts</a>
-      </li>
-      <li>
+
         <a class="nav-link" [routerLink]="['/posts/add-new-post']">Create Post</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/groups']">Groups</a>
-      </li>
-      <li>
+
         <a class="nav-link" [routerLink]="['/groups/add']">Create Group</a>
       </li>
       <li *ngIf="isAdmin">
         <a class="nav-link" [routerLink]="['/reports']">Reports</a>
+
+        <a class="nav-link" [routerLink]="['/bans']">Bans</a>
       </li>
     </ul>
 </nav>

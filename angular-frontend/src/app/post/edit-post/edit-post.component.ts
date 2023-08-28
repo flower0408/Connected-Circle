@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { Post } from '../model/post.model';
 import { PostService } from '../services/post.service';
 import { UserService } from 'src/app/user/services/user.service';
-import { User } from 'src/app/user/model/user.model';
 import { Image } from '../model/image.model';
 
 @Component({
@@ -17,7 +15,6 @@ export class EditPostComponent implements OnInit{
 
   form: FormGroup;
   editing: boolean = this.router.url.includes('edit');
-  //postForGroup: number = Number.parseInt(this.router.url.split('/')[2]) || 0;
   imagePaths: string[] = [];
   images: Image[] = [];
 
@@ -25,7 +22,6 @@ export class EditPostComponent implements OnInit{
     private fb: FormBuilder,
     private router: Router,
     private postService: PostService,
-    private userService: UserService
   ) {
     console.log('Current URL:', this.router.url);
     this.form = this.fb.group({

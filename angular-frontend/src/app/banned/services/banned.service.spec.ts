@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ReportService } from './report.service';
+import { BannedService } from './banned.service';
 
-describe('ReportService', () => {
-  let service: ReportService;
+describe('BannedService', () => {
+  let service: BannedService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ReportService);
+    service = TestBed.inject(BannedService);
   });
 
   it('should be created', () => {

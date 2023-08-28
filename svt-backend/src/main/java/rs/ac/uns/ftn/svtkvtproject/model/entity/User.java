@@ -1,7 +1,10 @@
 package rs.ac.uns.ftn.svtkvtproject.model.entity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import rs.ac.uns.ftn.svtkvtproject.controller.ReportController;
 import rs.ac.uns.ftn.svtkvtproject.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -67,6 +70,17 @@ public class User {
     @JoinTable(name = "user_friends", inverseJoinColumns=@JoinColumn(name="friend_id"))
     private List<User> friends;
 
+    private static final Logger logger = LogManager.getLogger(User.class);
+
+    public void setDeleted(boolean deleted) {
+        if (this.isDeleted != deleted) {
+            this.isDeleted = deleted;
+            if (!deleted) {
+                // Log that the deletion status has changed to false
+                logger.info("User with ID " + this.id + " is no longer deleted.");
+            }
+        }
+    }
 
     //  Associations
 /*

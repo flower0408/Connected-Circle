@@ -50,7 +50,6 @@ export class PostListComponent implements OnInit{
     );
   }
 
-  //funkcija za prikaz nasumicnih post-ova (Knuth Shuffle)
   randomize(posts: Post[]): Post[] {
     let currentIndex = posts.length,  randomIndex;
 

@@ -1,18 +1,3 @@
-<!--<h1 class="center">Recieved Group Requests</h1>
-
-<div *ngFor="let request of recievedRequests" class="card">
-    <h3 *ngIf="requestUsers.get(request.createdByUserId)" class="blue-bold">
-        {{requestUsers.get(request.createdByUserId).displayName || requestUsers.get(request.createdByUserId).username}}
-    </h3>
-    <h3 *ngIf="requestUsers.get(request.createdByUserId)" class="blue-bold">
-        {{requestUsers.get(request.createdByUserId).firstName + ' ' + requestUsers.get(request.createdByUserId).lastName}}
-    </h3>
-    <h3>{{request.createdAt | date: 'MMMM d, y, HH:mm'}}</h3>
-    <button *ngIf="request.at == null" (click)="respondToRequest(request.id, 'accept')">Accept</button>
-    <button *ngIf="request.at == null" (click)="respondToRequest(request.id, 'decline')">Decline</button>
-    <button *ngIf="request.at != null && request.approved == true" disabled>You accepted this request</button>
-    <button *ngIf="request.at != null && request.approved == false" disabled>You declined this request</button>
-</div>-->
 <br>
 <h1 class="center" style="font-style: italic;">~ Received Group Requests ~</h1>
 <h4 class="pink-bold center" *ngIf="recievedRequests.length == 0">You have no received requests </h4>

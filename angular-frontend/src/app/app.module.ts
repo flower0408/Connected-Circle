@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
+import { BannedListComponent } from './banned/banned-list.component';
 import { GroupListComponent } from './group/group-list/group-list.component';
 import { AddGroupComponent } from './group/add-group/add-group.component';
 import { EditGroupComponent } from './group/edit-group/edit-group.component';
@@ -52,7 +53,8 @@ import {NgOptimizedImage} from "@angular/common";
     ReportComponent,
     ReportListComponent,
     EditReportComponent,
-    EditReportGroupComponent
+    EditReportGroupComponent,
+    BannedListComponent
   ],
   imports: [
     BrowserModule,

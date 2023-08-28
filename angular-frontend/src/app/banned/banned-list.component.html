@@ -1,0 +1,28 @@
+<br>
+<h1 class="center" style="font-style: italic;">~ Banned ~</h1>
+<h4 class="pink-bold center" *ngIf="bans.length == 0">There are no bans</h4>
+<div class="post-list" *ngIf="bans.length > 0">
+  <div class="post-container" *ngFor="let banned of bans">
+    <div class="post-card">
+      <div class="post-field">
+        <span class="field-label">By admin:</span>
+        <span class="field-value">{{ banned.byAdminId }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Timestamp:</span>
+        <span class="field-value-timestamp">{{ banned.timestamp | date: 'MM.dd.yyyy' }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Blocked:</span>
+        <span class="field-value">{{ banned.blocked ? 'Yes' : 'No' }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Toward user:</span>
+        <span class="field-value">{{ banned.towardsUserId }}</span>
+      </div>
+      <div class="button-group">
+        <button class="post-button" (click)="submitBanned(banned)">Unblock user</button>
+      </div>
+    </div>
+  </div>
+</div>

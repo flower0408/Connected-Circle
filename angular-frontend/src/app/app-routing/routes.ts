@@ -19,14 +19,16 @@ import { AddPostComponent } from '../post/add-post/add-post.component';
 import { FriendRequestsComponent } from '../user/friend-requests/friend-requests.component';
 import { FriendsComponent } from '../user/friends/friends.component';
 import { PostListComponent } from '../post/post-list/post-list.component';
+import {BannedListComponent} from "../banned/banned-list.component";
 
 export const routes :Routes = [
+  {path: 'bans', component: BannedListComponent},
   {path: 'groups/:id/add-post', component: AddPostComponent},
   {path: 'groups/:id/group-requests', component: GroupRequestsComponent},
   {path: 'groups/add', component: AddGroupComponent},
   {path: 'groups/edit/:id', component: EditGroupComponent},
   {path: 'groups/reports/:id', component: GroupReportsComponent},
-  {path: 'groups/reports/edit/:id', component: EditReportGroupComponent},
+  {path: 'groups/reports/editGroup/:id', component: EditReportGroupComponent},
   {path: 'groups/:id', component: GroupComponent},
   {path: 'groups', component: GroupListComponent},
   {path: 'reports/edit/:id', component: EditReportComponent},

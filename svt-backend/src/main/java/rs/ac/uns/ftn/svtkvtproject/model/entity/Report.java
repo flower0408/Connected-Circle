@@ -62,7 +62,7 @@ public class Report {
         return onComment != null ? onComment.getId() : null;
     }
 
-    public Long getOnUsertId() {
+    public Long getOnUserId() {
         return onUser != null ? onUser.getId() : null;
     }
 

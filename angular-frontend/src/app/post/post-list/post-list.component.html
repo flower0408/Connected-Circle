@@ -5,6 +5,7 @@
     <button class="sort-button" (click)="sortPosts('asc')">Ascending</button>
     <button class="sort-button" (click)="sortPosts('desc')">Descending</button>
   </div>
+  <h4 class="pink-bold center" *ngIf="posts.length == 0">There are no posts</h4>
   <div class="post-container" *ngFor="let post of posts">
     <div class="post-card">
       <h1 class="post-username" *ngIf="users.get(post.postedByUserId)">

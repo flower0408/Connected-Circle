@@ -48,4 +48,8 @@ export class ReportService {
     return this.http.patch('api/reports/edit/' + editedReport.id, editedReport, {headers: this.headers, responseType: 'text'});
   }
 
+  editGroup(editedReport: Report): Observable<string> {
+    return this.http.patch('api/reports/editForGroup/' + editedReport.id, editedReport, {headers: this.headers, responseType: 'text'});
+  }
+
 }

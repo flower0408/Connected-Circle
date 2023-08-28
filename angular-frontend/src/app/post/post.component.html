@@ -22,7 +22,16 @@
             <button class="btn btn1" (click)="openReportDropdown()" *ngIf="!reportDropdownOpened && !showReportDropdownForPost">Report post</button>
           </li>
           <li>
-            <button class="btn btn1" *ngIf="!reportDropdownOpened && !showReportDropdownForPost">Report user</button>
+            <!-- Report dropdown for reporting users -->
+            <div *ngIf="showReportDropdownForUser">
+              <label for="reportReason">Select a report reason:</label>
+              <select id="reportReason" [(ngModel)]="selectedReason">
+                <option *ngFor="let reason of reportReasons" [value]="reason">{{ reason }}</option>
+              </select>
+              <button class="btn btn1" (click)="submitUserReport()">Submit</button>
+            </div>
+
+            <button class="btn btn1" *ngIf="!showReportDropdownForUser && !showReportDropdownForPost" (click)="openReportUserDropdown(user.id)">Report user</button>
           </li>
 
         </ul>

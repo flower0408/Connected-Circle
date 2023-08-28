@@ -56,9 +56,12 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query(nativeQuery = true,
             value = "SELECT p.id FROM post p " +
+                    "JOIN user u ON p.posted_by_user_id = u.id " +
                     "WHERE p.id IN (SELECT post_id FROM group_posts WHERE group_id = :groupId) " +
-                    "AND p.is_deleted = false")
+                    "AND p.is_deleted = false " +
+                    "AND u.is_deleted = false")
     Optional<List<Long>> findPostsByGroupId(@Param("groupId") Long groupId);
+
 
     @Query(nativeQuery = true,
             value = "SELECT *\n" +

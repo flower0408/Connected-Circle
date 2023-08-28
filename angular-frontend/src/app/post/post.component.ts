@@ -10,7 +10,6 @@ import { Report } from 'src/app/report/model/report.model';
 import { CommentService } from './services/comment.service';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "../user/services/authentication.service";
 import {Reaction} from "./model/reaction.model";
 import {ReactionService} from "./services/reaction.service";
 import {ReportService} from "../report/services/report.service";
@@ -27,10 +26,11 @@ export class PostComponent implements OnInit {
   showReportDropdownForPost: boolean = false;
   showReportDropdownForComment: boolean = false;
   showReportDropdownForReply: boolean = false;
+  showReportDropdownForUser: boolean = false;
   reportedCommentId: number | null = null;
   reportedReplyId: number | null = null;
+  reportUserId: number | null = null;
   form: FormGroup;
-  imagePath: string = '';
   image: Image = new Image();
   post: Post = new Post();
   user: User = new User();
@@ -38,7 +38,6 @@ export class PostComponent implements OnInit {
   comments: Comment[] = [];
   replies: Comment[] = [];
   users: Map<number, User> = new Map();
-  profileImage : Image = new Image();
   profileImageForm: FormGroup;
   reactions: Reaction[] = [];
 
@@ -72,6 +71,7 @@ export class PostComponent implements OnInit {
   }
   openReportDropdown() {
     this.showReportDropdownForPost = true;
+    this.showReportDropdownForUser = false;
   }
   reportDropdownOpened: boolean = false;
 
@@ -406,6 +406,61 @@ export class PostComponent implements OnInit {
     this.showReportDropdownForReply = false;
     this.reportedCommentId = null;
   }
+
+  submitUserReport() {
+    if (!this.selectedReason) {
+      window.alert('Please select a valid report reason');
+      return;
+    }
+
+    if (!this.reportUserId) {
+      window.alert('No user available to report');
+      return;
+    }
+
+    let report: Report = new Report();
+    report.reason = this.selectedReason;
+    report.timestamp = new Date().toISOString().slice(0, 10);
+
+    report.onUserId = this.reportUserId;
+
+    let sub: string;
+    const item = localStorage.getItem('user') || '';
+
+    const jwt: JwtHelperService = new JwtHelperService();
+    const decodedToken = jwt.decodeToken(item);
+    sub = decodedToken.sub;
+
+    this.userService.getOneByUsername(sub).subscribe(
+      (result) => {
+        const user: User = result.body as User;
+        report.byUserId = user.id;
+
+        this.reportService.add(report).subscribe(
+          (result) => {
+            window.alert('Successfully added a report');
+            location.reload();
+          },
+          (error) => {
+            window.alert('Error while adding a report');
+            console.log(error);
+          }
+        );
+      }
+    );
+
+    this.showReportDropdownForUser = false;
+    this.showReportDropdownForPost = false;
+    this.showReportDropdownForComment = false;
+    this.showReportDropdownForReply = false;
+  }
+
+  openReportUserDropdown(reportUserId: number){
+    this.reportUserId = reportUserId;
+    this.showReportDropdownForUser = true;
+    this.showReportDropdownForPost = false;
+  }
+
   openReportCommentDropdown(commentId: number) {
     this.reportedCommentId = commentId;
   }
@@ -474,12 +529,6 @@ export class PostComponent implements OnInit {
         return undefined; // Invalid reason
     }
   }
-
-
-
-
-
-
 
   canDeleteComment(commentId: number): boolean {
     let sub: string;

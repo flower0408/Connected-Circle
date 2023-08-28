@@ -24,7 +24,7 @@
 
 .field-label {
   color: #F88379;
-  font-weight: bold;
+  font-size: 1.2rem;
   margin-right: 10px;
 }
 
@@ -56,4 +56,9 @@
   background-color: #F3CFC6;
   color: black;
 }
-
+.pink-bold{
+  color: #F88379;
+}
+.center{
+  text-align: center;
+}

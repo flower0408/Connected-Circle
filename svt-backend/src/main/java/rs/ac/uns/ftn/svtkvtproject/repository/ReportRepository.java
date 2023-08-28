@@ -25,7 +25,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
                    "LEFT JOIN post p ON r.on_post_id = p.id\n" +
                    "LEFT JOIN group_posts gp ON p.id = gp.post_id OR c.belongs_to_post_id = gp.post_id\n" +
                    "WHERE gp.group_id IS NULL\n" +
-                   "AND r.is_deleted = false;") // Add the condition for is_deleted
+                   "AND r.is_deleted = false;")
    Optional<List<Report>> findAllReports();
 
 

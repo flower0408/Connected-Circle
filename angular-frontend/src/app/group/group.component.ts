@@ -50,14 +50,6 @@ export class GroupComponent implements OnInit{
       }
     );
 
-    /*this.groupService.getReportsForGroup(id).subscribe(
-      result => {
-        const reports = result.body as Report[];
-      },
-      error => {
-        console.log('Error fetching reports for group:', error);
-      }
-    );*/
 
     this.postService.getAllForGroup(id).subscribe(
       result => {
@@ -159,16 +151,16 @@ export class GroupComponent implements OnInit{
 
   deleteGroupAdmin(): void {
     if (this.groupAdmins.length == 0) {
-      window.alert('Group is unmoderated');
+      window.alert('Group has no admin! ');
       return;
     }
 
     let promptText: string = '';
     this.groupAdmins.forEach(admin => {
-      promptText += admin.id + ' -> ' + (admin.displayName || admin.username);
+      promptText += admin.id + ' - ' + (admin.displayName || admin.username);
     });
 
-    const adminId: number = prompt('Enter group admin id to be removed\n' + promptText) as unknown as number;
+    const adminId: number = prompt('Enter group admin id you what to delete\n' + promptText) as unknown as number;
     if (adminId == null)
       return;
 

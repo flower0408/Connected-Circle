@@ -27,11 +27,11 @@ public class Banned {
     private LocalDate timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "by_admin_id", referencedColumnName = "id")
+    @JoinColumn(name = "by_admin_id", referencedColumnName = "id", nullable = false)
     private User byAdmin;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "towards_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "towards_user_id", referencedColumnName = "id", nullable = false)
     private User towardsUser;
 
     @Column(nullable = false)
@@ -39,4 +39,8 @@ public class Banned {
 
     @Column(nullable = false)
     private boolean isDeleted;
+
+    public Long getTowardsUserId() {
+        return towardsUser != null ? towardsUser.getId() : null;
+    }
 }

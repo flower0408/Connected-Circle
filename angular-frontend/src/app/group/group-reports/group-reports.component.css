@@ -33,13 +33,13 @@
 }
 
 .field-value-timestamp {
-  font-size: 1rem; /* Smaller font size for timestamp */
-  color: #777; /* Adjust color for timestamp */
+  font-size: 1rem;
+  color: #777;
 }
 
 .button-group {
   display: flex;
-  justify-content: center; /* Center button */
+  justify-content: center;
   margin-top: 20px;
 }
 

@@ -34,9 +34,9 @@ nav{
 }
 .image-container {
   display: flex;
-  justify-content: center; /* Horizontally center */
-  align-items: center; /* Vertically center */
-  height: 15vh; /* You might need to adjust this depending on your layout */
+  justify-content: center;
+  align-items: center;
+  height: 15vh;
 }
 p{
   font-size: 30px;

@@ -17,7 +17,7 @@ import { Location } from '@angular/common';
 export class EditReportGroupComponent implements OnInit {
 
   form: FormGroup;
-  editing: boolean = this.router.url.includes('edit');
+  editing: boolean = this.router.url.includes('editGroup');
 
   report: Report = new Report();
   user: User = new User();
@@ -67,7 +67,7 @@ export class EditReportGroupComponent implements OnInit {
   submit(): void {
     this.report.accepted = this.form.value.accepted;
 
-    this.reportService.edit(this.report).subscribe(
+    this.reportService.editGroup(this.report).subscribe(
       result => {
         window.alert('Successfully edited the report');
         this.location.back();

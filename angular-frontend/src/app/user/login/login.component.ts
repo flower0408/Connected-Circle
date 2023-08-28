@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit{
       result => {
         window.alert('Successful login!');
         localStorage.setItem('user', JSON.stringify(result));
-        this.router.navigate(['posts']);
+        this.router.navigate(['posts']).then(() => window.location.reload());
       },
       error => {
         window.alert('Username or password are incorrect!');

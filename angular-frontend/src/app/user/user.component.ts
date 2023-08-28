@@ -89,53 +89,7 @@ export class UserComponent implements OnInit {
     }
   }
 
-  toggleEditMode(): void {
-    this.isEditing = !this.isEditing;
-  }
-/*
-  submit(): void {
-    if (this.form.value.displayName != '')
-      this.user.displayName = this.form.value.displayName;
-    if (this.form.value.description != '')
-      this.user.description = this.form.value.description;
-    if (this.imagePath != '') {
-      this.image.path = '../../assets/images/' + this.imagePath;
-      this.image.belongsToUserId = this.user.id;
-      this.user.profileImage = this.image;
-    }
-    if (this.form.value.newPassword1 != this.form.value.newPassword2) {
-      window.alert('Inputs for new password do not match!');
-      return;
-    }
 
-    const auth: ChangePassword = new ChangePassword();
-    auth.oldPassword = this.form.value.oldPassword;
-    auth.newPassword = this.form.value.newPassword1;
-
-    this.authenticationService.changePassword(auth).subscribe(
-      result => {
-        window.alert('Successfully changed password!');
-        localStorage.removeItem('user');
-        this.router.navigate(['/users/login']).then(() => window.location.reload());
-      },
-      error => {
-        window.alert('Current password is incorrect!');
-        console.log(error);
-      }
-    )
-
-    this.userService.updateUser(this.user).subscribe(
-      result => {
-        window.alert('Successfully edited your profile');
-        this.router.navigate(['/users/profile']);
-      },
-      error => {
-        window.alert('Error while editing your profile');
-        console.log(error);
-      }
-    );
-  }
-*/
   submit(): void {
     const isPasswordEdited = this.form.value.oldPassword || this.form.value.newPassword1 || this.form.value.newPassword2;
     const arePasswordsMatching = this.form.value.newPassword1 === this.form.value.newPassword2;

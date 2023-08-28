@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    User findByIdAndIsDeletedFalse(Long id);
+
     Optional<User> findFirstByUsername(String username);
     @Query(nativeQuery = true,
             value = "select * from `user` where id in (select admin_id from group_admins where group_id = :groupId)")

@@ -21,101 +21,108 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<List<Post>> findAllByPostedBy(User user);
 
     @Query(nativeQuery = true,
-            value = "SELECT *\n" +
-                    "FROM post\n" +
-                    "WHERE id IN (\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id = 1 AND is_deleted = false AND id IN (\n" +
-                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId\n" +
-                    "        UNION\n" +
-                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId\n" +
-                    "    )\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id IN (\n" +
-                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId\n" +
-                    "    ) AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id IN (\n" +
-                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId\n" +
-                    "    ) AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT post_id FROM group_posts WHERE group_id IN (\n" +
-                    "        SELECT group_id FROM group_members WHERE member_id = :userId\n" +
-                    "    ) AND is_deleted = false\n" +
-                    ")\n" +
-                    "AND id NOT IN (\n" +
-                    "    SELECT post_id FROM group_posts WHERE group_id NOT IN (\n" +
-                    "        SELECT group_id FROM group_members WHERE member_id = :userId\n" +
-                    "    ) AND is_deleted = false\n" +
-                    ")\n" +
-                    "AND is_deleted = false;")
+            value = "SELECT * " +
+                    "FROM post p " +
+                    "JOIN user u ON p.posted_by_user_id = u.id " +
+                    "WHERE p.id IN ( " +
+                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND p.is_deleted = false AND id IN ( " +
+                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId " +
+                    "        UNION " +
+                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId " +
+                    "    ) " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id IN ( " +
+                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id IN ( " +
+                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT post_id FROM group_posts WHERE group_id IN ( " +
+                    "        SELECT group_id FROM group_members WHERE member_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    ") " +
+                    "AND p.id NOT IN ( " +
+                    "    SELECT post_id FROM group_posts WHERE group_id NOT IN ( " +
+                    "        SELECT group_id FROM group_members WHERE member_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    ") " +
+                    "AND p.is_deleted = false " +
+                    "AND u.is_deleted = false ")
     Optional<List<Post>> findHomepagePosts(@Param("userId") Long userId);
 
+
     @Query(nativeQuery = true,
-            value = "SELECT *\n" +
-                    "FROM post\n" +
-                    "WHERE id IN (\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id = 1 AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id = 1 AND is_deleted = false AND id IN (\n" +
-                    "        SELECT friend_id FROM user_friends WHERE user_id = 1\n" +
-                    "        UNION\n" +
-                    "        SELECT user_id FROM user_friends WHERE friend_id = 1\n" +
-                    "    )\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id IN (\n" +
-                    "        SELECT friend_id FROM user_friends WHERE user_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id IN (\n" +
-                    "        SELECT user_id FROM user_friends WHERE friend_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT post_id FROM group_posts WHERE group_id IN (\n" +
-                    "        SELECT group_id FROM group_members WHERE member_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    ")\n" +
-                    "AND id NOT IN (\n" +
-                    "    SELECT post_id FROM group_posts WHERE group_id NOT IN (\n" +
-                    "        SELECT group_id FROM group_members WHERE member_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    ")\n" +
-                    "AND is_deleted = false\n" +
-                    "ORDER BY creation_date ASC;\n")
+            value = "SELECT * " +
+                    "FROM post p " +
+                    "JOIN user u ON p.posted_by_user_id = u.id " +
+                    "WHERE p.id IN ( " +
+                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND p.is_deleted = false AND id IN ( " +
+                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId " +
+                    "        UNION " +
+                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId " +
+                    "    ) " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id IN ( " +
+                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id IN ( " +
+                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT post_id FROM group_posts WHERE group_id IN ( " +
+                    "        SELECT group_id FROM group_members WHERE member_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    ") " +
+                    "AND p.id NOT IN ( " +
+                    "    SELECT post_id FROM group_posts WHERE group_id NOT IN ( " +
+                    "        SELECT group_id FROM group_members WHERE member_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    ") " +
+                    "AND p.is_deleted = false " +
+                    "AND u.is_deleted = false " +
+                    "ORDER BY p.creation_date ASC;\n")
     Optional<List<Post>> findHomepagePostsSortedAsc(@Param("userId") Long userId);
 
     @Query(nativeQuery = true,
-            value = "SELECT *\n" +
-                    "FROM post\n" +
-                    "WHERE id IN (\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id = 1 AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id = 1 AND is_deleted = false AND id IN (\n" +
-                    "        SELECT friend_id FROM user_friends WHERE user_id = 1\n" +
-                    "        UNION\n" +
-                    "        SELECT user_id FROM user_friends WHERE friend_id = 1\n" +
-                    "    )\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id IN (\n" +
-                    "        SELECT friend_id FROM user_friends WHERE user_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT id FROM post WHERE posted_by_user_id IN (\n" +
-                    "        SELECT user_id FROM user_friends WHERE friend_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    "    UNION\n" +
-                    "    SELECT post_id FROM group_posts WHERE group_id IN (\n" +
-                    "        SELECT group_id FROM group_members WHERE member_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    ")\n" +
-                    "AND id NOT IN (\n" +
-                    "    SELECT post_id FROM group_posts WHERE group_id NOT IN (\n" +
-                    "        SELECT group_id FROM group_members WHERE member_id = 1\n" +
-                    "    ) AND is_deleted = false\n" +
-                    ")\n" +
-                    "AND is_deleted = false\n" +
-                    "ORDER BY creation_date DESC;\n")
+            value = "SELECT * " +
+                    "FROM post p " +
+                    "JOIN user u ON p.posted_by_user_id = u.id " +
+                    "WHERE p.id IN ( " +
+                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id = :userId AND p.is_deleted = false AND id IN ( " +
+                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId " +
+                    "        UNION " +
+                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId " +
+                    "    ) " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id IN ( " +
+                    "        SELECT friend_id FROM user_friends WHERE user_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT id FROM post WHERE posted_by_user_id IN ( " +
+                    "        SELECT user_id FROM user_friends WHERE friend_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    "    UNION " +
+                    "    SELECT post_id FROM group_posts WHERE group_id IN ( " +
+                    "        SELECT group_id FROM group_members WHERE member_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    ") " +
+                    "AND p.id NOT IN ( " +
+                    "    SELECT post_id FROM group_posts WHERE group_id NOT IN ( " +
+                    "        SELECT group_id FROM group_members WHERE member_id = :userId " +
+                    "    ) AND p.is_deleted = false " +
+                    ") " +
+                    "AND p.is_deleted = false " +
+                    "AND u.is_deleted = false " +
+                    "ORDER BY p.creation_date DESC;\n")
     Optional<List<Post>> findHomepagePostsSortedDesc(@Param("userId") Long userId);
 
     @Transactional
