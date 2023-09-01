@@ -29,13 +29,15 @@ public class BannedDTO {
     @NotNull
     private Long towardsUserId;
 
+    private Long groupId;
+
     public BannedDTO(Banned banned){
         this.id = banned.getId();
         this.timestamp = banned.getTimestamp().toString();
         this.blocked = banned.isBlocked();
         this.byAdminId = banned.getByAdmin().getId();
         this.towardsUserId = banned.getTowardsUser().getId();
-
+        if (banned.getGroup() != null)
+            this.groupId = banned.getGroup().getId();
     }
-
 }

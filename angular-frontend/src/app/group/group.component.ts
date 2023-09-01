@@ -24,6 +24,8 @@ export class GroupComponent implements OnInit{
   users: Map<number, User> = new Map();
   canPost: boolean = false;
   report: Report | null = null;
+  groupId!: number;
+
 
   groupAdmins: User[] = [];
 
@@ -36,60 +38,89 @@ export class GroupComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    const id: number = this.route.snapshot.params['id'];
+    this.route.params.subscribe(params => {
+      this.groupId = +params['id'];
 
-    this.groupService.getOne(id).subscribe(
-      result => {
-        this.group = result.body as Group;
+      this.groupService.getOne(this.groupId).subscribe(
+        result => {
+          this.group = result.body as Group;
 
-        this.userService.getGroupAdmins(this.group.id).subscribe(
-          result => {
-            this.groupAdmins = result.body as User[];
-          }
-        );
-      }
-    );
-
-
-    this.postService.getAllForGroup(id).subscribe(
-      result => {
-        this.posts = result.body as Post[];
-
-        this.posts.forEach(post => {
-          this.userService.getOne(post.postedByUserId).subscribe(
+          this.userService.getGroupAdmins(this.group.id).subscribe(
             result => {
-              let user: User = result.body as User;
-              this.users.set(user.id, user);
+              this.groupAdmins = result.body as User[];
             }
-          )
-        });
-      }
-    );
-
-    this.groupService.checkUserInGroup(id).subscribe(
-      result => {
-        const status = result.status;
-        if (status == 200) {
-          console.log(this.canPost);
+          );
         }
-        this.canPost = true;
-      }
-    );
+      );
 
-    let sub: string;
-    const item = localStorage.getItem('user') || '';
 
-    const jwt: JwtHelperService = new JwtHelperService();
-    const decodedToken = jwt.decodeToken(item);
-    sub = decodedToken.sub;
+      this.postService.getAllForGroup(this.groupId).subscribe(
+        result => {
+          this.posts = result.body as Post[];
 
-    this.userService.getOneByUsername(sub).subscribe(
-      result => {
-        this.user = result.body as User;
-      }
-    );
+          this.posts.forEach(post => {
+            this.userService.getOne(post.postedByUserId).subscribe(
+              result => {
+                let user: User = result.body as User;
+                this.users.set(user.id, user);
+              }
+            )
+          });
+        }
+      );
+
+      this.groupService.checkUserInGroup(this.groupId).subscribe(
+        result => {
+          const status = result.status;
+          if (status == 200) {
+            console.log(this.canPost);
+          }
+          this.canPost = true;
+        }
+      );
+
+      let sub: string;
+      const item = localStorage.getItem('user') || '';
+
+      const jwt: JwtHelperService = new JwtHelperService();
+      const decodedToken = jwt.decodeToken(item);
+      sub = decodedToken.sub;
+
+      this.userService.getOneByUsername(sub).subscribe(
+        result => {
+          this.user = result.body as User;
+        }
+      );
+    });
   }
-  hasAuthority(): boolean {
+
+    sortPostsAsc() {
+      this.postService.getAllForGroupAsc(this.groupId).subscribe(
+        result => {
+          this.posts = result.body as Post[];
+        },
+        error => {
+          window.alert('Error while sorting posts');
+          console.log(error);
+        }
+      );
+    }
+
+    sortPostsDesc() {
+      this.postService.getAllForGroupDesc(this.groupId).subscribe(
+        result => {
+          this.posts = result.body as Post[];
+        },
+        error => {
+          window.alert('Error while sorting posts');
+          console.log(error);
+        }
+      );
+    }
+
+
+
+    hasAuthority(): boolean {
     let role: string;
     const item = localStorage.getItem('user');
 

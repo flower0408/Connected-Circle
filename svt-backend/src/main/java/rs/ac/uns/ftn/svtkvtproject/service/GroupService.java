@@ -18,6 +18,10 @@ public interface GroupService {
 
     List<Long> findPostsByGroupId(Long id);
 
+    List<Long> findPostsByGroupIdAsc(Long id);
+
+    List<Long> findPostsByGroupIdDesc(Long id);
+
     List<Long> findReportsByGroupId(Long id);
 
     List<Group> findGroupsForUser(Long userId);
@@ -38,7 +42,11 @@ public interface GroupService {
 
     Integer deleteGroupMembers(Long id);
 
+    Integer deleteGroupMember(Long groupId, Long memberId);
+
     Integer deleteGroupAdmins(Long id);
 
     Boolean checkUser(Long groupId, Long userId);
+
+    List<Long> findMembersByGroupId(Long id);
 }

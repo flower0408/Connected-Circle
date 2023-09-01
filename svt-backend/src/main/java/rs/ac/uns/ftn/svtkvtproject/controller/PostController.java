@@ -205,6 +205,64 @@ public class PostController {
         return new ResponseEntity<>(postDTOS, HttpStatus.OK);
     }
 
+    @GetMapping("/group/{id}/sort/asc")
+    public ResponseEntity<List<PostDTO>> getAllForGroupSortedAsc(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding all posts for group with id: " + id);
+        List<Long> postsIds = groupService.findPostsByGroupIdAsc(Long.parseLong(id));
+        if (postsIds == null) {
+            logger.error("Posts not found for group with id: " + id);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<PostDTO> postDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (Long postId: postsIds) {
+            Post post = postService.findById(postId);
+            PostDTO postDTO = new PostDTO(post);
+            postDTO.setBelongsToGroupId(Long.parseLong(id));
+            postDTOS.add(postDTO);
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(postDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/group/{id}/sort/desc")
+    public ResponseEntity<List<PostDTO>> getAllForGroupSortedDesc(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding all posts for group with id: " + id);
+        List<Long> postsIds = groupService.findPostsByGroupIdDesc(Long.parseLong(id));
+        if (postsIds == null) {
+            logger.error("Posts not found for group with id: " + id);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<PostDTO> postDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (Long postId: postsIds) {
+            Post post = postService.findById(postId);
+            PostDTO postDTO = new PostDTO(post);
+            postDTO.setBelongsToGroupId(Long.parseLong(id));
+            postDTOS.add(postDTO);
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(postDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/group/{id}/user")
     public ResponseEntity<Boolean> checkUserInGroup(@PathVariable String id, @RequestHeader("authorization") String token) {
         logger.info("Authentication check");

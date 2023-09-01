@@ -54,6 +54,24 @@ public class BannedServiceImpl implements BannedService {
     }
 
     @Override
+    public List<Banned> findAllGroup() {
+        Optional<List<Banned>> bans = bannedRepository.findAllForGroup();
+        if (!bans.isEmpty())
+            return bans.get();
+        logger.error("Repository search for reports  returned null");
+        return null;
+    }
+
+    @Override
+    public List<Banned> findAllAdmin() {
+        Optional<List<Banned>> bans = bannedRepository.findAllForAdmin();
+        if (!bans.isEmpty())
+            return bans.get();
+        logger.error("Repository search for reports  returned null");
+        return null;
+    }
+
+    @Override
     public Banned createBanned(BannedDTO bannedDTO) {
         Optional<Banned> banned = bannedRepository.findById(bannedDTO.getId());
 
@@ -115,4 +133,27 @@ public class BannedServiceImpl implements BannedService {
             }
         }
     }
+
+    @Override
+    @Transactional
+    public void unblockMemberAndSaveBanned(Long bannedId) {
+        Banned banned = entityManager.find(Banned.class, bannedId);
+        if (banned != null && banned.isBlocked() && banned.getTowardsUser() != null && banned.getGroup() != null) {
+            Long memberId = banned.getTowardsUser().getId();
+            Long groupId = banned.getGroup().getId();
+
+            int updatedRows = entityManager.createNativeQuery(
+                            "INSERT INTO group_members (group_id, member_id) VALUES (:groupId, :memberId)")
+                    .setParameter("groupId", groupId)
+                    .setParameter("memberId", memberId)
+                    .executeUpdate();
+
+            if (updatedRows > 0) {
+                // Update the 'blocked' status in the 'Banned' entity
+                banned.setBlocked(false);
+                saveBanned(banned);
+            }
+        }
+    }
+
 }

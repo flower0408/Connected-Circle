@@ -34,6 +34,10 @@ public class Banned {
     @JoinColumn(name = "towards_user_id", referencedColumnName = "id", nullable = false)
     private User towardsUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    private Group group;
+
     @Column(nullable = false)
     private boolean blocked;
 

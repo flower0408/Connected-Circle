@@ -92,4 +92,27 @@ export class PostService {
 
     return this.http.get('api/posts/group/' + id, queryParams) as Observable<HttpResponse<Post[]>>;
   }
+
+  getAllForGroupAsc(id: number): Observable<HttpResponse<Post[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/group/' + id + '/sort/asc', queryParams) as Observable<HttpResponse<Post[]>>;
+  }
+
+
+  getAllForGroupDesc(id: number): Observable<HttpResponse<Post[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/group/' + id + '/sort/desc', queryParams) as Observable<HttpResponse<Post[]>>;
+  }
 }

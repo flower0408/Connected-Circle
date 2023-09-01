@@ -19,7 +19,7 @@ insert into user_friends(user_id, friend_id) values (1, 5);
 insert into user_friends(user_id, friend_id) values (1, 6);
 
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
-values (null, null, '2023-08-20', false, 2, 3);
+values (null, null, '2023-08-20', false, 2, 5);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
 values (null, null, '2023-08-22', false, 2, 4);
 
@@ -37,7 +37,7 @@ values ('This is a post in a group. If you see it, you are inside a group',
         '2023-08-14 15:23:35', false, 1);
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is another post for a group. Say hi to everyone in this group',
-        '2023-08-15 14:56:55', false, 2);
+        '2023-08-15 14:56:55', false, 3);
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is test post for second group. Say hi to everyone in this group',
         '2023-08-13 12:12:12', false, 3);
@@ -139,11 +139,11 @@ insert into report (accepted, is_deleted, reason, timestamp, by_user_id, on_comm
 values (true, true, 'HARASSMENT', '2023-05-12', 1, null, 2, null);*/
 
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
-values ('2023-05-11', false, 'Test group for testing purposes', false, 'Test Group 1', null);
+values ('2023-08-31', false, 'Test group for testing purposes', false, 'Test Group 1', null);
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
-values ('2023-05-11', false, 'Another test group for testing', false, 'Test Group 2', null);
+values ('2023-09-01', false, 'Another test group for testing', false, 'Test Group 2', null);
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
-values ('2023-05-12', true, 'Deleted test group for testing', true, 'Test Group 3', 'Un-moderated');
+values ('2023-08-12', true, 'Deleted test group for testing', true, 'Test Group 3', 'Un-moderated');
 
 insert into group_admins (group_id, admin_id)
 values (1, 1);

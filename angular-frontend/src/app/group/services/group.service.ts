@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Group } from '../model/group.model';
 import {GroupRequest} from "../model/groupRequest.model";
 import {Report} from "../../report/model/report.model";
+import {User} from "../../user/model/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,33 @@ export class GroupService {
 
     return this.http.get('api/groups/reports/' + groupId, queryParams) as Observable<HttpResponse<Report[]>>;
   }
+
+  getMembersForGroup(groupId: number): Observable<HttpResponse<User[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/groups/members/' + groupId, queryParams) as Observable<HttpResponse<User[]>>;
+  }
+
+  blockUser(memberId: number, adminId: number): Observable<any> {
+    // Define the request body with both memberId and adminId
+    const requestBody = { memberId: memberId, adminId: adminId }; // Adjust to your API's request format
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken,
+      'Content-Type': 'application/json'
+    });
+    // Make an HTTP POST request to block the user
+    return this.http.post('api/groups/block-member', requestBody, {
+      headers: headers,
+      responseType: 'text'
+    });
+  }
+
+
 
   getAll(): Observable<HttpResponse<Group[]>> {
     let queryParams = {};

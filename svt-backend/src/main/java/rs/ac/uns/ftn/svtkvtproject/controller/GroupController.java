@@ -1,9 +1,6 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
-import rs.ac.uns.ftn.svtkvtproject.model.dto.GroupDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.GroupRequestDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.ReportDTO;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.*;
@@ -16,6 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,8 @@ public class GroupController {
 
     ReportService reportService;
 
+    BannedService bannedService;
+
     AuthenticationManager authenticationManager;
 
     TokenUtils tokenUtils;
@@ -41,12 +45,14 @@ public class GroupController {
 
     @Autowired
     public GroupController(GroupService groupService, UserService userService, PostService postService, GroupRequestService groupRequestService, ReportService reportService,
+                           BannedService bannedService,
                            AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
         this.groupService = groupService;
         this.userService = userService;
         this.postService = postService;
         this.groupRequestService = groupRequestService;
         this.reportService = reportService;
+        this.bannedService = bannedService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
     }
@@ -95,6 +101,116 @@ public class GroupController {
 
         return new ResponseEntity<>(groupDTO, HttpStatus.OK);
     }
+
+    @GetMapping("members/{groupId}")
+    public ResponseEntity<List<UserDTO>> getGroupMembers(@PathVariable String groupId, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        logger.info("Finding members for group with id: " + groupId);
+        List<Long> membersIds = groupService.findMembersByGroupId(Long.parseLong(groupId));
+        if (membersIds == null) {
+            logger.error("Members not found for group with id: " + groupId);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<UserDTO> userDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (Long userId: membersIds) {
+            User user1 = userService.findById(userId);
+            UserDTO userDTO = new UserDTO(user1);
+            userDTOS.add(userDTO);
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
+    }
+
+
+
+        @PersistenceContext
+        private EntityManager entityManager;
+
+    @PostMapping("/block-member")
+    public ResponseEntity<String> blockMember(@RequestHeader("authorization") String token, @RequestBody BlockMemberRequestDTO request) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            // Step 2: Find admin and member
+            Long memberId = request.getMemberId();
+            Long adminId = request.getAdminId();
+
+            User admin = userService.findById(adminId);
+            User member = userService.findById(memberId);
+
+            // Step 3: Use the SQL query to find the group ID
+            Query query = entityManager.createNativeQuery(
+                    "SELECT gm.group_id " +
+                            "FROM group_members gm " +
+                            "JOIN group_admins ga ON gm.group_id = ga.group_id " +
+                            "WHERE gm.member_id = :memberId " +
+                            "AND ga.admin_id = :adminId");
+            query.setParameter("memberId", memberId);
+            query.setParameter("adminId", adminId);
+
+            List<Object> results = query.getResultList();
+
+            if (results.isEmpty()) {
+                return ResponseEntity.badRequest().body("Admin is not associated with a group");
+            }
+
+            // Assuming the query returns a single group ID
+            BigInteger bigIntegerGroupId = (BigInteger) results.get(0);
+            Long groupId = bigIntegerGroupId.longValue();
+
+            // Use the groupService to find the Group by its ID
+            Group group = groupService.findById(groupId);
+
+            if (group == null) {
+                return ResponseEntity.badRequest().body("Group not found");
+            }
+
+            // Step 4: Remove the member from the group
+            groupService.deleteGroupMember(groupId, memberId);
+
+            // Step 5: Create a new banned entry
+            Banned banned = new Banned();
+            banned.setByAdmin(admin);
+            banned.setTowardsUser(member);
+            banned.setBlocked(true);
+            banned.setTimestamp(LocalDate.now());
+            banned.setDeleted(false);
+            banned.setGroup(group); // Set the Group object
+
+            // Log the banned object before saving
+            logger.info("Banned object before saving: " + banned.toString());
+
+            // Save the banned record
+            bannedService.saveBanned(banned);
+
+            logger.info("Member blocked successfully");
+
+            return ResponseEntity.ok("Member blocked successfully");
+        } catch (Exception e) {
+            logger.error("An error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
+
+
 
     @GetMapping("reports/{groupId}")
     public ResponseEntity<List<ReportDTO>> getReportsForGroup(@PathVariable String groupId, @RequestHeader("authorization") String token) {

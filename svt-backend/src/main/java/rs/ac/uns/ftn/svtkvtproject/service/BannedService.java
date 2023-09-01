@@ -10,6 +10,9 @@ public interface BannedService {
 
     List<Banned> findAll();
 
+    List<Banned> findAllGroup();
+    List<Banned> findAllAdmin();
+
     Banned createBanned(BannedDTO bannedDTO);
 
     Integer deleteBanned(Long id);
@@ -17,4 +20,6 @@ public interface BannedService {
     Banned saveBanned(Banned banned);
 
     void  unblockUserAndSaveBanned(Long bannedId);
+
+    void  unblockMemberAndSaveBanned(Long bannedId);
 }

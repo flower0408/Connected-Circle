@@ -51,6 +51,12 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Transactional
     @Modifying
     @Query(nativeQuery = true,
+            value = "delete from group_members where group_id = :groupId and member_id = :memberId")
+    Integer deleteGroupMember(@Param("groupId") Long groupId, @Param("memberId") Long memberId);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,
             value = "delete from group_admins where group_id = :id")
     Integer deleteGroupAdmins(@Param("id") Long id);
 
@@ -61,6 +67,25 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
                     "AND p.is_deleted = false " +
                     "AND u.is_deleted = false")
     Optional<List<Long>> findPostsByGroupId(@Param("groupId") Long groupId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT p.id FROM post p " +
+                    "JOIN user u ON p.posted_by_user_id = u.id " +
+                    "WHERE p.id IN (SELECT post_id FROM group_posts WHERE group_id = :groupId) " +
+                    "AND p.is_deleted = false " +
+                    "AND u.is_deleted = false " +
+                    "ORDER BY p.creation_date ASC;\n")
+    Optional<List<Long>> findPostsByGroupIdAsc(@Param("groupId") Long groupId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT p.id FROM post p " +
+                    "JOIN user u ON p.posted_by_user_id = u.id " +
+                    "WHERE p.id IN (SELECT post_id FROM group_posts WHERE group_id = :groupId) " +
+                    "AND p.is_deleted = false " +
+                    "AND u.is_deleted = false " +
+                    "ORDER BY p.creation_date DESC;\n")
+    Optional<List<Long>> findPostsByGroupIdDesc(@Param("groupId") Long groupId);
+
 
 
     @Query(nativeQuery = true,
@@ -109,6 +134,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             value = "select * from `group` where id in (select group_id from group_members where member_id = :memberId)")
     Optional<List<Group>> findGroupsByMemberId(@Param("memberId") Long memberId);
 
+
     @Query(nativeQuery = true,
             value = "select count(*) from group_members where group_id = :groupId and member_id = :userId")
     Integer findUserInGroup(@Param("groupId") Long groupId, @Param("userId") Long userId);
@@ -116,4 +142,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(nativeQuery = true,
             value = "select * from `group` where id in (select group_id from group_posts where post_id = :postId)")
     Optional<Group> checkIfPostInGroup(@Param("postId") Long postId);
+
+
+
+    @Query(nativeQuery = true, value = "select distinct member_id from `group_members` where group_id = :groupId")
+    Optional<List<Long>> findGroupMembers(@Param("groupId") Long groupId);
+
 }

@@ -75,11 +75,39 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Long> findPostsByGroupIdAsc(Long id) {
+        Optional<List<Long>> postsIds = groupRepository.findPostsByGroupIdAsc(id);
+        if (!postsIds.isEmpty())
+            return postsIds.get();
+        logger.error("Repository search for posts for group with id: " + id + " returned null");
+        return null;
+    }
+
+
+    @Override
+    public List<Long> findPostsByGroupIdDesc(Long id) {
+        Optional<List<Long>> postsIds = groupRepository.findPostsByGroupIdDesc(id);
+        if (!postsIds.isEmpty())
+            return postsIds.get();
+        logger.error("Repository search for posts for group with id: " + id + " returned null");
+        return null;
+    }
+
+    @Override
     public List<Long> findReportsByGroupId(Long id) {
         Optional<List<Long>> postsIds = groupRepository.findReportsByGroupId(id);
         if (!postsIds.isEmpty())
             return postsIds.get();
         logger.error("Repository search for reports for group with id: " + id + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Long> findMembersByGroupId(Long id) {
+        Optional<List<Long>> membersIds = groupRepository.findGroupMembers(id);
+        if (!membersIds.isEmpty())
+            return membersIds.get();
+        logger.error("Repository search for members for group with id: " + id + " returned null");
         return null;
     }
 
@@ -153,6 +181,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public Integer deleteGroupMember(Long groupId, Long memberId) {
+        return groupRepository.deleteGroupMember(groupId, memberId);
+    }
+
+    @Override
     public Integer deleteGroupAdmins(Long id) {
         return groupRepository.deleteGroupAdmins(id);
     }
@@ -161,4 +194,5 @@ public class GroupServiceImpl implements GroupService {
     public Boolean checkUser(Long groupId, Long userId) {
         return (groupRepository.findUserInGroup(groupId, userId) > 0 || userService.checkUserIsAdmin(userId));
     }
+
 }

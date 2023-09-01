@@ -29,6 +29,8 @@ import { EditReportGroupComponent } from './group/edit-report-group/edit-report-
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './core/header/header.component';
 import {NgOptimizedImage} from "@angular/common";
+import {GroupMembersComponent} from "./group/group-members/group-members.component";
+import {BannedListGroupComponent} from "./banned/banned-list-group/banned-list-group.component";
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import {NgOptimizedImage} from "@angular/common";
     ReportListComponent,
     EditReportComponent,
     EditReportGroupComponent,
-    BannedListComponent
+    BannedListComponent,
+    GroupMembersComponent,
+    BannedListGroupComponent
   ],
   imports: [
     BrowserModule,

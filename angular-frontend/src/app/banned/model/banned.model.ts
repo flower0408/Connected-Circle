@@ -4,6 +4,7 @@ export class Banned {
   timestamp: string;
   byAminId: number;
   towardsUserId: number;
+  groupId: number;
 
   constructor(obj: {
     _id?: number,
@@ -11,12 +12,15 @@ export class Banned {
     blocked?: boolean,
     byAminId?: number,
     towardsUserId?: number,
+    groupId?: number,
   } = {}) {
+
     this._id = obj._id || null as unknown as number;
     this.timestamp = obj.timestamp || null as unknown as string;
     this.byAminId = obj.byAminId || null as unknown as number;
     this.blocked = obj.blocked || null as unknown as boolean;
     this.towardsUserId = obj.towardsUserId || null as unknown as number;
+    this.groupId = obj.groupId || null as unknown as number;
   }
 
   get id() {

@@ -9,7 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.BannedDTO;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.ReportDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Banned;
+import rs.ac.uns.ftn.svtkvtproject.model.entity.Report;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.BannedService;
@@ -54,7 +56,29 @@ public class BannedController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("Finding all bans");
-        List<Banned> bans = bannedService.findAll();
+        List<Banned> bans = bannedService.findAllAdmin();
+        List<BannedDTO> bannedDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (Banned banned: bans) {
+            bannedDTOS.add(new BannedDTO(banned));
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(bannedDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/forGroup")
+    public ResponseEntity<List<BannedDTO>> getAllBanned(@RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Finding all bans");
+        List<Banned> bans = bannedService.findAllGroup();
         List<BannedDTO> bannedDTOS = new ArrayList<>();
         logger.info("Creating response");
         for (Banned banned: bans) {
@@ -123,6 +147,20 @@ public class BannedController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         bannedService.unblockUserAndSaveBanned(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/unblockMember/{id}")
+    public ResponseEntity<?> unblockMemberAndBanned(@PathVariable Long id, @RequestHeader("authorization") String token) {
+        logger.info("Checking authorization");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found for token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        bannedService.unblockMemberAndSaveBanned(id);
         return ResponseEntity.ok().build();
     }
 

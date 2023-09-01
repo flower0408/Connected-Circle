@@ -37,12 +37,34 @@ export class BannedService {
     return this.http.get('api/banned', queryParams) as Observable<HttpResponse<Banned[]>>;
   }
 
+  getAllGroup(): Observable<HttpResponse<Banned[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/banned/forGroup', queryParams) as Observable<HttpResponse<Banned[]>>;
+  }
+
   unblock(bannedId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken,
       'Content-Type': 'application/json'
     });
     return this.http.patch('api/banned/unblock/' + bannedId, {}, {
+      headers: headers,
+      responseType: 'text'
+    });
+  }
+
+  unblockMember(bannedId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken,
+      'Content-Type': 'application/json'
+    });
+    return this.http.patch('api/banned/unblockMember/' + bannedId, {}, {
       headers: headers,
       responseType: 'text'
     });

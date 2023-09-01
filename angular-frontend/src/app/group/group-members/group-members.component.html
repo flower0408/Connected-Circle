@@ -1,0 +1,36 @@
+<br>
+<h1 class="center" style="font-style: italic;">~ Group Members ~</h1>
+<h4 class="pink-bold center" *ngIf="members.length == 0">There are no members of group</h4>
+<div class="post-list" *ngIf="members.length > 0">
+  <div class="post-container" *ngFor="let member of members">
+    <div class="post-card">
+      <div class="post-field">
+        <span class="field-label">User id:</span>
+        <span class="field-value">{{ member.id }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Username:</span>
+        <span class="field-value">{{ member.username }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Email:</span>
+        <span class="field-value">{{ member.email }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">First name:</span>
+        <span class="field-value">{{ member.firstName }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Last name:</span>
+        <span class="field-value">{{ member.lastName }}</span>
+      </div>
+      <div class="post-field">
+        <span class="field-label">Display name:</span>
+        <span class="field-value">{{ member.displayName }}</span>
+      </div>
+      <div class="button-group">
+        <button class="post-button" type="submit" (click)="blockUser(member.id)">Block user</button>
+      </div>
+    </div>
+  </div>
+</div>
