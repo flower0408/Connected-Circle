@@ -131,6 +131,56 @@ public class GroupController {
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
+    @PostMapping("/{groupId}/adminGroup/{adminId}")
+    public ResponseEntity addGroupAdminNew(@PathVariable String groupId, @PathVariable String adminId, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Adding group admin with id: " + adminId);
+        boolean added = groupService.addGroupAdmin(Long.parseLong(groupId), Long.parseLong(adminId));
+        if (!added) {
+            logger.error("Admin couldn't be added to group with id: " + groupId);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Successfully added group admin for group with id: " + groupId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("admins/{groupId}")
+    public ResponseEntity<List<UserDTO>> getGroupAdmins(@PathVariable String groupId, @RequestHeader("authorization") String token) {
+        logger.info("Authentication check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        logger.info("Finding admins for group with id: " + groupId);
+        List<Long> adminsIds = groupService.findAdminsByGroupId(Long.parseLong(groupId));
+        if (adminsIds == null) {
+            logger.error("Admins not found for group with id: " + groupId);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<UserDTO> userDTOS = new ArrayList<>();
+        logger.info("Creating response");
+        for (Long userId: adminsIds) {
+            User user1 = userService.findById(userId);
+            UserDTO userDTO = new UserDTO(user1);
+            userDTOS.add(userDTO);
+        }
+        logger.info("Created and sent response");
+
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
+    }
+
 
 
         @PersistenceContext

@@ -148,4 +148,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(nativeQuery = true, value = "select distinct member_id from `group_members` where group_id = :groupId")
     Optional<List<Long>> findGroupMembers(@Param("groupId") Long groupId);
 
+    @Query(nativeQuery = true, value = "select distinct admin_id from `group_admins` where group_id = :groupId")
+    Optional<List<Long>> findGroupAdmins(@Param("groupId") Long groupId);
+
 }

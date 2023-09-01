@@ -51,6 +51,17 @@ export class GroupService {
     return this.http.get('api/groups/members/' + groupId, queryParams) as Observable<HttpResponse<User[]>>;
   }
 
+  getAdminsForGroup(groupId: number): Observable<HttpResponse<User[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/groups/admins/' + groupId, queryParams) as Observable<HttpResponse<User[]>>;
+  }
+
   blockUser(memberId: number, adminId: number): Observable<any> {
     // Define the request body with both memberId and adminId
     const requestBody = { memberId: memberId, adminId: adminId }; // Adjust to your API's request format
@@ -92,6 +103,10 @@ export class GroupService {
 
   addGroupAdmin(groupId: number, adminId: number): Observable<string> {
     return this.http.post('api/groups/' + groupId + '/admin/' + adminId, {}, {headers: this.headers, responseType: 'text'});
+  }
+
+  addAdminGroup(groupId: number, adminId: number): Observable<string> {
+    return this.http.post('api/groups/' + groupId + '/adminGroup/' + adminId, {}, {headers: this.headers, responseType: 'text'});
   }
 
   deleteGroupAdmin(groupId: number, adminId: number): Observable<HttpResponse<Group>> {

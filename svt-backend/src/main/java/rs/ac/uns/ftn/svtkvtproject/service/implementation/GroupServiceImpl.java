@@ -111,6 +111,16 @@ public class GroupServiceImpl implements GroupService {
         return null;
     }
 
+
+    @Override
+    public List<Long> findAdminsByGroupId(Long id) {
+        Optional<List<Long>> adminsIds = groupRepository.findGroupAdmins(id);
+        if (!adminsIds.isEmpty())
+            return adminsIds.get();
+        logger.error("Repository search for admins for group with id: " + id + " returned null");
+        return null;
+    }
+
     @Override
     public List<Group> findGroupsForUser(Long userId) {
         Optional<List<Group>> groups = groupRepository.findGroupsByMemberId(userId);

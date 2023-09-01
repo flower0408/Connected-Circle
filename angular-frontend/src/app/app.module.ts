@@ -31,6 +31,7 @@ import { HeaderComponent } from './core/header/header.component';
 import {NgOptimizedImage} from "@angular/common";
 import {GroupMembersComponent} from "./group/group-members/group-members.component";
 import {BannedListGroupComponent} from "./banned/banned-list-group/banned-list-group.component";
+import {GroupAdminsComponent} from "./group/group-admins/group-admins.component";
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import {BannedListGroupComponent} from "./banned/banned-list-group/banned-list-g
     EditReportGroupComponent,
     BannedListComponent,
     GroupMembersComponent,
-    BannedListGroupComponent
+    BannedListGroupComponent,
+    GroupAdminsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,22 +1,20 @@
+
 import { Component, OnInit } from '@angular/core';
-import { Report } from 'src/app/report/model/report.model';
 import {GroupService} from "src/app/group/services/group.service";
 import {Router} from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
 import {User} from "../../user/model/user.model";
-import {Banned} from "../../banned/model/banned.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {UserService} from "../../user/services/user.service";
 @Component({
-  selector: 'app-group-members',
-  templateUrl: './group-members.component.html',
-  styleUrls: ['./group-members.component.css']
+  selector: 'app-group-admins',
+  templateUrl: './group-admins.component.html',
+  styleUrls: ['./group-admins.component.css']
 })
-export class GroupMembersComponent implements OnInit {
-  form: FormGroup;
-  member:User = new User();
-  members: User[] = [];
+export class GroupAdminsComponent implements OnInit {
+  admin:User = new User();
+  admins: User[] = [];
   groupId!: number;
   user: User = new User();
 
@@ -27,9 +25,6 @@ export class GroupMembersComponent implements OnInit {
     private route: ActivatedRoute, // Inject ActivatedRoute
     private router: Router
   ) {
-    this.form = this.fb.group({
-      accepted: [null, Validators.required]
-    });
   }
 
   ngOnInit(): void {
@@ -53,9 +48,9 @@ export class GroupMembersComponent implements OnInit {
       const id = +params['id'];
       if (!isNaN(id)) {
         this.groupId = id; // Store the groupId
-        this.groupService.getMembersForGroup(id).subscribe(
+        this.groupService.getAdminsForGroup(id).subscribe(
           result => {
-            this.members = result.body as User[];
+            this.admins = result.body as User[];
           }
         );
       } else {
@@ -64,35 +59,6 @@ export class GroupMembersComponent implements OnInit {
     });
   }
 
-  blockUser(memberId: number): void {
-    const adminId = this.user.id;
-    this.groupService.blockUser(memberId, adminId).subscribe(
-      response => {
-        window.alert('Successfully blocked member');
-        location.reload();
-        console.log('User blocked successfully');
-      },
-      error => {
-        window.alert('Error while blocking member');
-        console.error('Error blocking user:', error);
-      }
-    );
-  }
-
-
-  addGroupAdmin(adminId: number): void {
-    this.groupService.addAdminGroup(this.groupId, adminId).subscribe(
-      response => {
-        window.alert('User added as a group admin');
-        location.reload();
-        console.log('Admin added successfully');
-      },
-      error => {
-        window.alert('Error while adding user as a group admin');
-        console.error('Error adding user as a group admin:', error);
-      }
-    );
-  }
 
 
 }

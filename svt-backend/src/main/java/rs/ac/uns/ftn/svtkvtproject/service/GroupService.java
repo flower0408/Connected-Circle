@@ -49,4 +49,6 @@ public interface GroupService {
     Boolean checkUser(Long groupId, Long userId);
 
     List<Long> findMembersByGroupId(Long id);
+
+    List<Long> findAdminsByGroupId(Long id);
 }

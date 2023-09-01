@@ -22,6 +22,7 @@ import { PostListComponent } from '../post/post-list/post-list.component';
 import {BannedListComponent} from "../banned/banned-list.component";
 import {GroupMembersComponent} from "../group/group-members/group-members.component";
 import {BannedListGroupComponent} from "../banned/banned-list-group/banned-list-group.component";
+import {GroupAdminsComponent} from "../group/group-admins/group-admins.component";
 
 export const routes :Routes = [
   {path: 'bans', component: BannedListComponent},
@@ -32,6 +33,7 @@ export const routes :Routes = [
   {path: 'groups/edit/:id', component: EditGroupComponent},
   {path: 'groups/reports/:id', component: GroupReportsComponent},
   {path: 'groups/members/:id', component: GroupMembersComponent},
+  {path: 'groups/admins/:id', component: GroupAdminsComponent},
   {path: 'groups/reports/editGroup/:id', component: EditReportGroupComponent},
   {path: 'groups/:id', component: GroupComponent},
   {path: 'groups', component: GroupListComponent},
