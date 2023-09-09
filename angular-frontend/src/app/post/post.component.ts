@@ -14,6 +14,7 @@ import {Reaction} from "./model/reaction.model";
 import {ReactionService} from "./services/reaction.service";
 import {ReportService} from "../report/services/report.service";
 import {ReportReason} from "../report/model/reportReason";
+import { map } from 'rxjs/operators'; // Import the map operator
 
 @Component({
   selector: 'app-post',
@@ -48,7 +49,7 @@ export class PostComponent implements OnInit {
   commentsReactions: Map<number, Map<number, Reaction>> = new Map(); //Map<idKomentara, Map<idReakcije, Reakcija>> zbog brisanja reakcija na komentar
 
   defaultSortType: 'date' | 'likes' | 'hearts' | 'dislikes' = 'date';
-  defaultSortDirection: 'asc' | 'desc' = 'desc';
+  defaultSortDirection: 'asc' | 'desc' = 'asc';
 
 
   constructor(
@@ -188,7 +189,6 @@ export class PostComponent implements OnInit {
           }
         );
 
-        this.sortComments();
       }
     );
   }
@@ -197,41 +197,52 @@ export class PostComponent implements OnInit {
     this.defaultSortDirection = this.defaultSortDirection === 'asc' ? 'desc' : 'asc';
   }
 
-
-  sortComments() {
-    this.comments.sort((a, b) => {
-      let valueA: number;
-      let valueB: number;
-
-      switch (this.defaultSortType) {
-        case 'date':
-          valueA = new Date(a.timestamp).getTime();
-          valueB = new Date(b.timestamp).getTime();
-          break;
-        case 'likes':
-          valueA = this.getReactionCount(a.id, 'LIKE');
-          valueB = this.getReactionCount(b.id, 'LIKE');
-          break;
-        case 'hearts':
-          valueA = this.getReactionCount(a.id, 'HEART');
-          valueB = this.getReactionCount(b.id, 'HEART');
-          break;
-        case 'dislikes':
-          valueA = this.getReactionCount(a.id, 'DISLIKE');
-          valueB = this.getReactionCount(b.id, 'DISLIKE');
-          break;
-        default:
-          valueA = new Date(a.timestamp).getTime();
-          valueB = new Date(b.timestamp).getTime();
+  sortComments(order: string) {
+    this.postService.getSortedComments(this.post.id, order).subscribe(
+      result => {
+        // Check if the response status is OK (200)
+        if (result.status === 200) {
+          // Handle the sorted comments here
+          let temp: Comment[] = result.body as unknown as Comment[];
+          this.comments = temp;
+        } else {
+          window.alert('Error while sorting comments');
+          console.log('Error status:', result.status);
+        }
+      },
+      error => {
+        window.alert('Error while sorting comments');
+        console.log(error);
       }
-
-      if (this.defaultSortDirection === 'asc') {
-        return valueA - valueB;
-      } else {
-        return valueB - valueA;
-      }
-    });
+    );
   }
+
+
+  onSortOptionChange() {
+    let order: string;
+
+    switch (this.defaultSortType) {
+      case 'date':
+        order = this.defaultSortDirection === 'asc' ? 'timestamp_asc' : 'timestamp_desc';
+        break;
+      case 'likes':
+        order = this.defaultSortDirection === 'asc' ? 'likes_asc' : 'likes_desc';
+        break;
+      case 'hearts':
+        order = this.defaultSortDirection === 'asc' ? 'hearts_asc' : 'hearts_desc';
+        break;
+      case 'dislikes':
+        order = this.defaultSortDirection === 'asc' ? 'dislikes_asc' : 'dislikes_desc';
+        break;
+      default:
+        order = 'timestamp_asc'; // Default sorting order
+        break;
+    }
+
+    this.sortComments(order);
+  }
+
+
 
 
   canReply(id: number): boolean {

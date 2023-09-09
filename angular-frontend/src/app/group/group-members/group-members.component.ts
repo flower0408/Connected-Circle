@@ -69,7 +69,7 @@ export class GroupMembersComponent implements OnInit {
     this.groupService.blockUser(memberId, adminId).subscribe(
       response => {
         window.alert('Successfully blocked member');
-        location.reload();
+        this.router.navigate(['/bansGroup', this.groupId]);
         console.log('User blocked successfully');
       },
       error => {

@@ -54,8 +54,8 @@ public class BannedServiceImpl implements BannedService {
     }
 
     @Override
-    public List<Banned> findAllGroup() {
-        Optional<List<Banned>> bans = bannedRepository.findAllForGroup();
+    public List<Banned> findAllGroup(Long groupId) {
+        Optional<List<Banned>> bans = bannedRepository.findAllForGroup(groupId);
         if (!bans.isEmpty())
             return bans.get();
         logger.error("Repository search for reports  returned null");

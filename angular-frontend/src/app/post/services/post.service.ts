@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Post } from '../model/post.model';
@@ -115,4 +115,17 @@ export class PostService {
 
     return this.http.get('api/posts/group/' + id + '/sort/desc', queryParams) as Observable<HttpResponse<Post[]>>;
   }
+
+  getSortedComments(id: number, order: string): Observable<HttpResponse<Comment[]>> {
+    let queryParams = {};
+
+    queryParams = {
+      headers: this.headers,
+      observe: 'response'
+    };
+
+    return this.http.get('api/posts/' + id + '/comments/sort/' + order, queryParams) as Observable<HttpResponse<Comment[]>>;
+  }
+
+
 }

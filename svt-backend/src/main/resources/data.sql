@@ -9,7 +9,7 @@ values (false, 'natasa@mail.com', 'Natasa', false, null, 'Kotaranin', '$2a$12$bw
 insert into `user`(is_deleted, email, first_name, is_admin, last_login, last_name, password, username, display_name, description, role)
 values (false, 'zika@mail.com', 'Zika', false, null, 'Zikic', '$2a$12$TeQF.oCNjgTsl9rFWA9Tb.zA3716nzJZ5wwxONeu1tTzHoqBkk7FK', 'zika', '-zika-', "I love nature and animals", 'USER');
 insert into `user`(is_deleted, email, first_name, is_admin, last_login, last_name, password, username, display_name, description, role)
-values (false, 'djura@mail.com', 'Djura', false, null, 'Djuric', '$2a$12$n8eEY1H5vFbQyiHDmw3CG.ih35ZaWN4pjoY27e1rxrksdNwPDjWZW', 'djurica', '-djurica-', "I am fan of cars", 'USER');
+values (false, 'djura@mail.com', 'Djura', false, null, 'Djuric', '$2a$12$n8eEY1H5vFbQyiHDmw3CG.ih35ZaWN4pjoY27e1rxrksdNwPDjWZW', 'djura', '-djurica-', "I am fan of cars", 'USER');
 
 insert into user_friends(user_id, friend_id) values (2, 3);
 insert into user_friends(user_id, friend_id) values (1, 2);
@@ -112,7 +112,7 @@ values (false, '2023-08-23', 'DISLIKE', 4, 3, null);
 insert into reaction (is_deleted, timestamp, type, made_by_user_id, on_comment_id, on_post_id)
 values (false, '2023-08-25', 'DISLIKE', 5, 4, null);
 insert into reaction (is_deleted, timestamp, type, made_by_user_id, on_comment_id, on_post_id)
-values (false, '2023-08-27', 'DISLIKE', 5, 5, null);
+values (false, '2023-08-27', 'DISLIKE', 5, 1, null);
 insert into reaction (is_deleted, timestamp, type, made_by_user_id, on_comment_id, on_post_id)
 values (false, '2023-08-28', 'DISLIKE', 3, 7, null);
 insert into reaction (is_deleted, timestamp, type, made_by_user_id, on_comment_id, on_post_id)
@@ -143,7 +143,7 @@ values ('2023-08-31', false, 'Test group for testing purposes', false, 'Test Gro
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
 values ('2023-09-01', false, 'Another test group for testing', false, 'Test Group 2', null);
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
-values ('2023-08-12', true, 'Deleted test group for testing', true, 'Test Group 3', 'Un-moderated');
+values ('2023-08-12', true, 'Deleted test group for testing', true, 'Test Group 3', 'Not usable');
 
 insert into group_admins (group_id, admin_id)
 values (1, 1);
@@ -165,7 +165,7 @@ insert into group_posts (group_id, post_id)
 values (2, 5);
 
 insert into group_request (approved, at, created_at, is_deleted, created_by_user_id, for_group_id)
-values (null, null, '2023-05-13', false, 4, 3);
+values (null, null, '2023-05-13', false, 4, 2);
 
 
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)

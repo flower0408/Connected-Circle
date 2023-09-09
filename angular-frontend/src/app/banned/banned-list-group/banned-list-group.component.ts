@@ -4,8 +4,9 @@ import { BannedService } from 'src/app/banned/services/banned.service';
 import {User} from "src/app/user/model/user.model";
 import {UserService} from "src/app/user/services/user.service";
 import {Location} from "@angular/common";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {JwtHelperService} from "@auth0/angular-jwt";
+
 
 @Component({
   selector: 'app-banned-list-group',
@@ -23,7 +24,8 @@ export class BannedListGroupComponent implements OnInit{
     private bannedService: BannedService,
     private userService: UserService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute // Inject ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -42,12 +44,18 @@ export class BannedListGroupComponent implements OnInit{
       }
     );
 
-    this.bannedService.getAllGroup().subscribe(
-      result => {
-        this.bans = result.body as Banned[];
-
+    this.route.params.subscribe(params => {
+      const groupId = +params['groupId'];
+      if (!isNaN(groupId)) {
+        this.bannedService.getAllGroup(groupId).subscribe(
+          result => {
+            this.bans = result.body as Banned[];
+          }
+        );
+      } else {
+        console.error('Invalid Group ID:', params['groupId']);
       }
-    );
+    });
   }
 
   submitBannedGroup(banned: Banned): void {

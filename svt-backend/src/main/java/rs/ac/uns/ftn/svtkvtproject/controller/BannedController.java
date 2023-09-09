@@ -67,8 +67,8 @@ public class BannedController {
         return new ResponseEntity<>(bannedDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/forGroup")
-    public ResponseEntity<List<BannedDTO>> getAllBanned(@RequestHeader("authorization") String token) {
+    @GetMapping("/forGroup/{groupId}")
+    public ResponseEntity<List<BannedDTO>> getAllBanned(@PathVariable String groupId, @RequestHeader("authorization") String token) {
         logger.info("Authentication check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
@@ -78,7 +78,7 @@ public class BannedController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("Finding all bans");
-        List<Banned> bans = bannedService.findAllGroup();
+        List<Banned> bans = bannedService.findAllGroup(Long.parseLong(groupId));
         List<BannedDTO> bannedDTOS = new ArrayList<>();
         logger.info("Creating response");
         for (Banned banned: bans) {

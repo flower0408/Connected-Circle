@@ -10,7 +10,7 @@ public interface BannedService {
 
     List<Banned> findAll();
 
-    List<Banned> findAllGroup();
+    List<Banned> findAllGroup(Long groupId);
     List<Banned> findAllAdmin();
 
     Banned createBanned(BannedDTO bannedDTO);

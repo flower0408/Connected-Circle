@@ -15,7 +15,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class EditGroupComponent implements OnInit {
 
   form: FormGroup;
-  editing: boolean = this.router.url.includes('editGroup');
+  editing: boolean = this.router.url.includes('edit');
 
   group: Group = new Group();
   user: User = new User();

@@ -26,7 +26,7 @@ import {GroupAdminsComponent} from "../group/group-admins/group-admins.component
 
 export const routes :Routes = [
   {path: 'bans', component: BannedListComponent},
-  {path: 'bansGroup', component: BannedListGroupComponent},
+  {path: 'bansGroup/:groupId', component: BannedListGroupComponent},
   {path: 'groups/:id/add-post', component: AddPostComponent},
   {path: 'groups/:id/group-requests', component: GroupRequestsComponent},
   {path: 'groups/add', component: AddGroupComponent},

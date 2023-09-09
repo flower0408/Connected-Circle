@@ -14,6 +14,22 @@ public interface CommentService {
 
     List<Comment> findCommentsForPost(Long postId);
 
+    List<Comment> findCommentsForPostLikesAsc(Long postId);
+
+    List<Comment> findCommentsForPostLikesDesc(Long postId);
+
+    List<Comment> findCommentsForPostDislikesAsc(Long postId);
+
+    List<Comment> findCommentsForPostDislikesDesc(Long postId);
+
+    List<Comment> findCommentsForPostHeartsAsc(Long postId);
+
+    List<Comment> findCommentsForPostHeartsDesc(Long postId);
+
+    List<Comment> findCommentsForPostTimestampAsc(Long postId);
+
+    List<Comment> findCommentsForPostTimestampDesc(Long postId);
+
     Comment createComment(CommentDTO commentDTO);
 
     Comment updateComment(Comment comment);

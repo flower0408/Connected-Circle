@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/posts")
@@ -395,4 +396,65 @@ public class PostController {
 
         return new ResponseEntity<>(commentDTOS, HttpStatus.OK);
     }
+
+   @GetMapping("/{id}/comments/sort/{order}")
+   public ResponseEntity<List<CommentDTO>> getSortedCommentsForPost(
+           @PathVariable String id,
+           @RequestHeader("authorization") String token,
+           @PathVariable String order) {
+       logger.info("Checking authorization");
+       String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
+       String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
+       User user = userService.findByUsername(username); //provera da li postoji u bazi
+
+       if (user == null) {
+           logger.error("User not found for token: " + cleanToken);
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+
+       logger.info("Finding comments for post with id: " + id);
+
+       List<CommentDTO> commentDTOS = new ArrayList<>();
+       List<Comment> comments;
+
+       switch (order.toLowerCase()) {
+           case "likes_asc":
+               comments = commentService.findCommentsForPostLikesAsc(Long.parseLong(id));
+               break;
+           case "likes_desc":
+               comments = commentService.findCommentsForPostLikesDesc(Long.parseLong(id));
+               break;
+           case "dislikes_asc":
+               comments = commentService.findCommentsForPostDislikesAsc(Long.parseLong(id));
+               break;
+           case "dislikes_desc":
+               comments = commentService.findCommentsForPostDislikesDesc(Long.parseLong(id));
+               break;
+           case "hearts_asc":
+               comments = commentService.findCommentsForPostHeartsAsc(Long.parseLong(id));
+               break;
+           case "hearts_desc":
+               comments = commentService.findCommentsForPostHeartsDesc(Long.parseLong(id));
+               break;
+           case "timestamp_asc":
+               comments = commentService.findCommentsForPostTimestampAsc(Long.parseLong(id));
+               break;
+           case "timestamp_desc":
+               comments = commentService.findCommentsForPostTimestampDesc(Long.parseLong(id));
+               break;
+           default:
+               comments = commentService.findCommentsForPostLikesAsc(Long.parseLong(id));
+               break;
+       }
+
+       for (Comment comment : comments) {
+           commentDTOS.add(new CommentDTO(comment));
+       }
+
+       logger.info("Created and sent response");
+
+       return new ResponseEntity<>(commentDTOS, HttpStatus.OK);
+   }
+
+
 }

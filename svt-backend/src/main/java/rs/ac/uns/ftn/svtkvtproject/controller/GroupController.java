@@ -198,14 +198,12 @@ public class GroupController {
         }
 
         try {
-            // Step 2: Find admin and member
             Long memberId = request.getMemberId();
             Long adminId = request.getAdminId();
 
             User admin = userService.findById(adminId);
             User member = userService.findById(memberId);
 
-            // Step 3: Use the SQL query to find the group ID
             Query query = entityManager.createNativeQuery(
                     "SELECT gm.group_id " +
                             "FROM group_members gm " +
@@ -221,33 +219,27 @@ public class GroupController {
                 return ResponseEntity.badRequest().body("Admin is not associated with a group");
             }
 
-            // Assuming the query returns a single group ID
             BigInteger bigIntegerGroupId = (BigInteger) results.get(0);
             Long groupId = bigIntegerGroupId.longValue();
 
-            // Use the groupService to find the Group by its ID
             Group group = groupService.findById(groupId);
 
             if (group == null) {
                 return ResponseEntity.badRequest().body("Group not found");
             }
 
-            // Step 4: Remove the member from the group
             groupService.deleteGroupMember(groupId, memberId);
 
-            // Step 5: Create a new banned entry
             Banned banned = new Banned();
             banned.setByAdmin(admin);
             banned.setTowardsUser(member);
             banned.setBlocked(true);
             banned.setTimestamp(LocalDate.now());
             banned.setDeleted(false);
-            banned.setGroup(group); // Set the Group object
+            banned.setGroup(group);
 
-            // Log the banned object before saving
             logger.info("Banned object before saving: " + banned.toString());
 
-            // Save the banned record
             bannedService.saveBanned(banned);
 
             logger.info("Member blocked successfully");

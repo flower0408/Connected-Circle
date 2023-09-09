@@ -5,6 +5,8 @@ import {GroupService} from "../services/group.service";
 import {UserService} from "../../user/services/user.service";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {GroupRequest} from "../model/groupRequest.model";
+import {Banned} from "../../banned/model/banned.model";
+import {BannedService} from "../../banned/services/banned.service";
 
 @Component({
   selector: 'app-group-list',
@@ -17,10 +19,12 @@ export class GroupListComponent implements OnInit {
   isAdmin: boolean = false;
   userGroups: Group[] = [];
   groupRequests: Map<number, GroupRequest[]> = new Map();
-
+  bannedUsersForGroup: Map<number, Banned[]> = new Map();
+  bans: Banned[] = [];
 
   constructor(private groupService: GroupService,
-              private userService: UserService) {
+              private userService: UserService,
+              private  bannedService: BannedService) {
 
   }
 
@@ -33,6 +37,12 @@ export class GroupListComponent implements OnInit {
           this.groupService.getGroupRequests(group.id).subscribe(
             result => {
               this.groupRequests.set(group.id, result.body as GroupRequest[]);
+            }
+          );
+          this.bannedService.getAllGroup(group.id).subscribe(
+            result => {
+              this.bannedUsersForGroup.set(group.id, result.body as Banned[]);
+
             }
           );
         });
@@ -75,6 +85,9 @@ export class GroupListComponent implements OnInit {
 
   canSendRequest(groupId: number): boolean {
     let canSend: boolean = true;
+    const isUserBanned = this.isUserBannedForGroup(groupId);
+
+
     this.groupRequests.forEach(requests => {
       requests.forEach(request => {
         if (request.createdByUserId == this.user.id && request.forGroupId == groupId)
@@ -82,10 +95,15 @@ export class GroupListComponent implements OnInit {
       });
     });
 
-    if (this.canAccess(groupId))
+    if (isUserBanned || this.canAccess(groupId)) {
       canSend = false;
-
+    }
     return canSend;
+  }
+
+  private isUserBannedForGroup(groupId: number): boolean {
+    const bannedUsers = this.bannedUsersForGroup.get(groupId);
+    return bannedUsers?.some(banned => banned.towardsUserId === this.user.id) ?? false;
   }
 
   sendRequest(groupId: number): void {

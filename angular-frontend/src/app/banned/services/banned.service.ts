@@ -37,7 +37,7 @@ export class BannedService {
     return this.http.get('api/banned', queryParams) as Observable<HttpResponse<Banned[]>>;
   }
 
-  getAllGroup(): Observable<HttpResponse<Banned[]>> {
+  getAllGroup(groupId: number): Observable<HttpResponse<Banned[]>> {
     let queryParams = {};
 
     queryParams = {
@@ -45,7 +45,7 @@ export class BannedService {
       observe: 'response'
     };
 
-    return this.http.get('api/banned/forGroup', queryParams) as Observable<HttpResponse<Banned[]>>;
+    return this.http.get('api/banned/forGroup/' + groupId, queryParams) as Observable<HttpResponse<Banned[]>>;
   }
 
   unblock(bannedId: number): Observable<any> {

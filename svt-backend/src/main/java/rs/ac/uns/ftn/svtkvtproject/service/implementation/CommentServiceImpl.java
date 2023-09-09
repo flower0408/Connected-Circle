@@ -68,6 +68,78 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> findCommentsForPostLikesAsc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostLikesAsc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostLikesDesc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostLikesDesc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostDislikesAsc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostDislikesAsc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostDislikesDesc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostDislikesDesc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostHeartsAsc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostHeartsAsc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostHeartsDesc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostHeartsDesc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostTimestampAsc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostTimestampAsc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
+    public List<Comment> findCommentsForPostTimestampDesc(Long postId) {
+        Optional<List<Comment>> comments = commentRepository.findCommentsForPostTimestampDesc(postId);
+        if (!comments.isEmpty())
+            return comments.get();
+        logger.error("Repository search for comments for post with id: " + postId + " returned null");
+        return null;
+    }
+
+    @Override
     public Comment createComment(CommentDTO commentDTO) {
         Optional<Comment> comment = commentRepository.findById(commentDTO.getId());
 
