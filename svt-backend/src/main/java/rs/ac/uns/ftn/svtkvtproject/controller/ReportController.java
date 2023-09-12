@@ -276,13 +276,11 @@ public class ReportController {
     }
 
     @PatchMapping("/edit/{id}")
-    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReportDTO> editReport(@PathVariable String id,@RequestBody @Validated ReportDTO editedReport, @RequestHeader("authorization") String token) {
         logger.info("Authentication check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
-        //User user1 = this.userService.findByUsername(user.getName());
         if (user == null) {
             logger.error("User not found with token: " + cleanToken);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -299,7 +297,6 @@ public class ReportController {
 
             if (oldReport.getAccepted()) {
                 if (oldReport.getOnPostId() != null) {
-                    // Mark the reported post as deleted
                     Integer deleteResult = postService.deletePost(oldReport.getOnPostId());
                     if (deleteResult > 0) {
                         // Successfully marked as deleted
@@ -309,7 +306,6 @@ public class ReportController {
                 }
 
                 if (oldReport.getOnCommentId() != null) {
-                    // Mark the reported comment as deleted
                     Integer deleteResult = commentService.deleteComment(oldReport.getOnCommentId());
                     if (deleteResult > 0) {
                         // Successfully marked as deleted
@@ -318,26 +314,20 @@ public class ReportController {
                     }
                 }
                 if (oldReport.getOnUserId() != null) {
-                    // Ban the reported user
                     User reportedUser = userService.findById(oldReport.getOnUserId());
                     if (reportedUser != null) {
-                        // Create a banned record
                         Banned banned = new Banned();
                         banned.setTimestamp(LocalDate.now());
-                        banned.setByAdmin(user); // The admin who accepted the report
-                        banned.setTowardsUser(reportedUser); // The user being banned
-                        banned.setBlocked(true); // Set blocked to true
-                        bannedService.saveBanned(banned); // Save the banned record
+                        banned.setByAdmin(user);
+                        banned.setTowardsUser(reportedUser);
+                        banned.setBlocked(true);
+                        bannedService.saveBanned(banned);
 
-                        // Handle user status based on blocked value
                         if (banned.isBlocked()) {
-                            // Mark user as deleted
                             reportedUser.setDeleted(true);
                         } else {
-                            // Restore user
                             reportedUser.setDeleted(false);
                         }
-                        // Save the updated user
                         userService.saveUser(reportedUser);
                     }
                 }
@@ -352,13 +342,11 @@ public class ReportController {
     }
 
     @PatchMapping("/editForGroup/{id}")
-    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReportDTO> editReportForGroup(@PathVariable String id,@RequestBody @Validated ReportDTO editedReport, @RequestHeader("authorization") String token) {
         logger.info("Authentication check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
-        //User user1 = this.userService.findByUsername(user.getName());
         if (user == null) {
             logger.error("User not found with token: " + cleanToken);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -375,7 +363,6 @@ public class ReportController {
 
             if (oldReport.getAccepted()) {
                 if (oldReport.getOnPostId() != null) {
-                    // Mark the reported post as deleted
                     Integer deleteResult = postService.deletePost(oldReport.getOnPostId());
                     if (deleteResult > 0) {
                         // Successfully marked as deleted
@@ -393,30 +380,6 @@ public class ReportController {
                         // Handle error (if needed)
                     }
                 }
-                /*if (oldReport.getOnUserId() != null) {
-                    // Ban the reported user
-                    User reportedUser = userService.findById(oldReport.getOnUserId());
-                    if (reportedUser != null) {
-                        // Create a banned record
-                        Banned banned = new Banned();
-                        banned.setTimestamp(LocalDate.now());
-                        banned.setByAdmin(user); // The admin who accepted the report
-                        banned.setTowardsUser(reportedUser); // The user being banned
-                        banned.setBlocked(true); // Set blocked to true
-                        bannedService.saveBanned(banned); // Save the banned record
-
-                        // Handle user status based on blocked value
-                        if (banned.isBlocked()) {
-                            // Mark user as deleted
-                            reportedUser.setDeleted(true);
-                        } else {
-                            // Restore user
-                            reportedUser.setDeleted(false);
-                        }
-                        // Save the updated user
-                        userService.saveUser(reportedUser);
-                    }
-                }*/
             }
         }
         oldReport = reportService.saveReport(oldReport);

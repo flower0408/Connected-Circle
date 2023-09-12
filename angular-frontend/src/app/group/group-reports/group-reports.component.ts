@@ -21,8 +21,8 @@ export class GroupReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const id = +params['id']; // + symbol to convert string to number
-      if (!isNaN(id)) { // Check if id is a valid number
+      const id = +params['id'];
+      if (!isNaN(id)) {
         this.groupService.getReportsForGroup(id).subscribe(
           result => {
             this.reports = result.body as Report[];

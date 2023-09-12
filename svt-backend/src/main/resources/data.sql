@@ -18,10 +18,10 @@ insert into user_friends(user_id, friend_id) values (1, 4);
 insert into user_friends(user_id, friend_id) values (1, 5);
 insert into user_friends(user_id, friend_id) values (1, 6);
 
-insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
+/*insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
 values (null, null, '2023-08-20', false, 2, 5);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
-values (null, null, '2023-08-22', false, 2, 4);
+values (null, null, '2023-08-22', false, 2, 4);*/
 
 insert into post (content, creation_date, is_deleted, posted_by_user_id)
 values ('This is first post by me. I am glad if you can see it.',
@@ -139,9 +139,9 @@ insert into report (accepted, is_deleted, reason, timestamp, by_user_id, on_comm
 values (true, true, 'HARASSMENT', '2023-05-12', 1, null, 2, null);*/
 
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
-values ('2023-08-31', false, 'Test group for testing purposes', false, 'Test Group 1', null);
+values ('2023-08-31', false, 'Test group for testing purposes', false, 'Group of Pera', null);
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
-values ('2023-09-01', false, 'Another test group for testing', false, 'Test Group 2', null);
+values ('2023-09-01', false, 'Another test group for testing', false, 'Group of Ana', null);
 insert into `group` (creation_date, is_deleted, description, is_suspended, name, suspended_reason)
 values ('2023-08-12', true, 'Deleted test group for testing', true, 'Test Group 3', 'Not usable');
 
@@ -164,8 +164,8 @@ values (1, 4);
 insert into group_posts (group_id, post_id)
 values (2, 5);
 
-insert into group_request (approved, at, created_at, is_deleted, created_by_user_id, for_group_id)
-values (null, null, '2023-05-13', false, 4, 2);
+/*insert into group_request (approved, at, created_at, is_deleted, created_by_user_id, for_group_id)
+values (null, null, '2023-05-13', false, 4, 2);*/
 
 
 insert into image (is_deleted, path, belongs_to_post_id, belongs_to_user_id)

@@ -200,9 +200,7 @@ export class PostComponent implements OnInit {
   sortComments(order: string) {
     this.postService.getSortedComments(this.post.id, order).subscribe(
       result => {
-        // Check if the response status is OK (200)
         if (result.status === 200) {
-          // Handle the sorted comments here
           let temp: Comment[] = result.body as unknown as Comment[];
           this.comments = temp;
         } else {

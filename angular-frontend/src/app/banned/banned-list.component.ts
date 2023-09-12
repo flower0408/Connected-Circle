@@ -54,7 +54,7 @@ export class BannedListComponent implements OnInit{
     this.bannedService.unblock(banned.id).subscribe(
       result => {
         window.alert('Successfully edited the banned');
-        this.location.back();
+        window.location.reload();
       },
       error => {
         window.alert('An error occurred editing the banned');

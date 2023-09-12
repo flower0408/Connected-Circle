@@ -40,13 +40,17 @@ export class RegisterComponent {
     auth.lastName = this.form.value.lastName;
 
     this.authenticationService.register(auth).subscribe(
-      result => {
+      (result) => {
         window.alert('Successful registration!');
         console.log(result);
         this.router.navigate(['users/login']);
       },
-      error => {
-        console.log(error);
+      (error) => {
+        if (error.status === 406) {
+          window.alert('That username already exists. Please choose a different username.');
+        } else {
+          console.log(error);
+        }
       }
     );
   }
