@@ -55,11 +55,4 @@ public class Group {
     @JoinTable(name = "group_members", inverseJoinColumns=@JoinColumn(name="member_id"))
     private List<User> groupMembers;
 
-    //  Associations
-
-   /* @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "id")
-    private Set<Banned> bans = new HashSet<Banned>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "id")
-    private Set<GroupRequest> requests = new HashSet<GroupRequest>();*/
 }

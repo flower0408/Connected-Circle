@@ -15,9 +15,6 @@ import java.util.Optional;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-   /* @Query(nativeQuery = true,
-            value = "SELECT DISTINCT r FROM report r WHERE r.is_deleted = false")
-    List<Report> findAll();*/
    @Query(nativeQuery = true,
            value = "SELECT r.*\n" +
                    "FROM report r\n" +

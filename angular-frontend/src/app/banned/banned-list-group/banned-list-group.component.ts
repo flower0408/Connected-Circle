@@ -25,7 +25,7 @@ export class BannedListGroupComponent implements OnInit{
     private userService: UserService,
     private location: Location,
     private router: Router,
-    private route: ActivatedRoute // Inject ActivatedRoute
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {

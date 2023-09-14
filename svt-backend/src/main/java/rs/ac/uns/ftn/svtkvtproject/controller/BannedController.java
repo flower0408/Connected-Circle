@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,8 +47,9 @@ public class BannedController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<BannedDTO>> getAll(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -68,8 +70,9 @@ public class BannedController {
     }
 
     @GetMapping("/forGroup/{groupId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<BannedDTO>> getAllBanned(@PathVariable String groupId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -90,8 +93,9 @@ public class BannedController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<BannedDTO> getOne(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -113,8 +117,8 @@ public class BannedController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteReport(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+    public ResponseEntity deleteBanned(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -133,12 +137,11 @@ public class BannedController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @PatchMapping("/unblock/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> unblockUserAndBanned(@PathVariable Long id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -151,8 +154,9 @@ public class BannedController {
     }
 
     @PatchMapping("/unblockMember/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> unblockMemberAndBanned(@PathVariable Long id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -163,87 +167,6 @@ public class BannedController {
         bannedService.unblockMemberAndSaveBanned(id);
         return ResponseEntity.ok().build();
     }
-
-
-   /* @Transactional
-    @PatchMapping("/edit/{id}")
-    public ResponseEntity<BannedDTO> editBanned(
-            @PathVariable String id,
-            @RequestBody @Validated BannedDTO editedBanned,
-            @RequestHeader("authorization") String token
-    ) {
-        logger.info("Authentication check");
-        String cleanToken = token.substring(7);
-        String username = tokenUtils.getUsernameFromToken(cleanToken);
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            logger.error("User not found with token: " + cleanToken);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        logger.info("Finding original banned with id: " + editedBanned.getId());
-        Banned oldBanned = bannedService.findById(Long.parseLong(id));
-
-        oldBanned.setBlocked(editedBanned.isBlocked());
-
-        // Load the towardsUser eagerly only when needed
-        User towardsUser = userService.findById(oldBanned.getTowardsUserId());
-        if (towardsUser != null) {
-            if (!oldBanned.isBlocked()) {
-                towardsUser.setDeleted(false); // Update isDeleted status
-            }
-            userService.saveUser(towardsUser);
-            logger.info("User with ID " + towardsUser.getId() + " is no longer deleted.");
-        }
-        oldBanned = bannedService.saveBanned(oldBanned);
-
-        logger.info("Creating response");
-        BannedDTO updatedBanned = new BannedDTO(oldBanned);
-        logger.info("Created and sent response");
-
-        return new ResponseEntity<>(updatedBanned, HttpStatus.OK);
-    }*/
-   /*@Transactional
-   @PatchMapping("/edit/{id}")
-   public ResponseEntity<BannedDTO> editBanned(
-           @PathVariable String id,
-           @RequestBody @Validated BannedDTO editedBanned,
-           @RequestHeader("authorization") String token
-   ) {
-       logger.info("Authentication check");
-       String cleanToken = token.substring(7);
-       String username = tokenUtils.getUsernameFromToken(cleanToken);
-       User user = userService.findByUsername(username);
-       if (user == null) {
-           logger.error("User not found with token: " + cleanToken);
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-       }
-
-       logger.info("Finding original banned with id: " + editedBanned.getId());
-       Banned oldBanned = bannedService.findById(Long.parseLong(id));
-
-       boolean oldBlockedStatus = oldBanned.isBlocked();
-       oldBanned.setBlocked(editedBanned.isBlocked());
-
-       // If the block status has changed (unblocked), update user isDeleted status
-       if (oldBlockedStatus && !editedBanned.isBlocked()) {
-           User towardsUser = userService.findById(oldBanned.getTowardsUserId());
-           if (towardsUser != null)  {
-               towardsUser.setDeleted(false);
-               userService.saveUser(towardsUser);
-               logger.info("User with ID " + towardsUser.getId() + " is no longer deleted.");
-           }
-       }
-
-       oldBanned = bannedService.saveBanned(oldBanned);
-
-       logger.info("Creating response");
-       BannedDTO updatedBanned = new BannedDTO(oldBanned);
-       logger.info("Created and sent response");
-
-       return new ResponseEntity<>(updatedBanned, HttpStatus.OK);
-   }*/
-
 
 
 }

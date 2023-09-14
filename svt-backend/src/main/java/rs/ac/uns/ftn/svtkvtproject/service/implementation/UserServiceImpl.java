@@ -74,14 +74,6 @@ public class UserServiceImpl implements UserService {
         return newUser;
     }
 
-    /*@Override
-    public List<User> findAll() {
-        Optional<List<User>> users = userRepository.findAllUsers();
-        if (!users.isEmpty())
-            return users.get();
-        logger.error("Repository search for all users returned null");
-        return null;
-    }*/
 
     @Override
     public List<User> findAll() {

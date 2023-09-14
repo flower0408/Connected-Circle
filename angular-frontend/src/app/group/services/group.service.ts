@@ -64,12 +64,11 @@ export class GroupService {
 
   blockUser(memberId: number, adminId: number): Observable<any> {
     // Define the request body with both memberId and adminId
-    const requestBody = { memberId: memberId, adminId: adminId }; // Adjust to your API's request format
+    const requestBody = { memberId: memberId, adminId: adminId };
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken,
       'Content-Type': 'application/json'
     });
-    // Make an HTTP POST request to block the user
     return this.http.post('api/groups/block-member', requestBody, {
       headers: headers,
       responseType: 'text'

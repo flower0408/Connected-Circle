@@ -36,20 +36,4 @@ public class Post {
     @Column(nullable = false)
     private boolean isDeleted;
 
-    //  Associations
-/*
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<Comment> comments = new HashSet<Comment>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)
-    private Set<Reaction> reactions;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)
-    private Set<Report> reports = new HashSet<Report>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Image> images = new HashSet<>();
-
-    @ManyToOne
-    private Group postedInGroup;*/
 }

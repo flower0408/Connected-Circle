@@ -47,20 +47,5 @@ public class Comment {
     @JoinColumn(name = "replies_to_comment_id", referencedColumnName = "id")
     private Comment repliesTo;
 
-    //    Associations
 
-   /* @ManyToOne
-    private Post post;
-
-    @ManyToOne
-    private Comment parent;
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> replies = new HashSet<Comment>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Reaction> reactions = new HashSet<Reaction>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "id")
-    private Set<Report> reports = new HashSet<Report>();*/
 }

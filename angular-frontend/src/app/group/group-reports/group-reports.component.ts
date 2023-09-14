@@ -14,7 +14,7 @@ export class GroupReportsComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
-    private route: ActivatedRoute, // Inject ActivatedRoute
+    private route: ActivatedRoute,
     private router: Router
   ) {
   }

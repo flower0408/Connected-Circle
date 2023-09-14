@@ -37,7 +37,7 @@ public class BannedServiceImpl implements BannedService {
     }
 
 
-    private static final Logger logger = LogManager.getLogger(ReactionServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(BannedServiceImpl.class);
 
     @Override
     public Banned findById(Long id) {
@@ -149,7 +149,6 @@ public class BannedServiceImpl implements BannedService {
                     .executeUpdate();
 
             if (updatedRows > 0) {
-                // Update the 'blocked' status in the 'Banned' entity
                 banned.setBlocked(false);
                 saveBanned(banned);
             }

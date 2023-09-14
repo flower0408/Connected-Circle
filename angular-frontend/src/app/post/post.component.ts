@@ -535,7 +535,7 @@ export class PostComponent implements OnInit {
       case ReportReason.OTHER:
         return reason.trim() as ReportReason;
       default:
-        return undefined; // Invalid reason
+        return undefined;
     }
   }
 
@@ -566,7 +566,7 @@ export class PostComponent implements OnInit {
     return canDelete;
   }
 
-  canDeleteReply(): boolean {
+  canDeleteReply(replyId: number): boolean {
     let sub: string;
     let role: string;
     const item = localStorage.getItem('user');
@@ -583,7 +583,7 @@ export class PostComponent implements OnInit {
     sub = decodedToken.sub;
 
     this.replies.forEach(reply => {
-      if (this.users.get(reply.belongsToUserId)?.username == sub)
+      if (this.users.get(reply.belongsToUserId)?.username == sub && reply.id == replyId)
         canDelete = true;
     });
 

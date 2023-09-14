@@ -71,15 +71,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<UserDTO> getOne(@PathVariable Long userId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
-        String cleanToken = token.substring(7);
-        String username = tokenUtils.getUsernameFromToken(cleanToken);
-       // User user = userService.findById(userId); /
-        User user = userService.findByUsername(username);
+        logger.info("Authorization check");
+        String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
+        String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
+        User user = userService.findByUsername(username); //provera da li postoji u bazi
         if (user == null) {
-            //logger.error("User not found for token: " + cleanToken);
+            logger.error("User not found for token: " + cleanToken);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("Finding user with id: " + userId);
@@ -95,9 +94,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -111,13 +110,12 @@ public class UserController {
     }
 
     @PatchMapping("/edit")
-    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<UserDTO> editUser(@RequestBody @Validated UserDTO editedUser, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
-        //User user1 = this.userService.findByUsername(user.getName());
         if (user == null) {
             logger.error("User not found with token: " + cleanToken);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -149,8 +147,9 @@ public class UserController {
     }
 
     @GetMapping("group/{id}/admins")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<UserDTO>> getGroupAdmins(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -171,13 +170,12 @@ public class UserController {
     }
 
     @GetMapping("/user/{queryUsername}")
-    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<UserDTO> getOneByUsername(@PathVariable String queryUsername,  @RequestHeader("authorization") String token)  {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
-        //User user1 = this.userService.findByUsername(user.getName());
         if (user == null) {
             logger.error("User not found with token: " + cleanToken);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -253,9 +251,10 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<UserDTO> changePassword(@RequestBody @Validated UpdatePasswordDTO changePasswordRequest,
             @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -279,8 +278,9 @@ public class UserController {
     }
 
     @PostMapping("/search")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<UserDTO>> searchUsers(@RequestBody UserSearch userSearch, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -301,8 +301,9 @@ public class UserController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAll(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -330,8 +331,9 @@ public class UserController {
     }
 
     @GetMapping("/friend-request")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<FriendRequestDTO>> getFriendRequests(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -354,8 +356,9 @@ public class UserController {
     }
 
     @PatchMapping("/friend-request")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<FriendRequestDTO> updateFriendRequest(@RequestBody @Validated FriendRequestDTO friendRequestDTO, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -383,8 +386,9 @@ public class UserController {
     }
 
     @DeleteMapping("/friend-request/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteFriendRequest(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -404,9 +408,10 @@ public class UserController {
     }
 
     @PostMapping("/{id}/friend-request")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Boolean> saveFriendRequest(@PathVariable String id, @RequestBody @Validated FriendRequestDTO friendRequestDTO,
                                                      @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -427,8 +432,9 @@ public class UserController {
     }
 
     @GetMapping("/friends")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<UserDTO>> getUserFriends(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user1 = userService.findByUsername(username);
@@ -449,8 +455,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/image")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ImageDTO> getProfileImage(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -472,8 +479,9 @@ public class UserController {
     }
 
     @DeleteMapping("/image/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteImage(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -493,12 +501,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/groups")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<GroupDTO>> getUserGroups(@PathVariable String id,
                                                         @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
-        String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
-        String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
-        User user = userService.findByUsername(username); //provera da li postoji u bazi
+        logger.info("Authorization check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
 
         if (user == null) {
             logger.error("User not found for token: " + cleanToken);

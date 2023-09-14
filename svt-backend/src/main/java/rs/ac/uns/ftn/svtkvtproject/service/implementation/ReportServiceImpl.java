@@ -46,7 +46,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
 
-    private static final Logger logger = LogManager.getLogger(ReactionServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(ReportServiceImpl.class);
 
 
     @Override

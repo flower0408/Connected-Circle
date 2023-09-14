@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -57,8 +58,9 @@ public class ReportController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<ReportDTO>> getAll(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -79,8 +81,9 @@ public class ReportController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<ReportDTO>> getAllReports(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -101,8 +104,9 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReportDTO> getOne(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -124,8 +128,9 @@ public class ReportController {
     }
 
     @GetMapping("/post/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ReportDTO>> getReportsForPost(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -146,8 +151,9 @@ public class ReportController {
     }
 
     @GetMapping("/comment/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ReportDTO>> getReportsForComment(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -168,8 +174,9 @@ public class ReportController {
     }
 
     @GetMapping("/user/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<ReportDTO>> getReportsForUser(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -190,8 +197,9 @@ public class ReportController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReportDTO> addReport(@RequestBody @Validated ReportDTO newReport, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -209,7 +217,6 @@ public class ReportController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        // Now you can use reportReason to create the Report instance
         Report createdReport = reportService.createReport(newReport);
 
         if (createdReport == null) {
@@ -224,9 +231,8 @@ public class ReportController {
     }
     public ReportReason getReportReasonFromString(String reason) {
         if (reason == null || reason.trim().isEmpty()) {
-            return null; // or a default enum value, depending on your business logic
+            return null;
         }
-       // String trimmedReason = reason.trim(); // Trim the reason string
         switch (reason.trim()) {
             case "BREAKS_RULES":
                 return ReportReason.BREAKS_RULES;
@@ -255,8 +261,8 @@ public class ReportController {
 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteReaction(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+    public ResponseEntity deleteReport(@PathVariable String id, @RequestHeader("authorization") String token) {
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -276,8 +282,9 @@ public class ReportController {
     }
 
     @PatchMapping("/edit/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ReportDTO> editReport(@PathVariable String id,@RequestBody @Validated ReportDTO editedReport, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -342,8 +349,9 @@ public class ReportController {
     }
 
     @PatchMapping("/editForGroup/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReportDTO> editReportForGroup(@PathVariable String id,@RequestBody @Validated ReportDTO editedReport, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);

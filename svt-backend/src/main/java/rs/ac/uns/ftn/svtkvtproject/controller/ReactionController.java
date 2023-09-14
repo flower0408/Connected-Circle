@@ -1,10 +1,7 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
-import rs.ac.uns.ftn.svtkvtproject.model.dto.ImageDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ReactionDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.Image;
-import rs.ac.uns.ftn.svtkvtproject.model.entity.Post;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Reaction;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
@@ -54,8 +51,9 @@ public class ReactionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReactionDTO> getOne(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -77,8 +75,9 @@ public class ReactionController {
     }
 
     @GetMapping("/post/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ReactionDTO>> getReactionsForPost(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -99,8 +98,9 @@ public class ReactionController {
     }
 
     @GetMapping("/comment/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ReactionDTO>> getReactionsForComment(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -121,8 +121,9 @@ public class ReactionController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReactionDTO> addReaction(@RequestBody @Validated ReactionDTO newReaction, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -144,8 +145,9 @@ public class ReactionController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteReaction(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);

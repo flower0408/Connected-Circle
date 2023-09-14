@@ -47,7 +47,7 @@ export class GroupAdminsComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = +params['id'];
       if (!isNaN(id)) {
-        this.groupId = id; // Store the groupId
+        this.groupId = id;
         this.groupService.getAdminsForGroup(id).subscribe(
           result => {
             this.admins = result.body as User[];

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
@@ -58,8 +59,9 @@ public class GroupController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<GroupDTO>> getAll(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -80,8 +82,9 @@ public class GroupController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupDTO> getOne(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -103,8 +106,9 @@ public class GroupController {
     }
 
     @GetMapping("members/{groupId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<UserDTO>> getGroupMembers(@PathVariable String groupId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -132,8 +136,9 @@ public class GroupController {
     }
 
     @PostMapping("/{groupId}/adminGroup/{adminId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity addGroupAdminNew(@PathVariable String groupId, @PathVariable String adminId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -153,8 +158,9 @@ public class GroupController {
     }
 
     @GetMapping("admins/{groupId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<UserDTO>> getGroupAdmins(@PathVariable String groupId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -187,8 +193,9 @@ public class GroupController {
         private EntityManager entityManager;
 
     @PostMapping("/block-member")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> blockMember(@RequestHeader("authorization") String token, @RequestBody BlockMemberRequestDTO request) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -255,8 +262,9 @@ public class GroupController {
 
 
     @GetMapping("reports/{groupId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ReportDTO>> getReportsForGroup(@PathVariable String groupId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -287,8 +295,9 @@ public class GroupController {
 
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupDTO> createGroup(@RequestBody @Validated GroupDTO newGroup, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -310,9 +319,10 @@ public class GroupController {
     }
 
     @PatchMapping("/edit/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupDTO> editGroup(@PathVariable String id, @RequestBody @Validated GroupDTO editedGroup,
                                               @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -341,8 +351,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteGroup(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -364,8 +375,9 @@ public class GroupController {
     }
 
     @PostMapping("/{groupId}/admin/{adminId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity addGroupAdmin(@PathVariable String groupId, @PathVariable String adminId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -386,8 +398,9 @@ public class GroupController {
     }
 
     @PostMapping("/{groupId}/member/{memberId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity addGroupMember(@PathVariable String groupId, @PathVariable String memberId, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -407,8 +420,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/delete/{groupId}/admin/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity deleteGroupAdmin(@PathVariable String groupId, @PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -428,8 +442,9 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/group-requests")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<GroupRequestDTO>> getGroupRequests(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -449,8 +464,9 @@ public class GroupController {
     }
 
     @PatchMapping("/group-request")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupRequestDTO> updateGroupRequest(@RequestBody @Validated GroupRequestDTO groupRequestDTO, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -479,8 +495,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/group-request/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteGroupRequest(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -500,9 +517,10 @@ public class GroupController {
     }
 
     @PostMapping("/{id}/group-request")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupRequestDTO> createGroupRequest(@PathVariable String id, @RequestBody @Validated GroupRequestDTO newGroupRequest,
                                                               @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);

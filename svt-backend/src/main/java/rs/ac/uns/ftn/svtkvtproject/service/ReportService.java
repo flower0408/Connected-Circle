@@ -12,13 +12,6 @@ import java.util.Set;
 
 public interface ReportService {
 
-   /* ReportDTO createReport(ReportDTO reportDTO);
-    Set<ReportDTO> getAllReports();
-    Set<ReportDTO> getAllReportsForGroup(int groupID);
-    ReportDTO updateReport(UpdateReportDTO updateReportDTO);
-    Report findOneEntityById(int id);
-    Set<ReportDTO>getAllReportsForAdmin();*/
-
     Report findById(Long id);
 
     List<Report> findAll();

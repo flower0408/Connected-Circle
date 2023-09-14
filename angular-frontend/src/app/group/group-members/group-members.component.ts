@@ -24,7 +24,7 @@ export class GroupMembersComponent implements OnInit {
     private fb: FormBuilder,
     private groupService: GroupService,
     private userService: UserService,
-    private route: ActivatedRoute, // Inject ActivatedRoute
+    private route: ActivatedRoute,
     private router: Router
   ) {
     this.form = this.fb.group({

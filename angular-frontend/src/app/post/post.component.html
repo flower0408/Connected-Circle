@@ -111,7 +111,7 @@
                 <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'HEART')"><i class="fa fa-heart"></i>  {{getReactionCount(reply.id, 'HEART')}}</button>
                 <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'LIKE')"><i class="fa fa-thumbs-up"></i>  {{getReactionCount(reply.id, 'LIKE')}}</button>
                 <button class="btn btn-white btn-xs" (click)="reactedComment(reply.id, 'DISLIKE')"><i class="fa fa-thumbs-down"></i>  {{getReactionCount(reply.id, 'DISLIKE')}}</button>
-                <button class="btn btn1" *ngIf="canDeleteReply()" (click)="deleteComment(reply.id)">Delete Reply</button>
+                <button class="btn btn1" *ngIf="canDeleteReply(reply.id)" (click)="deleteComment(reply.id)">Delete Reply</button>
                 <!-- Add the report reason dropdown for reporting comments -->
                 <div *ngIf="reportedReplyId === reply.id">
                   <label for="reportReason">Select a report reason:</label>

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Comment;
@@ -53,8 +54,9 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<CommentDTO> getOne(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -75,8 +77,9 @@ public class CommentController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<CommentDTO>> getAll(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -97,8 +100,9 @@ public class CommentController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<CommentDTO> addComment(@RequestBody @Validated CommentDTO newComment, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -120,9 +124,10 @@ public class CommentController {
     }
 
     @PatchMapping("/edit/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<CommentDTO> editComment(@PathVariable String id, @RequestBody @Validated CommentDTO editedComment,
                                                   @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -148,8 +153,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteComment(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);

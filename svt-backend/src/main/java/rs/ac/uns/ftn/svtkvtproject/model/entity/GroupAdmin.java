@@ -33,10 +33,6 @@ public class GroupAdmin {
     @Column(nullable = false)
     private boolean isDeleted;
 
-    //  Associations
-/*
-    @OneToMany
-    private Set<Banned> bans = new HashSet<Banned>();*/
 
 }
 

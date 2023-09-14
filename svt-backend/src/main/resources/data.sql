@@ -163,6 +163,8 @@ insert into group_posts (group_id, post_id)
 values (1, 4);
 insert into group_posts (group_id, post_id)
 values (2, 5);
+insert into group_posts (group_id, post_id)
+values (2, 6);
 
 /*insert into group_request (approved, at, created_at, is_deleted, created_by_user_id, for_group_id)
 values (null, null, '2023-05-13', false, 4, 2);*/

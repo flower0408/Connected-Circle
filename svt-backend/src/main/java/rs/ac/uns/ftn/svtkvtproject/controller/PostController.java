@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ImageDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
@@ -55,8 +56,9 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PostDTO> getOne(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -78,8 +80,9 @@ public class PostController {
     }
 
     @GetMapping("/{id}/images")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ImageDTO>> getImagesForPost(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -100,8 +103,9 @@ public class PostController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<PostDTO>> getAll(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -122,8 +126,9 @@ public class PostController {
     }
 
     @GetMapping("/homepage")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<PostDTO>> getHomepagePosts(@RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -148,8 +153,9 @@ public class PostController {
     }
 
     @GetMapping("/homepage/sort/{order}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<PostDTO>> getHomepagePostsSorted(@PathVariable String order, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -178,8 +184,9 @@ public class PostController {
     }
 
     @GetMapping("/group/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<PostDTO>> getAllForGroup(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -207,8 +214,9 @@ public class PostController {
     }
 
     @GetMapping("/group/{id}/sort/asc")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<PostDTO>> getAllForGroupSortedAsc(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -236,8 +244,9 @@ public class PostController {
     }
 
     @GetMapping("/group/{id}/sort/desc")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<PostDTO>> getAllForGroupSortedDesc(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -265,8 +274,9 @@ public class PostController {
     }
 
     @GetMapping("/group/{id}/user")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Boolean> checkUserInGroup(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -286,8 +296,9 @@ public class PostController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PostDTO> addPost(@RequestBody @Validated PostDTO newPost, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -316,9 +327,10 @@ public class PostController {
     }
 
     @PatchMapping("/edit/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PostDTO> editPost(@PathVariable String id, @RequestBody @Validated PostDTO editedPost,
                                               @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -348,8 +360,9 @@ public class PostController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deletePost(@PathVariable String id, @RequestHeader("authorization") String token) {
-        logger.info("Authentication check");
+        logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
         User user = userService.findByUsername(username);
@@ -372,12 +385,13 @@ public class PostController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
     @GetMapping("/{id}/comments")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<CommentDTO>> getCommentsForPost(@PathVariable String id,
                                                                @RequestHeader("authorization") String token) {
-        logger.info("Checking authorization");
-        String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
-        String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
-        User user = userService.findByUsername(username); //provera da li postoji u bazi
+        logger.info("Authorization check");
+        String cleanToken = token.substring(7);
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
 
         if (user == null) {
             logger.error("User not found for token: " + cleanToken);
@@ -398,14 +412,13 @@ public class PostController {
     }
 
    @GetMapping("/{id}/comments/sort/{order}")
-   public ResponseEntity<List<CommentDTO>> getSortedCommentsForPost(
-           @PathVariable String id,
-           @RequestHeader("authorization") String token,
+   @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+   public ResponseEntity<List<CommentDTO>> getSortedCommentsForPost(@PathVariable String id, @RequestHeader("authorization") String token,
            @PathVariable String order) {
-       logger.info("Checking authorization");
-       String cleanToken = token.substring(7); //izbacivanje 'Bearer' iz tokena
-       String username = tokenUtils.getUsernameFromToken(cleanToken); //izvlacenje username-a iz tokena
-       User user = userService.findByUsername(username); //provera da li postoji u bazi
+       logger.info("Authorization check");
+       String cleanToken = token.substring(7);
+       String username = tokenUtils.getUsernameFromToken(cleanToken);
+       User user = userService.findByUsername(username);
 
        if (user == null) {
            logger.error("User not found for token: " + cleanToken);

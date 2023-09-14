@@ -36,10 +36,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             value = "select * from `user` where id = :id and is_admin = true and is_deleted = false;")
     Optional<User> checkIfUserIsAdmin(@Param("id") Long id);
 
-    /*@Query(nativeQuery = true,
-            value = "select * from `user`;")
-    Optional<List<User>> findAllUsers();*/
-
     @Query(nativeQuery = true,
             value = "select * from `user` where is_deleted = false;")
     Optional<List<User>> findAllActiveUsers();

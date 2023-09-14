@@ -76,41 +76,9 @@ public class User {
         if (this.isDeleted != deleted) {
             this.isDeleted = deleted;
             if (!deleted) {
-                // Log that the deletion status has changed to false
                 logger.info("User with ID " + this.id + " is no longer deleted.");
             }
         }
     }
 
-    //  Associations
-/*
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<Post> posts = new HashSet<Post>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<GroupAdmin> groupAdmins = new HashSet<GroupAdmin>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<Banned> bans = new HashSet<Banned>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<Comment> comments = new HashSet<Comment>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<FriendRequest> friendRequestsFrom = new HashSet<FriendRequest>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<FriendRequest> friendRequestsTo = new HashSet<FriendRequest>();
-
-    @OneToMany
-    private Set<Report> reports = new HashSet<Report>();
-
-    @OneToOne
-    private Image profileImage;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<GroupRequest> groupRequests = new HashSet<GroupRequest>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private Set<Reaction> reactions = new HashSet<Reaction>();*/
 }
