@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.svtkvtproject.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.GroupDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Group;
 
@@ -28,7 +29,7 @@ public interface GroupService {
 
     Group checkIfPostInGroup(Long postId);
 
-    Group createGroup(GroupDTO groupDTO);
+    Group createGroup(GroupDTO groupDTO, MultipartFile attachedFile);
 
     Group updateGroup(Group group);
 

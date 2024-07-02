@@ -1,6 +1,10 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.svtkvtproject.service.interfaces.SearchServieGroup;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,12 +47,14 @@ public class GroupController {
 
     TokenUtils tokenUtils;
 
+    SearchServieGroup searchServieGroup;
+
     private static final Logger logger = LogManager.getLogger(GroupController.class);
 
     @Autowired
     public GroupController(GroupService groupService, UserService userService, PostService postService, GroupRequestService groupRequestService, ReportService reportService,
                            BannedService bannedService,
-                           AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
+                           AuthenticationManager authenticationManager, TokenUtils tokenUtils, SearchServieGroup searchServieGroup) {
         this.groupService = groupService;
         this.userService = userService;
         this.postService = postService;
@@ -56,6 +63,7 @@ public class GroupController {
         this.bannedService = bannedService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
+        this.searchServieGroup = searchServieGroup;
     }
 
     @GetMapping()
@@ -294,9 +302,9 @@ public class GroupController {
 
 
 
-    @PostMapping("/add")
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<GroupDTO> createGroup(@RequestBody @Validated GroupDTO newGroup, @RequestHeader("authorization") String token) {
+    public ResponseEntity<GroupDTO> createGroup(@ModelAttribute  GroupDTO newGroup,  @RequestHeader("authorization") String token, @RequestParam(required = false) MultipartFile attachedPDF) {
         logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
@@ -306,7 +314,7 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("Creating group from DTO");
-        Group createdGroup = groupService.createGroup(newGroup);
+        Group createdGroup = groupService.createGroup(newGroup, attachedPDF);
         if (createdGroup == null) {
             logger.error("Group couldn't be created from DTO");
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
@@ -315,8 +323,71 @@ public class GroupController {
         GroupDTO groupDTO = new GroupDTO(createdGroup);
         logger.info("Created and sent response");
 
+        System.out.println(attachedPDF.getOriginalFilename());
         return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
     }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<GroupDocument>> findByName(@PathVariable String name) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByName(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/description/{description}")
+    public ResponseEntity<List<GroupDocument>> findByDescription(@PathVariable String description) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByDescription(description), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/pdf-content/{content}")
+    public ResponseEntity<List<GroupDocument>> findByPDFContent(@PathVariable String content) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPDFContent(content), HttpStatus.OK);
+    }
+
+    /*@PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<GroupDTO> createGroup(
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam(value = "attachedPDF", required = false) MultipartFile attachedPDF,
+            @RequestHeader("Authorization") String token) {
+
+        logger.info("Authorization check");
+        String cleanToken = token.substring(7); // Assuming token starts with "Bearer "
+        String username = tokenUtils.getUsernameFromToken(cleanToken);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with token: " + cleanToken);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        GroupDTO newGroup = new GroupDTO();
+        newGroup.setName(name);
+        newGroup.setDescription(description);
+        newGroup.setCreationDate(LocalDateTime.now().toString());
+        newGroup.setSuspended(false);
+
+        logger.info("Creating group from DTO");
+        Group createdGroup = groupService.createGroup(newGroup, attachedPDF);
+        if (createdGroup == null) {
+            logger.error("Group couldn't be created from DTO");
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        logger.info("Creating response");
+        GroupDTO groupDTO = new GroupDTO(createdGroup);
+        logger.info("Created and sent response");
+
+        // Return the response with multipart/form-data content type
+       /* HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(groupDTO);*/
+      /*  System.out.println(attachedPDF.getOriginalFilename());
+        return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
+    }*/
+
 
     @PatchMapping("/edit/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")

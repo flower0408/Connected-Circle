@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.svtkvtproject.service.implementation;
 
+import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.GroupDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Group;
 import rs.ac.uns.ftn.svtkvtproject.repository.GroupRepository;
@@ -9,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.svtkvtproject.service.interfaces.IndexingServiceGroup;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +33,10 @@ public class GroupServiceImpl implements GroupService {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    private IndexingServiceGroup indexingServiceGroup;
+    @Autowired
+    public void setIndexingServiceGroup(IndexingServiceGroup indexingServiceGroup) {this.indexingServiceGroup = indexingServiceGroup;}
 
     private static final Logger logger = LogManager.getLogger(GroupServiceImpl.class);
 
@@ -140,7 +147,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group createGroup(GroupDTO groupDTO) {
+    public Group createGroup(GroupDTO groupDTO, MultipartFile attachedFile) {
         Optional<Group> group = groupRepository.findByName(groupDTO.getName());
 
         if (group.isPresent()) {
@@ -151,11 +158,15 @@ public class GroupServiceImpl implements GroupService {
         Group newGroup = new Group();
         newGroup.setName(groupDTO.getName());
         newGroup.setDescription(groupDTO.getDescription());
-        newGroup.setCreationDate(LocalDateTime.parse(groupDTO.getCreationDate()));
-        newGroup.setSuspended(groupDTO.isSuspended());
+        newGroup.setCreationDate(LocalDateTime.now());
+        newGroup.setSuspended(false);
         newGroup.setSuspendedReason(groupDTO.getSuspendedReason());
         newGroup.setDeleted(false);
         newGroup = groupRepository.save(newGroup);
+        if (attachedFile != null && !attachedFile.isEmpty()) {
+            GroupDocument groupDocument = indexingServiceGroup.indexDocument(newGroup, attachedFile);
+            System.out.println("Group document: " + groupDocument);
+        }
 
         return newGroup;
     }
