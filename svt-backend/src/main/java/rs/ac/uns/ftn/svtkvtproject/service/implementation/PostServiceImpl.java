@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.svtkvtproject.service.implementation;
 
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
+import rs.ac.uns.ftn.svtkvtproject.elasticrepository.GroupDocumentRepository;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Post;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
@@ -44,9 +46,14 @@ public class PostServiceImpl implements PostService {
     }
 
     private IndexingServicePost indexingServicePost;
+
     @Autowired
     public void setIndexingServiceGroup(IndexingServicePost indexingServicePost) {this.indexingServicePost = indexingServicePost;}
 
+    private GroupDocumentRepository groupDocumentRepository;
+
+    @Autowired
+    public void setGroupDocumentRepository(GroupDocumentRepository groupDocumentRepository) {this.groupDocumentRepository = groupDocumentRepository;}
 
     private static final Logger logger = LogManager.getLogger(PostServiceImpl.class);
 
@@ -127,12 +134,21 @@ public class PostServiceImpl implements PostService {
 
         if (postDTO.getBelongsToGroupId() != null) {
             boolean userInGroup = groupService.checkUser(postDTO.getBelongsToGroupId(), postDTO.getPostedByUserId());
-
             if (!userInGroup) {
                 logger.error("User with id: " + postDTO.getPostedByUserId() +
                         " tried posting in group with id: " + postDTO.getBelongsToGroupId() +
                         " while not being a member");
                 return null;
+            }
+            GroupDocument group = groupDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getBelongsToGroupId())).orElse(null);
+            logger.info("groupDocumentRepository.findByDatabaseId : " + (Math.toIntExact(postDTO.getBelongsToGroupId()))
+            );
+            if (group != null) {
+                logger.info("group.getNumPosts : " + group.getNumPosts() + "group.id : " + group.getId());
+                group.setNumPosts(group.getNumPosts() + 1);
+                logger.info("group.getNumPostsAfter : " + group.getNumPosts() + "group.id : " + group.getId());
+                groupDocumentRepository.save(group);
+                logger.info("groupDocumentRepository.save : " + groupDocumentRepository.save(group) + "group.getNumPosts : " + group.getNumPosts());
             }
         }
 

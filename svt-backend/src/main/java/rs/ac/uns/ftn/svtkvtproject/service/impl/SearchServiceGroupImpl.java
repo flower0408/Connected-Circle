@@ -16,6 +16,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.json.JsonData;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchGroupByRangeOfPosts;
 import rs.ac.uns.ftn.svtkvtproject.service.interfaces.SearchServieGroup;
 
 @Service
@@ -44,6 +45,14 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
         var searchQueryBuilder =
                 new NativeQueryBuilder().withQuery(simpleSearchForPDFDescription(content));
         return runQuery(searchQueryBuilder.build());
+    }
+
+    @Override
+    public List<GroupDocument> searchGroupsByPosts(SearchGroupByRangeOfPosts data) {
+        var searchQueryBuilder =
+                new NativeQueryBuilder().withQuery(searchByNumPostsRange(data.getGreaterThan(), data.getLessThan()));
+        return runQuery(searchQueryBuilder.build());
+
     }
 
     private List<GroupDocument> runQuery(NativeQuery searchQuery) {

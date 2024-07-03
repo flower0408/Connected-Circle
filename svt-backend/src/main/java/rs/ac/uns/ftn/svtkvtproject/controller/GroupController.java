@@ -343,6 +343,11 @@ public class GroupController {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPDFContent(content), HttpStatus.OK);
     }
 
+    @GetMapping("/based-on-posts")
+    public ResponseEntity<List<GroupDocument>> findByPostsInGroups(@RequestBody SearchGroupByRangeOfPosts data) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
+    }
+
     /*@PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupDTO> createGroup(
