@@ -23,29 +23,29 @@ values (null, null, '2023-08-20', false, 2, 5);
 insert into friend_request (approved, at, created_at, is_deleted, from_user_id, to_user_id)
 values (null, null, '2023-08-22', false, 2, 4);*/
 
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is first post by me. I am glad if you can see it.',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is my first post', 'This is first post by me. I am glad if you can see it.',
         '2023-08-12 12:00:00', false, 1);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is second post by me. I am glad if you can see it.',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is my second post', 'This is second post by me. I am glad if you can see it.',
         '2023-08-20 12:00:00', false, 1);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is new post for today, happy to be here.',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is my new post', 'This is new post for today, happy to be here.',
         '2023-08-08 18:20:30', false, 2);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is a post in a group. If you see it, you are inside a group',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is my group post','This is a post in a group. If you see it, you are inside a group',
         '2023-08-14 15:23:35', false, 1);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is another post for a group. Say hi to everyone in this group',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is my another group post', 'This is another post for a group. Say hi to everyone in this group',
         '2023-08-15 14:56:55', false, 3);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is test post for second group. Say hi to everyone in this group',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is my test post', 'This is test post for second group. Say hi to everyone in this group',
         '2023-08-13 12:12:12', false, 3);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-values ('This is Anas global post. Friends can see it. Sending good vibes to everyone.',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+values ('This is Anas first post', 'This is Anas global post. Friends can see it. Sending good vibes to everyone.',
         '2023-08-26 05:22:12', false, 3);
-insert into post (content, creation_date, is_deleted, posted_by_user_id)
-    values ('This is Mikas global post. Friends can see it. Sending good vibes to everyone.',
+insert into post (title, content, creation_date, is_deleted, posted_by_user_id)
+    values ('This is Mikas first post', 'This is Mikas global post. Friends can see it. Sending good vibes to everyone.',
         '2023-08-28 01:12:39', false, 2);
 
 insert into comment (is_deleted, text, timestamp, belongs_to_post_id, belongs_to_user_id, replies_to_comment_id)

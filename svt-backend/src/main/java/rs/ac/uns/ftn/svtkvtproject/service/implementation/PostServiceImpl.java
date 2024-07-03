@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.svtkvtproject.service.implementation;
 
+import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Post;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
@@ -11,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.svtkvtproject.service.interfaces.IndexingServicePost;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +42,11 @@ public class PostServiceImpl implements PostService {
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
     }
+
+    private IndexingServicePost indexingServicePost;
+    @Autowired
+    public void setIndexingServiceGroup(IndexingServicePost indexingServicePost) {this.indexingServicePost = indexingServicePost;}
+
 
     private static final Logger logger = LogManager.getLogger(PostServiceImpl.class);
 
@@ -102,7 +110,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(PostDTO postDTO) {
+    public Post createPost(PostDTO postDTO, MultipartFile attachedPDF) {
         Optional<Post> post = postRepository.findById(postDTO.getId());
 
         if (post.isPresent()) {
@@ -112,7 +120,8 @@ public class PostServiceImpl implements PostService {
 
         Post newPost = new Post();
         newPost.setContent(postDTO.getContent());
-        newPost.setCreationDate(LocalDateTime.parse(postDTO.getCreationDate()));
+        newPost.setTitle(postDTO.getTitle());
+        newPost.setCreationDate(LocalDateTime.now());
         newPost.setPostedBy(userService.findById(postDTO.getPostedByUserId()));
         newPost.setDeleted(false);
 
@@ -131,6 +140,12 @@ public class PostServiceImpl implements PostService {
 
         if (postDTO.getBelongsToGroupId() != null)
             postRepository.saveGroupPost(postDTO.getBelongsToGroupId(), newPost.getId());
+
+        System.out.println(newPost.getTitle());
+        System.out.println(newPost.getContent());
+        System.out.println(newPost.getTitle());
+        System.out.println(newPost.getContent());
+        PostDocument postDocument = indexingServicePost.indexDocument(newPost, attachedPDF);
 
         return newPost;
     }

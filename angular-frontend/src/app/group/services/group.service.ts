@@ -14,6 +14,8 @@ export class GroupService {
   private headers = new HttpHeaders({'authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken,
   'Content-Type': 'application/json'});
 
+  private headers2 = new HttpHeaders({'authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken});
+
   constructor(
     private http: HttpClient
   ) { }
@@ -88,9 +90,28 @@ export class GroupService {
     return this.http.get('api/groups', queryParams) as Observable<HttpResponse<Group[]>>;
   }
 
-  add(newGroup: Group): Observable<string> {
-    return this.http.post('api/groups/add', newGroup, {headers: this.headers, responseType: 'text'});
+  private formatFormData(name: string, description: string, attachedPDF: File): FormData {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    if (attachedPDF) {
+      formData.append('attachedPDF', attachedPDF);
+    }
+    return formData;
   }
+  
+  add(name: string, description: string, attachedPDF: File): Observable<any> {
+    const formData = this.formatFormData(name, description, attachedPDF);
+  
+    return this.http.post('api/groups/add', formData, {
+      headers: this.headers2,
+      responseType: 'text'
+    });
+  }
+
+  /*add(newGroup: Group): Observable<string> {
+    return this.http.post('api/groups/add', newGroup, {headers: this.headers, responseType: 'text'});
+  }*/
 
   edit(editedGroup: Group): Observable<string> {
     return this.http.patch('api/groups/edit/' + editedGroup.id, editedGroup, {headers: this.headers, responseType: 'text'});

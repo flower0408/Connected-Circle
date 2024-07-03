@@ -50,6 +50,7 @@
         </div>
       </div>
       <div class="social-body">
+        <p>{{post.title}}</p>
         <p>{{post.content}}</p>
         <div class="img1" *ngFor="let image of images">
           <img [src]="image.path" [alt]="'Image ' + image.id">

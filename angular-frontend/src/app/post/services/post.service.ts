@@ -12,6 +12,8 @@ export class PostService {
   private headers = new HttpHeaders({'authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken,
   'Content-Type': 'application/json'});
 
+  private headers2 = new HttpHeaders({'authorization': 'Bearer ' + JSON.parse(localStorage.user).accessToken});
+
   constructor(
     private http: HttpClient
   ) { }
@@ -75,9 +77,60 @@ export class PostService {
     return this.http.delete('api/posts/delete/' + id, {headers: this.headers}) as Observable<HttpResponse<Post>>;
   }
 
-  add(newPost: Post): Observable<string> {
-    return this.http.post('api/posts/add', newPost, {headers: this.headers, responseType: 'text'});
+  private formateFormDataWithGroupId(
+    title: string, 
+    content: string, 
+    postedByUserId: string, 
+    belongsToGroupId: string, 
+    attachedPDF: File
+  ): FormData {
+    let formData: FormData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('postedByUserId', postedByUserId);
+    formData.append('belongsToGroupId', belongsToGroupId);
+    formData.append('attachedPDF', attachedPDF);
+    return formData;
   }
+  
+  private formateFormDataWithoutGroupId(
+    title: string, 
+    content: string, 
+    postedByUserId: string, 
+    attachedPDF: File
+  ): FormData {
+    let formData: FormData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('postedByUserId', postedByUserId);
+    formData.append('attachedPDF', attachedPDF);
+    return formData;
+  }
+  
+  add(
+    title: string, 
+    content: string, 
+    postedByUserId: string, 
+    belongsToGroupId: string | null, 
+    attachedPDF: File
+  ): Observable<any> {
+    let formData: FormData;
+  
+    if (belongsToGroupId !== null) {
+      formData = this.formateFormDataWithGroupId(title, content, postedByUserId, belongsToGroupId, attachedPDF);
+    } else {
+      formData = this.formateFormDataWithoutGroupId(title, content, postedByUserId, attachedPDF);
+    }
+    
+    return this.http.post('api/posts/add', formData, {
+      headers: this.headers2,
+      responseType: 'text'
+    });
+  }
+
+  /*add(newPost: Post): Observable<string> {
+    return this.http.post('api/posts/add', newPost, {headers: this.headers, responseType: 'text'});
+  }*/
 
   edit(editedPost: Post): Observable<string> {
     return this.http.patch('api/posts/edit/' + editedPost.id, editedPost, {headers: this.headers, responseType: 'text'});

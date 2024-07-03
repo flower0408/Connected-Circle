@@ -17,6 +17,9 @@
           This field can't be empty!
         </small>
       </div>
+      <div class="form-group">
+        <input type="file" (change)="onFileChange($event)" />
+      </div>
       <div class="center">
         <button  type="submit" class="btn btn1" [disabled]="!form.valid">Add Group</button>
 

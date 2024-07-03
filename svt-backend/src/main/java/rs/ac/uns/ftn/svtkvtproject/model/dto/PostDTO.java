@@ -20,6 +20,9 @@ public class PostDTO {
     @NotBlank
     private String content;
 
+    @NotBlank
+    private String title;
+
     @NotNull
     private String creationDate;
 
@@ -32,6 +35,7 @@ public class PostDTO {
 
     public PostDTO(Post createdPost) {
         this.id = createdPost.getId();
+        this.title = createdPost.getTitle();
         this.content = createdPost.getContent();
         this.creationDate = createdPost.getCreationDate().toString();
         this.postedByUserId = createdPost.getPostedBy().getId();

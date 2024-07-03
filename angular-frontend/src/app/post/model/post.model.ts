@@ -2,6 +2,7 @@ import { Image } from "./image.model";
 
 export class Post {
   _id: number;
+  title: string;
   content: string;
   creationDate: string;
   postedByUserId: number;
@@ -12,6 +13,7 @@ export class Post {
   constructor(obj: {
     _id?: number,
     content?: string,
+    title?:string,
     creationDate?: string,
     postedByUserId?: number,
     images?: Image[],
@@ -19,6 +21,7 @@ export class Post {
   } = {}) {
     this._id = obj._id || null as unknown as number;
     this.content = obj.content || null as unknown as string;
+    this.title = obj.title || null as unknown as string;
     this.creationDate = obj.creationDate || null as unknown as string;
     this.postedByUserId = obj.postedByUserId || null as unknown as number;
     this.images = obj.images || [];

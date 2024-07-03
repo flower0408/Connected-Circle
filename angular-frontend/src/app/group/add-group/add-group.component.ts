@@ -28,10 +28,23 @@ export class AddGroupComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       name: [null, Validators.required],
-      description: [null, Validators.required]
+      description: [null, Validators.required],
+      attachedPDF: [''],
     });
 
    }
+
+   onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.form.patchValue({
+        attachedPDF: file
+      });
+      this.form.get('attachedPDF')?.updateValueAndValidity();
+    }
+    console.log(this.form.get('attachedPDF')?.value);
+  }
+  
 
    ngOnInit(): void {
     const jwt: JwtHelperService = new JwtHelperService();
@@ -55,8 +68,11 @@ export class AddGroupComponent implements OnInit {
       group.description = this.form.value.description;
       group.creationDate = new Date().toISOString().slice(0, -1);
       group.suspended = false;
+      const attachedPDF = this.form.get('attachedPDF')?.value;
+      const name = this.form.get('name');
+      const description = this.form.get('description');
 
-      this.groupService.add(group).subscribe(
+      this.groupService.add(name?.value, description?.value, attachedPDF).subscribe(
         result => {
           group = (JSON.parse(result)) as Group;
 

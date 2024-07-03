@@ -1,6 +1,9 @@
 package rs.ac.uns.ftn.svtkvtproject.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ImageDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.svtkvtproject.service.interfaces.SearchServicePost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +44,13 @@ public class PostController {
 
     TokenUtils tokenUtils;
 
+    SearchServicePost searchServicePost;
+
     private static final Logger logger = LogManager.getLogger(PostController.class);
 
     @Autowired
     public PostController(PostService postService, UserService userService, GroupService groupService, ImageService imageService,
-                          CommentService commentService, ReactionService reactionService, AuthenticationManager authenticationManager, TokenUtils tokenUtils) {
+                          CommentService commentService, ReactionService reactionService, AuthenticationManager authenticationManager, TokenUtils tokenUtils, SearchServicePost searchServicePost) {
         this.postService = postService;
         this.userService = userService;
         this.groupService = groupService;
@@ -53,6 +59,7 @@ public class PostController {
         this.reactionService = reactionService;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
+        this.searchServicePost = searchServicePost;
     }
 
     @GetMapping("/{id}")
@@ -295,9 +302,9 @@ public class PostController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<PostDTO> addPost(@RequestBody @Validated PostDTO newPost, @RequestHeader("authorization") String token) {
+    public ResponseEntity<PostDTO> addPost(@ModelAttribute  PostDTO newPost, @RequestHeader("authorization") String token, @RequestParam(required = false) MultipartFile attachedPDF) {
         logger.info("Authorization check");
         String cleanToken = token.substring(7);
         String username = tokenUtils.getUsernameFromToken(cleanToken);
@@ -307,7 +314,7 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("Creating post from DTO");
-        Post createdPost = postService.createPost(newPost);
+        Post createdPost = postService.createPost(newPost, attachedPDF);
         if (createdPost == null) {
             logger.error("Post couldn't be created from DTO");
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
@@ -325,6 +332,22 @@ public class PostController {
 
         return new ResponseEntity<>(postDTO, HttpStatus.CREATED);
     }
+
+    @GetMapping("/title/{title}")
+    public ResponseEntity<List<PostDocument>> findPostsByTitle(@PathVariable String title) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByPostName(title), HttpStatus.OK);
+    }
+
+    @GetMapping("/content/{content}")
+    public ResponseEntity<List<PostDocument>> findPostsByContent(@PathVariable String content) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByPostContent(content), HttpStatus.OK);
+    }
+
+    @GetMapping("/pdf-content/{content}")
+    public ResponseEntity<List<PostDocument>> findPostsByPDFContent(@PathVariable String content) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByPDFContent(content), HttpStatus.OK);
+    }
+
 
     @PatchMapping("/edit/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
