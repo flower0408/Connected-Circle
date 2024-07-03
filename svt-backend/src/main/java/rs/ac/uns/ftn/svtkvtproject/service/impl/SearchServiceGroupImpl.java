@@ -74,6 +74,67 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
         })._toQuery();
     }
 
+    @Override
+    public List<GroupDocument> searchGroupsBooleanQuery(String name, String description, String pdfContent, String operation) {
+        var searchQueryBuilder = new NativeQueryBuilder().withQuery(buildComplexSearchQuery(name, description, pdfContent, operation));
+        return runQuery(searchQueryBuilder.build());
+    }
+
+    private Query buildComplexSearchQuery(String name, String description, String pdfContent, String operation) {
+        return BoolQuery.of(q -> {
+            switch (operation) {
+                case "AND":
+                    q.must(mb -> mb.bool(b -> {
+                        if (name != null && !name.isEmpty()) {
+                            b.must(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
+                        }
+                        if (description != null && !description.isEmpty()) {
+                            b.must(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
+                        }
+                        if (pdfContent != null && !pdfContent.isEmpty()) {
+                            //b.must(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
+                            b.must(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
+                        }
+                        return b;
+                    }));
+                    break;
+                case "OR":
+                    q.should(mb -> mb.bool(b -> {
+                        if (name != null && !name.isEmpty()) {
+                            b.should(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
+                        }
+                        if (description != null && !description.isEmpty()) {
+                            b.should(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
+                        }
+                        if (pdfContent != null && !pdfContent.isEmpty()) {
+                            b.should(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
+                            b.should(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
+                        }
+                        return b;
+                    }));
+                    break;
+                case "NOT":
+                    q.must(mb -> mb.bool(b -> {
+                        if (name != null && !name.isEmpty()) {
+                            b.must(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
+                        }
+                        if (description != null && !description.isEmpty()) {
+                            b.must(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
+                        }
+                        if (pdfContent != null && !pdfContent.isEmpty()) {
+                            b.mustNot(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
+                            b.mustNot(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
+                        }
+                        return b;
+                    }));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid operation: " + operation);
+            }
+            return q;
+        })._toQuery();
+    }
+
 
     private Query buildSimpleSearchQuery(List<String> tokens) {
         return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {

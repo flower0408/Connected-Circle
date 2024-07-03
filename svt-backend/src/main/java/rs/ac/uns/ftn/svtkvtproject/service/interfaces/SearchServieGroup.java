@@ -13,4 +13,6 @@ public interface SearchServieGroup {
     List<GroupDocument> searchGroupsByDescription(String description);
     List<GroupDocument> searchGroupsByPDFContent(String content);
     List<GroupDocument> searchGroupsByPosts(SearchGroupByRangeOfPosts data);
+    //List<GroupDocument> searchGroupsCombined(String name, String description, String pdfContent, Boolean useAndOperator);
+    List<GroupDocument> searchGroupsBooleanQuery(String name, String description, String pdfContent,  String operation);
 }

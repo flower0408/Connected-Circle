@@ -348,6 +348,16 @@ public class GroupController {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
     }
 
+    //GET http://localhost:8080/api/groups/search?name=test&description=provera&pdfContent=natasa&operation=OR
+    @GetMapping("/search")
+    public ResponseEntity<List<GroupDocument>> searchGroupsBooleanQuery(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String pdfContent,
+            @RequestParam(required = false, defaultValue = "OR") String operation) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsBooleanQuery(name, description, pdfContent, operation), HttpStatus.OK);
+    }
+
     /*@PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<GroupDTO> createGroup(
