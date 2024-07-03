@@ -1,5 +1,9 @@
 package rs.ac.uns.ftn.svtkvtproject.service.implementation;
 
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
+import rs.ac.uns.ftn.svtkvtproject.elasticrepository.GroupDocumentRepository;
+import rs.ac.uns.ftn.svtkvtproject.elasticrepository.PostDocumentRepository;
 import rs.ac.uns.ftn.svtkvtproject.model.enums.ReactionType;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ReactionDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Comment;
@@ -50,6 +54,16 @@ public class ReactionServiceImpl implements ReactionService {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    private GroupDocumentRepository groupDocumentRepository;
+
+    @Autowired
+    public void setGroupDocumentRepository(GroupDocumentRepository groupDocumentRepository) {this.groupDocumentRepository = groupDocumentRepository;}
+
+    private PostDocumentRepository postDocumentRepository;
+
+    @Autowired
+    public void setPostDocumentRepository(PostDocumentRepository postDocumentRepository) {this.postDocumentRepository = postDocumentRepository;}
 
     private static final Logger logger = LogManager.getLogger(ReactionServiceImpl.class);
 
@@ -106,10 +120,34 @@ public class ReactionServiceImpl implements ReactionService {
         if (reactionDTO.getOnCommentId() != null) {
             Comment comment = commentService.findById(reactionDTO.getOnCommentId());
             newReaction.setOnComment(comment);
+            if (comment.getBelongsToPost() != null) {
+                Post post = comment.getBelongsToPost();
+                PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(post.getId())).orElse(null);
+                if (postDocument != null) {
+                    postDocument.setTotalLikes(postDocument.getTotalLikes() + 1);
+                    this.postDocumentRepository.save(postDocument);
+                }
+            }
         }
 
         if (reactionDTO.getOnPostId() != null) {
             Post post = postService.findById(reactionDTO.getOnPostId());
+            PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(post.getId())).orElse(null);
+            if (postDocument != null) {
+                postDocument.setTotalLikes(postDocument.getTotalLikes() + 1);
+                this.postDocumentRepository.save(postDocument);
+                if (postDocument.getGroupID() != null) {
+                    GroupDocument groupDocument = groupDocumentRepository.findByDatabaseId(postDocument.getGroupID()).orElse(null);
+                    System.out.println(postDocument.getGroupID());
+                    if (groupDocument != null) {
+                        groupDocument.setTotalLikes(groupDocument.getTotalLikes() + 1);
+                        float totalLikesFloat = (float) groupDocument.getTotalLikes();
+                        float totalNumPostsFloat = (float) groupDocument.getNumPosts();
+                        groupDocument.setAvgNumberOfLikes((totalLikesFloat / totalNumPostsFloat));
+                        this.groupDocumentRepository.save(groupDocument);
+                    }
+                }
+            }
             newReaction.setOnPost(post);
         }
 

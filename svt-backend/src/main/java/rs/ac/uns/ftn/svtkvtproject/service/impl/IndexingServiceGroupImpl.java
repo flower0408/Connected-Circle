@@ -52,7 +52,9 @@ public class IndexingServiceGroupImpl implements IndexingServiceGroup {
         newGroupDocument.setServerFilename(serverFilename);
 
         newGroupDocument.setNumPosts(0);
+        newGroupDocument.setAvgNumberOfLikes(0.0F);
         newGroupDocument.setDatabaseId(Math.toIntExact(group.getId()));
+        newGroupDocument.setTotalLikes(0);
         groupDocumentRepository.save(newGroupDocument);
         return newGroupDocument;
     }

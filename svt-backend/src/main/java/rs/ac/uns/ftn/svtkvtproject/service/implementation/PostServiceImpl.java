@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticrepository.GroupDocumentRepository;
+import rs.ac.uns.ftn.svtkvtproject.elasticrepository.PostDocumentRepository;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Post;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.User;
@@ -54,6 +55,12 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     public void setGroupDocumentRepository(GroupDocumentRepository groupDocumentRepository) {this.groupDocumentRepository = groupDocumentRepository;}
+
+    private PostDocumentRepository postDocumentRepository;
+
+    @Autowired
+    public void setPostDocumentRepository(PostDocumentRepository postDocumentRepository) {this.postDocumentRepository = postDocumentRepository;}
+
 
     private static final Logger logger = LogManager.getLogger(PostServiceImpl.class);
 
@@ -140,12 +147,18 @@ public class PostServiceImpl implements PostService {
                         " while not being a member");
                 return null;
             }
+           /* PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getId())).orElse(null);
+            postDocument.setGroupID();
+            newPostDocument.setGroupID(post.getPostedInGroup().getId());*/
             GroupDocument group = groupDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getBelongsToGroupId())).orElse(null);
+           // PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getId())).orElse(null);
+            //postDocument.setGroupID(Math.toIntExact(postDTO.getBelongsToGroupId()));
             logger.info("groupDocumentRepository.findByDatabaseId : " + (Math.toIntExact(postDTO.getBelongsToGroupId()))
             );
             if (group != null) {
                 logger.info("group.getNumPosts : " + group.getNumPosts() + "group.id : " + group.getId());
                 group.setNumPosts(group.getNumPosts() + 1);
+                group.setAvgNumberOfLikes((float) (group.getTotalLikes() / group.getNumPosts()));
                 logger.info("group.getNumPostsAfter : " + group.getNumPosts() + "group.id : " + group.getId());
                 groupDocumentRepository.save(group);
                 logger.info("groupDocumentRepository.save : " + groupDocumentRepository.save(group) + "group.getNumPosts : " + group.getNumPosts());
@@ -154,14 +167,28 @@ public class PostServiceImpl implements PostService {
 
         newPost = postRepository.save(newPost);
 
-        if (postDTO.getBelongsToGroupId() != null)
+        if (postDTO.getBelongsToGroupId() != null) {
             postRepository.saveGroupPost(postDTO.getBelongsToGroupId(), newPost.getId());
-
+            // PostDocument document = postDocumentRepository.findByDatabaseId(Math.toIntExact(newPost.getId())).orElse(null);
+            //document.setGroupID(Math.toIntExact(postDTO.getBelongsToGroupId()));}
+        }
         System.out.println(newPost.getTitle());
         System.out.println(newPost.getContent());
         System.out.println(newPost.getTitle());
         System.out.println(newPost.getContent());
         PostDocument postDocument = indexingServicePost.indexDocument(newPost, attachedPDF);
+
+        if (postDTO.getBelongsToGroupId() != null){
+            //postRepository.saveGroupPost(postDTO.getBelongsToGroupId(), newPost.getId());
+            logger.info("postDTO.getBelongsToGroupId : " + postDTO.getBelongsToGroupId());
+           // PostDocument document = postDocumentRepository.findByDatabaseId(Math.toIntExact(newPost.getId())).orElse(null);
+            logger.info("postDocumentRepository.findByDatabaseId : " + (Math.toIntExact(newPost.getId()))
+            );
+            postDocument.setGroupID(Math.toIntExact(postDTO.getBelongsToGroupId()));
+            // Log postDocument to check if it exists
+            logger.info("postDocument after setting GroupID: " + postDocument);}
+            postDocumentRepository.save(postDocument);
+        System.out.println(newPost.getTitle());
 
         return newPost;
     }

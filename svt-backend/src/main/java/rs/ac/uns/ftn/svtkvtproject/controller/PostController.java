@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ImageDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfLikes;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.*;
@@ -348,6 +349,11 @@ public class PostController {
         return new ResponseEntity<>(this.searchServicePost.getPostsByPDFContent(content), HttpStatus.OK);
     }
 
+    @GetMapping("/search-by-likes")
+    public ResponseEntity<List<PostDocument>> findPostsByLikes(@RequestBody SearchPostsByNumberOfLikes criteria) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByNumberOfLikes(criteria), HttpStatus.OK);
+
+    }
 
     @PatchMapping("/edit/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")

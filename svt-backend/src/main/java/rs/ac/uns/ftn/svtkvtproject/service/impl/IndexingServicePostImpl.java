@@ -45,7 +45,8 @@ public class IndexingServicePostImpl implements IndexingServicePost {
         var serverFilename = fileServiceMinio.store(documentFile, UUID.randomUUID().toString());
         newPostDocument.setServerFilename(serverFilename);
 
-
+        newPostDocument.setDatabaseId(Math.toIntExact(post.getId()));
+        newPostDocument.setTotalLikes(0);
         postDocumentRepository.save(newPostDocument);
         return newPostDocument;
     }

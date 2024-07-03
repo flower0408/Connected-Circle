@@ -3,12 +3,15 @@ package rs.ac.uns.ftn.svtkvtproject.service.impl;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
+import co.elastic.clients.json.JsonData;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfLikes;
 import rs.ac.uns.ftn.svtkvtproject.service.interfaces.SearchServicePost;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -41,6 +44,26 @@ public class SearchServicePostImpl implements SearchServicePost {
         var searchQueryBuilder =
                 new NativeQueryBuilder().withQuery(simpleSearchForPDFContent(content));
         return runQuery(searchQueryBuilder.build());
+    }
+
+    @Override
+    public List<PostDocument> getPostsByNumberOfLikes(SearchPostsByNumberOfLikes criteria) {
+        var searchQueryBuilder =
+                new NativeQueryBuilder().withQuery(searchByNumOfLikesRange(criteria.getGreaterThan(), criteria.getLessThan()));
+        return runQuery(searchQueryBuilder.build());
+
+    }
+
+    public Query searchByNumOfLikesRange(Integer minLikes, Integer maxLikes) {
+        return RangeQuery.of(q -> {
+            if (minLikes != null) {
+                q.field("total_likes").gte(JsonData.of(minLikes));
+            }
+            if (maxLikes != null) {
+                q.field("total_likes").lte(JsonData.of(maxLikes));
+            }
+            return q;
+        })._toQuery();
     }
 
 
