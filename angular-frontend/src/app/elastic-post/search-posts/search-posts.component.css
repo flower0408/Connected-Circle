@@ -1,0 +1,91 @@
+.post-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+  }
+  
+  .search-container {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .query-options {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+  
+  .query-options label {
+    margin-right: 10px;
+  }
+  
+  .operation-group {
+    margin-bottom: 15px;
+  }
+  
+  .search-button, .range-button {
+    background-color: #F88379;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .search-button:hover, .range-button:hover {
+    background-color: #F56C61;
+  }
+  
+  input[type="text"], input[type="number"], select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .range-forms {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .range-forms .form-group {
+    width: 45%; /* Adjust width to control spacing */
+  }
+  
+  .post-list {
+    margin-top: 20px;
+  }
+  
+  .post-card {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 10px;
+    background-color: #fff;
+  }
+  
+  .post-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #f88379;
+  }
+  
+  .post-content {
+    font-size: 1rem;
+    color: #666;
+  }
+  

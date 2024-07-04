@@ -351,10 +351,17 @@ public class PostController {
     }
 
     @GetMapping("/search-by-likes")
-    public ResponseEntity<List<PostDocument>> findPostsByLikes(@RequestBody SearchPostsByNumberOfLikes criteria) {
-        return new ResponseEntity<>(this.searchServicePost.getPostsByNumberOfLikes(criteria), HttpStatus.OK);
+    public ResponseEntity<List<PostDocument>> findPostsByLikes(
+            @RequestParam Integer greaterThan,
+            @RequestParam Integer lessThan
+    ) {
+        SearchPostsByNumberOfLikes criteria = new SearchPostsByNumberOfLikes();
+        criteria.setGreaterThan(greaterThan);
+        criteria.setLessThan(lessThan);
 
+        return new ResponseEntity<>(this.searchServicePost.getPostsByNumberOfLikes(criteria), HttpStatus.OK);
     }
+
     //GET http://localhost:8080/api/posts/search?title=test&content=provera&pdfContent=natasa&operation=OR
     @GetMapping("/search")
     public ResponseEntity<List<PostDocument>> searchGroupsBooleanQuery(
@@ -366,9 +373,16 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
         return new ResponseEntity<>(this.searchServicePost.searchPostsBooleanQuery(title, content, pdfContent, operation, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
-
+    
     @GetMapping("/number-of-comments")
-    public ResponseEntity<List<PostDocument>> findPostsByComments(@RequestBody SearchPostsByNumberOfComments criteria) {
+    public ResponseEntity<List<PostDocument>> findPostsByComments(
+            @RequestParam Integer greaterThan,
+            @RequestParam Integer lessThan
+    ) {
+        SearchPostsByNumberOfComments criteria = new SearchPostsByNumberOfComments();
+        criteria.setGreaterThan(greaterThan);
+        criteria.setLessThan(lessThan);
+
         return new ResponseEntity<>(this.searchServicePost.getPostsByNumberOfComments(criteria), HttpStatus.OK);
     }
 

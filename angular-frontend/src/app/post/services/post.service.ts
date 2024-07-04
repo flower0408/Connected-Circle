@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Post } from '../model/post.model';
 import { Image } from '../model/image.model';
+import PostElastic from "src/app/elastic-post/model/elasticPost.model"
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,42 @@ export class PostService {
   constructor(
     private http: HttpClient
   ) { }
+
+  getElasticPostsByTitle(title: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<PostElastic[]> {
+    const params = new HttpParams().set('usePhraseQuery', usePhraseQuery.toString()).set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<PostElastic[]>('api/posts/title/' + title, { params });
+  }
+
+  getElasticPostsByContent(content: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<PostElastic[]> {
+    const params = new HttpParams().set('usePhraseQuery', usePhraseQuery.toString()).set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<PostElastic[]>('api/posts/content/' + content, { params });
+  }
+
+  getElasticPostsByPDFContent(content: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<PostElastic[]> {
+    const params = new HttpParams().set('usePhraseQuery', usePhraseQuery.toString()).set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<PostElastic[]>('api/posts/pdf-content/' + content, { params });
+  }
+
+  searchElasticPosts(title: string, content: string, pdfContent: string, operation: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<PostElastic[]> {
+    const params = new HttpParams()
+      .set('title', title)
+      .set('content', content)
+      .set('pdfContent', pdfContent)
+      .set('operation', operation)
+      .set('usePhraseQuery', usePhraseQuery.toString())
+      .set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<PostElastic[]>('api/posts/search', { params });
+  }
+
+  getElasticPostsByCommentsRange(criteria: any): Observable<PostElastic[]> {
+    const params = new HttpParams({ fromObject: criteria }); // Convert criteria to query params
+    return this.http.get<PostElastic[]>(`api/posts/number-of-comments`, { params });
+  }
+
+  getElasticPostsByLikes(criteria: any): Observable<PostElastic[]> {
+    const params = new HttpParams({ fromObject: criteria }); // Convert criteria to query params
+    return this.http.get<PostElastic[]>(`api/posts/search-by-likes`, { params });
+  }
 
   getHomepagePosts(): Observable<HttpResponse<Post[]>> {
     let queryParams = {};

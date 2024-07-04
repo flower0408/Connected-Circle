@@ -33,6 +33,7 @@ import {NgOptimizedImage} from "@angular/common";
 import {GroupMembersComponent} from "./group/group-members/group-members.component";
 import {BannedListGroupComponent} from "./banned/banned-list-group/banned-list-group.component";
 import {GroupAdminsComponent} from "./group/group-admins/group-admins.component";
+import { SearchPostsComponent } from './elastic-post/search-posts/search-posts.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import {GroupAdminsComponent} from "./group/group-admins/group-admins.component"
     GroupMembersComponent,
     BannedListGroupComponent,
     GroupAdminsComponent,
-    SearchGroupsComponent
+    SearchGroupsComponent,
+    SearchPostsComponent
   ],
   imports: [
     BrowserModule,

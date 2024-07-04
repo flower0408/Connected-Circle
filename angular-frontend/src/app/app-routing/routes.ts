@@ -26,6 +26,7 @@ import {GroupAdminsComponent} from "../group/group-admins/group-admins.component
 import {LoginGuardService} from "../guards/login-guard.service";
 import {RoleGuardService} from "../guards/role-guard.service";
 import { SearchGroupsComponent } from '../elastic-group/search-groups/search-groups.component';
+import { SearchPostsComponent } from '../elastic-post/search-posts/search-posts.component';
 
 export const routes :Routes = [
   {path: 'bans', component: BannedListComponent,
@@ -97,6 +98,7 @@ export const routes :Routes = [
     canActivate: [RoleGuardService],
     data: {expectedRoles: 'ADMIN|USER'}},
     {path: 'searchGroup', component: SearchGroupsComponent},
+    {path: 'searchPost', component: SearchPostsComponent},
   {path: 'posts', component: PostListComponent,
     canActivate: [RoleGuardService],
     data: {expectedRoles: 'ADMIN|USER'}},

@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.svtkvtproject.service.interfaces;
 
-import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfComments;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfLikes;
