@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.svtkvtproject.controller;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.ImageDTO;
@@ -335,24 +336,38 @@ public class PostController {
     }
 
     @GetMapping("/title/{title}")
-    public ResponseEntity<List<PostDocument>> findPostsByTitle(@PathVariable String title) {
-        return new ResponseEntity<>(this.searchServicePost.getPostsByPostName(title), HttpStatus.OK);
+    public ResponseEntity<List<PostDocument>> findPostsByTitle(@PathVariable String title, @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+                                                               @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByPostName(title, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
     @GetMapping("/content/{content}")
-    public ResponseEntity<List<PostDocument>> findPostsByContent(@PathVariable String content) {
-        return new ResponseEntity<>(this.searchServicePost.getPostsByPostContent(content), HttpStatus.OK);
+    public ResponseEntity<List<PostDocument>> findPostsByContent(@PathVariable String content, @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+                                                                 @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByPostContent(content, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
     @GetMapping("/pdf-content/{content}")
-    public ResponseEntity<List<PostDocument>> findPostsByPDFContent(@PathVariable String content) {
-        return new ResponseEntity<>(this.searchServicePost.getPostsByPDFContent(content), HttpStatus.OK);
+    public ResponseEntity<List<PostDocument>> findPostsByPDFContent(@PathVariable String content, @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+                                                                    @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByPDFContent(content, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
     @GetMapping("/search-by-likes")
     public ResponseEntity<List<PostDocument>> findPostsByLikes(@RequestBody SearchPostsByNumberOfLikes criteria) {
         return new ResponseEntity<>(this.searchServicePost.getPostsByNumberOfLikes(criteria), HttpStatus.OK);
 
+    }
+    //GET http://localhost:8080/api/posts/search?title=test&content=provera&pdfContent=natasa&operation=OR
+    @GetMapping("/search")
+    public ResponseEntity<List<PostDocument>> searchGroupsBooleanQuery(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false) String pdfContent,
+            @RequestParam(required = false, defaultValue = "OR") String operation,
+            @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+            @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServicePost.searchPostsBooleanQuery(title, content, pdfContent, operation, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
     @PatchMapping("/edit/{id}")
