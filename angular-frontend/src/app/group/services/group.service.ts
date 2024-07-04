@@ -1,10 +1,12 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Group } from '../model/group.model';
 import {GroupRequest} from "../model/groupRequest.model";
 import {Report} from "../../report/model/report.model";
 import {User} from "../../user/model/user.model";
+import { GroupElastic } from 'src/app/elastic-group/model/elasticGroup.model';
+import { SearchGroupByRangeOfPosts } from 'src/app/elastic-group/model/elasticGroupRequest.model';
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +109,50 @@ export class GroupService {
       headers: this.headers2,
       responseType: 'text'
     });
+  }
+
+  getElasticGroupsByName(name: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<GroupElastic[]> {
+    let params = new HttpParams()
+      .set('usePhraseQuery', usePhraseQuery.toString())
+      .set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<GroupElastic[]>(`api/groups/name/${name}`, { params });
+  }
+
+  getElasticGroupsByDescription(description: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<GroupElastic[]> {
+    let params = new HttpParams()
+      .set('usePhraseQuery', usePhraseQuery.toString())
+      .set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<GroupElastic[]>(`api/groups/description/${description}`, { params });
+  }
+
+  getElasticGroupsByPDFContent(content: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<GroupElastic[]> {
+    let params = new HttpParams()
+      .set('usePhraseQuery', usePhraseQuery.toString())
+      .set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<GroupElastic[]>(`api/groups/pdf-content/${content}`, { params });
+  }
+
+  getElasticGroupsByPostsRange(data: SearchGroupByRangeOfPosts): Observable<GroupElastic[]> {
+    let params = new HttpParams();
+    if (data.greaterThan !== null) {
+      params = params.set('greaterThan', data.greaterThan.toString());
+    }
+    if (data.lessThan !== null) {
+      params = params.set('lessThan', data.lessThan.toString());
+    }
+
+    return this.http.get<GroupElastic[]>('api/groups/number-of-posts', { params });
+  }
+
+  searchElasticGroups(name: string, description: string, pdfContent: string, operation: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<GroupElastic[]> {
+    const params = new HttpParams()
+      .set('name', name)
+      .set('description', description)
+      .set('pdfContent', pdfContent)
+      .set('operation', operation)
+      .set('usePhraseQuery', usePhraseQuery.toString())
+      .set('useFuzzyQuery', useFuzzyQuery.toString());
+    return this.http.get<GroupElastic[]>('api/groups/search', { params });
   }
 
   /*add(newGroup: Group): Observable<string> {

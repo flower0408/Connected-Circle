@@ -27,5 +27,8 @@
 
         <a class="nav-link" [routerLink]="['/bans']">Bans</a>
       </li>
+      <li *ngIf="isAdmin">
+        <a class="nav-link" [routerLink]="['/searchGroup']">Search Group</a>
+      </li>
     </ul>
 </nav>

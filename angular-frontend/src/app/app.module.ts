@@ -12,6 +12,7 @@ import { EditGroupComponent } from './group/edit-group/edit-group.component';
 import { GroupRequestsComponent } from './group/group-requests/group-requests.component';
 import { GroupReportsComponent } from './group/group-reports/group-reports.component';
 import { GroupComponent } from './group/group.component';
+import { SearchGroupsComponent } from './elastic-group/search-groups/search-groups.component';
 import { LoginComponent } from './user/login/login.component';
 import { UserComponent } from './user/user.component';
 import { RegisterComponent } from './user/register/register.component';
@@ -60,7 +61,8 @@ import {GroupAdminsComponent} from "./group/group-admins/group-admins.component"
     BannedListComponent,
     GroupMembersComponent,
     BannedListGroupComponent,
-    GroupAdminsComponent
+    GroupAdminsComponent,
+    SearchGroupsComponent
   ],
   imports: [
     BrowserModule,

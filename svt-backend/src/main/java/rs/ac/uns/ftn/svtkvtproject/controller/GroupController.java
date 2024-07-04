@@ -346,8 +346,18 @@ public class GroupController {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPDFContent(content, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
-    @GetMapping("/number-of-posts")
+   /* @GetMapping("/number-of-posts")
     public ResponseEntity<List<GroupDocument>> findByPostsInGroups(@RequestBody SearchGroupByRangeOfPosts data) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
+    }*/
+
+    @GetMapping("/number-of-posts")
+    public ResponseEntity<List<GroupDocument>> findByPostsInGroups(@RequestParam(required = false) Integer greaterThan,
+                                                                   @RequestParam(required = false) Integer lessThan) {
+        SearchGroupByRangeOfPosts data = new SearchGroupByRangeOfPosts();
+        data.setGreaterThan(greaterThan);
+        data.setLessThan(lessThan);
+
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
     }
 

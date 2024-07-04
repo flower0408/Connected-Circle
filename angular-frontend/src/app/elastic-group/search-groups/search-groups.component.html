@@ -1,0 +1,56 @@
+<div class="search-container">
+    <form [formGroup]="searchForm">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" formControlName="name" type="text">
+        <label for="usePhraseQuery">Use Phrase Query:</label>
+        <input id="usePhraseQuery" formControlName="usePhraseQuery" type="checkbox">
+        <label for="useFuzzyQuery">Use Fuzzy Query:</label>
+        <input id="useFuzzyQuery" formControlName="useFuzzyQuery" type="checkbox">
+        <button type="button" (click)="searchByName()">Search by Name</button>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <input id="description" formControlName="description" type="text">
+        <label for="usePhraseQuery">Use Phrase Query:</label>
+        <input id="usePhraseQuery" formControlName="usePhraseQuery" type="checkbox">
+        <label for="useFuzzyQuery">Use Fuzzy Query:</label>
+        <input id="useFuzzyQuery" formControlName="useFuzzyQuery" type="checkbox">
+        <button type="button" (click)="searchByDescription()">Search by Description</button>
+      </div>
+      <div class="form-group">
+        <label for="pdfContent">PDF Content:</label>
+        <input id="pdfContent" formControlName="pdfContent" type="text">
+        <label for="usePhraseQuery">Use Phrase Query:</label>
+        <input id="usePhraseQuery" formControlName="usePhraseQuery" type="checkbox">
+        <label for="useFuzzyQuery">Use Fuzzy Query:</label>
+        <input id="useFuzzyQuery" formControlName="useFuzzyQuery" type="checkbox">
+        <button type="button" (click)="searchByPDFContent()">Search by PDF Content</button>
+      </div>
+      <div class="form-group">
+        <label for="greaterThan">Posts Greater Than:</label>
+        <input id="greaterThan" formControlName="greaterThan" type="number">
+        <label for="lessThan">Posts Less Than:</label>
+        <input id="lessThan" formControlName="lessThan" type="number">
+        <button type="button" (click)="searchByPostsRange()">Search by Posts Range</button>
+      </div>
+      <div class="form-group">
+        <label for="operation">Operation (AND/OR):</label>
+        <input id="operation" formControlName="operation" type="text">
+        <label for="usePhraseQuery">Use Phrase Query:</label>
+        <input id="usePhraseQuery" formControlName="usePhraseQuery" type="checkbox">
+        <label for="useFuzzyQuery">Use Fuzzy Query:</label>
+        <input id="useFuzzyQuery" formControlName="useFuzzyQuery" type="checkbox">
+        <button type="button" (click)="searchBooleanQuery()">Search with Boolean Query</button>
+      </div>
+    </form>
+  
+    <div class="post-list">
+      <div *ngFor="let group of groups" class="post-card">
+        <h2 class="post-username">{{ group.name }}</h2>
+        <p class="post-content">Number of Posts: {{ group.numPosts }}</p>
+        <p class="post-content">Average Number of Likes: {{ group.avgNumberOfLikes }}</p>
+      </div>
+    </div>
+  </div>
+  
