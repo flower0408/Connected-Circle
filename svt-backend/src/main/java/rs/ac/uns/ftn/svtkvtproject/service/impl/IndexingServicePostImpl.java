@@ -47,6 +47,7 @@ public class IndexingServicePostImpl implements IndexingServicePost {
 
         newPostDocument.setDatabaseId(Math.toIntExact(post.getId()));
         newPostDocument.setTotalLikes(0);
+        newPostDocument.setTotalComments(0);
         postDocumentRepository.save(newPostDocument);
         return newPostDocument;
     }

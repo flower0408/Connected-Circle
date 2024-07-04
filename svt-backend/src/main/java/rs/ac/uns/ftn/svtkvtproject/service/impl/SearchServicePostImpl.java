@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfComments;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfLikes;
 import rs.ac.uns.ftn.svtkvtproject.service.interfaces.SearchServicePost;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -54,6 +55,13 @@ public class SearchServicePostImpl implements SearchServicePost {
                 new NativeQueryBuilder().withQuery(searchByNumOfLikesRange(criteria.getGreaterThan(), criteria.getLessThan()));
         return runQuery(searchQueryBuilder.build());
 
+    }
+
+    @Override
+    public List<PostDocument> getPostsByNumberOfComments(SearchPostsByNumberOfComments criteria) {
+        var searchQueryBuilder =
+                new NativeQueryBuilder().withQuery(searchPostsByNumberOfComments(criteria.getGreaterThan(), criteria.getLessThan()));
+        return runQuery(searchQueryBuilder.build());
     }
 
     @Override
@@ -250,5 +258,17 @@ public class SearchServicePostImpl implements SearchServicePost {
             }
             return b;
         })))._toQuery();
+    }
+
+    private Query searchPostsByNumberOfComments(Integer minComments, Integer maxComments) {
+        return RangeQuery.of(q -> {
+            if (minComments != null) {
+                q.field("total_comments").gte(JsonData.of(minComments));
+            }
+            if (maxComments != null) {
+                q.field("total_comments").lte(JsonData.of(maxComments));
+            }
+            return q;
+        })._toQuery();
     }
 }

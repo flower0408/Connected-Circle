@@ -45,5 +45,7 @@ public class PostDocument {
     @Field(type = FieldType.Integer, store = true, name = "total_likes")
     private Integer totalLikes;
 
+    @Field(type = FieldType.Integer, store = true, name = "total_comments")
+    private Integer totalComments;
 
 }

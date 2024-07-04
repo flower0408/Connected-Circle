@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.svtkvtproject.service.implementation;
 
 import rs.ac.uns.ftn.svtkvtproject.controller.CommentController;
+import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
+import rs.ac.uns.ftn.svtkvtproject.elasticrepository.PostDocumentRepository;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Comment;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.Post;
@@ -41,6 +43,12 @@ public class CommentServiceImpl implements CommentService {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    private PostDocumentRepository postDocumentRepository;
+
+    @Autowired
+    public void setPostDocumentRepository(PostDocumentRepository postDocumentRepository) {this.postDocumentRepository = postDocumentRepository;}
+
 
     private static final Logger logger = LogManager.getLogger(CommentServiceImpl.class);
 
@@ -163,6 +171,13 @@ public class CommentServiceImpl implements CommentService {
         if (commentDTO.getBelongsToPostId() != null) {
             Post post = postService.findById(commentDTO.getBelongsToPostId());
             newComment.setBelongsToPost(post);
+            if (newComment.getBelongsToPost() != null) {
+                PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(newComment.getBelongsToPost().getId())).orElse(null);
+                if (postDocument != null) {
+                    postDocument.setTotalComments(postDocument.getTotalComments() + 1);
+                    postDocumentRepository.save(postDocument);
+                }
+            }
         }
 
         newComment.setDeleted(false);

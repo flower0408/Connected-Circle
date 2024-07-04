@@ -5,10 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.PostDocument;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.CommentDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.ImageDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.PostDTO;
-import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchPostsByNumberOfLikes;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.*;
 import rs.ac.uns.ftn.svtkvtproject.model.entity.*;
 import rs.ac.uns.ftn.svtkvtproject.security.TokenUtils;
 import rs.ac.uns.ftn.svtkvtproject.service.*;
@@ -368,6 +365,11 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
             @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
         return new ResponseEntity<>(this.searchServicePost.searchPostsBooleanQuery(title, content, pdfContent, operation, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
+    }
+
+    @GetMapping("/number-of-comments")
+    public ResponseEntity<List<PostDocument>> findPostsByComments(@RequestBody SearchPostsByNumberOfComments criteria) {
+        return new ResponseEntity<>(this.searchServicePost.getPostsByNumberOfComments(criteria), HttpStatus.OK);
     }
 
     @PatchMapping("/edit/{id}")
