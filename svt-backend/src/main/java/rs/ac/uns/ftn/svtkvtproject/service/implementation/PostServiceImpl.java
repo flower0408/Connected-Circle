@@ -147,12 +147,7 @@ public class PostServiceImpl implements PostService {
                         " while not being a member");
                 return null;
             }
-           /* PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getId())).orElse(null);
-            postDocument.setGroupID();
-            newPostDocument.setGroupID(post.getPostedInGroup().getId());*/
             GroupDocument group = groupDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getBelongsToGroupId())).orElse(null);
-           // PostDocument postDocument = postDocumentRepository.findByDatabaseId(Math.toIntExact(postDTO.getId())).orElse(null);
-            //postDocument.setGroupID(Math.toIntExact(postDTO.getBelongsToGroupId()));
             logger.info("groupDocumentRepository.findByDatabaseId : " + (Math.toIntExact(postDTO.getBelongsToGroupId()))
             );
             if (group != null) {
@@ -169,8 +164,6 @@ public class PostServiceImpl implements PostService {
 
         if (postDTO.getBelongsToGroupId() != null) {
             postRepository.saveGroupPost(postDTO.getBelongsToGroupId(), newPost.getId());
-            // PostDocument document = postDocumentRepository.findByDatabaseId(Math.toIntExact(newPost.getId())).orElse(null);
-            //document.setGroupID(Math.toIntExact(postDTO.getBelongsToGroupId()));}
         }
         System.out.println(newPost.getTitle());
         System.out.println(newPost.getContent());
@@ -179,13 +172,9 @@ public class PostServiceImpl implements PostService {
         PostDocument postDocument = indexingServicePost.indexDocument(newPost, attachedPDF);
 
         if (postDTO.getBelongsToGroupId() != null){
-            //postRepository.saveGroupPost(postDTO.getBelongsToGroupId(), newPost.getId());
             logger.info("postDTO.getBelongsToGroupId : " + postDTO.getBelongsToGroupId());
-           // PostDocument document = postDocumentRepository.findByDatabaseId(Math.toIntExact(newPost.getId())).orElse(null);
-            logger.info("postDocumentRepository.findByDatabaseId : " + (Math.toIntExact(newPost.getId()))
-            );
+            logger.info("postDocumentRepository.findByDatabaseId : " + (Math.toIntExact(newPost.getId())));
             postDocument.setGroupID(Math.toIntExact(postDTO.getBelongsToGroupId()));
-            // Log postDocument to check if it exists
             logger.info("postDocument after setting GroupID: " + postDocument);}
             postDocumentRepository.save(postDocument);
         System.out.println(newPost.getTitle());

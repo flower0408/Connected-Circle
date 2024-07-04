@@ -346,11 +346,6 @@ public class GroupController {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPDFContent(content, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
-   /* @GetMapping("/number-of-posts")
-    public ResponseEntity<List<GroupDocument>> findByPostsInGroups(@RequestBody SearchGroupByRangeOfPosts data) {
-        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
-    }*/
-
     @GetMapping("/number-of-posts")
     public ResponseEntity<List<GroupDocument>> findByPostsInGroups(@RequestParam(required = false) Integer greaterThan,
                                                                    @RequestParam(required = false) Integer lessThan) {
@@ -382,52 +377,6 @@ public class GroupController {
             @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsBooleanQuery(name, description, pdfContent, operation, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
-
-    /*@PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<GroupDTO> createGroup(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam(value = "attachedPDF", required = false) MultipartFile attachedPDF,
-            @RequestHeader("Authorization") String token) {
-
-        logger.info("Authorization check");
-        String cleanToken = token.substring(7); // Assuming token starts with "Bearer "
-        String username = tokenUtils.getUsernameFromToken(cleanToken);
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            logger.error("User not found with token: " + cleanToken);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        GroupDTO newGroup = new GroupDTO();
-        newGroup.setName(name);
-        newGroup.setDescription(description);
-        newGroup.setCreationDate(LocalDateTime.now().toString());
-        newGroup.setSuspended(false);
-
-        logger.info("Creating group from DTO");
-        Group createdGroup = groupService.createGroup(newGroup, attachedPDF);
-        if (createdGroup == null) {
-            logger.error("Group couldn't be created from DTO");
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        logger.info("Creating response");
-        GroupDTO groupDTO = new GroupDTO(createdGroup);
-        logger.info("Created and sent response");
-
-        // Return the response with multipart/form-data content type
-       /* HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(groupDTO);*/
-      /*  System.out.println(attachedPDF.getOriginalFilename());
-        return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
-    }*/
-
 
     @PatchMapping("/edit/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")

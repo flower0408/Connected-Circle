@@ -60,6 +60,11 @@
 .social-body img {
   margin-bottom: 10px;
 }
+.post-title {
+  font-size: 1.1rem; 
+  font-weight: bold; 
+}
+
 .social-footer {
   border-top: 1px solid #e7eaec;
   padding: 10px 15px;

@@ -17,12 +17,15 @@
         This field can't be empty!
       </small>
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
       <label class="color center" for="images">Images:</label>
       <input type="file" id="images" name="images" class="form-control-file" (change)="onFileChange($event)" multiple accept="image/*">
-    </div>
+    </div>-->
     <div class="form-group">
       <input type="file" (change)="onPDFFileChange($event)" />
+      <small class="text-danger" *ngIf="form.controls.attachedPDF.touched && form.controls.attachedPDF.errors?.required">
+        This field can't be empty!
+      </small>
     </div>
     <div class="center">
       <button  type="submit" class="btn btn1" [disabled]="!form.valid">Add Post</button>

@@ -31,7 +31,7 @@ export class AddPostComponent implements OnInit{
       title: ['', [Validators.required]],
       content: [null, Validators.required],
       images: [null, Validators.nullValidator],
-      attachedPDF: [''],
+      attachedPDF: ['', Validators.required],
     });
 
   }

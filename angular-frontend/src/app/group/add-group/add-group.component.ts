@@ -29,7 +29,7 @@ export class AddGroupComponent implements OnInit {
     this.form = this.fb.group({
       name: [null, Validators.required],
       description: [null, Validators.required],
-      attachedPDF: [''],
+      attachedPDF: ['' ,Validators.required],
     });
 
    }

@@ -111,8 +111,6 @@ public class SearchServicePostImpl implements SearchServicePost {
                         if (usePhraseQuery) {
                             b.should(sb -> sb.matchPhrase(m -> m.field("title").query(title).analyzer("serbian_simple")));
                             b.should(sb -> sb.matchPhrase(m -> m.field("content").query(content).analyzer("serbian_simple")));
-                            //b.should(sb -> sb.matchPhrase(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                            // b.should(sb -> sb.matchPhrase(m -> m.field("content_en").query(pdfContent).analyzer("english")));
                             if (pdfContent != null && !pdfContent.isEmpty()) {
                                 b.should(sb -> sb.bool(bb -> bb
                                         .should(s -> s.matchPhrase(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")))
@@ -122,8 +120,6 @@ public class SearchServicePostImpl implements SearchServicePost {
                         } else if (useFuzzyQuery) {
                             b.should(sb -> sb.match(m -> m.field("title").query(title).fuzziness(Fuzziness.ONE.asString()).analyzer("serbian_simple")));
                             b.should(sb -> sb.match(m -> m.field("content").query(content).fuzziness(Fuzziness.ONE.asString()).analyzer("serbian_simple")));
-                            // b.should(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).fuzziness(String.valueOf(Fuzziness.ONE)).analyzer("serbian_simple")));
-                            // b.should(sb -> sb.match(m -> m.field("content_en").query(pdfContent).fuzziness(String.valueOf(Fuzziness.ONE)).analyzer("english")));
                             if (pdfContent != null && !pdfContent.isEmpty()) {
                                 b.should(sb -> sb.bool(bb -> bb
                                         .should(s -> s.match(m -> m.field("content_sr").query(pdfContent).fuzziness(Fuzziness.ONE.asString()).analyzer("serbian_simple")))
@@ -133,8 +129,6 @@ public class SearchServicePostImpl implements SearchServicePost {
                         } else {
                             b.should(sb -> sb.match(m -> m.field("title").query(title).analyzer("serbian_simple")));
                             b.should(sb -> sb.match(m -> m.field("content").query(content).analyzer("serbian_simple")));
-                            //b.should(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                            //b.should(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
                             if (pdfContent != null && !pdfContent.isEmpty()) {
                                 b.should(sb -> sb.bool(bb -> bb
                                         .should(s -> s.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")))
@@ -206,10 +200,6 @@ public class SearchServicePostImpl implements SearchServicePost {
     }
 
     private Query simpleSearchForTitle(String title, boolean usePhraseQuery, boolean useFuzzyQuery) {
-       /* return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
-            b.should(sb -> sb.match(m -> m.field("title").query(title).analyzer("serbian_simple")));
-            return b;
-        })))._toQuery();*/
         return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
             if (usePhraseQuery) {
                 b.should(sb -> sb.matchPhrase(m -> m.field("title").query(title).analyzer("serbian_simple")));
@@ -223,10 +213,6 @@ public class SearchServicePostImpl implements SearchServicePost {
     }
 
     private Query simpleSearchForContent(String content, boolean usePhraseQuery, boolean useFuzzyQuery) {
-        /*return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
-            b.should(sb -> sb.match(m -> m.field("content").query(content).analyzer("serbian_simple")));
-            return b;
-        })))._toQuery();*/
         return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
             if (usePhraseQuery) {
                 b.should(sb -> sb.matchPhrase(m -> m.field("content").query(content).analyzer("serbian_simple")));
@@ -240,11 +226,6 @@ public class SearchServicePostImpl implements SearchServicePost {
     }
 
     private Query simpleSearchForPDFContent(String content, boolean usePhraseQuery, boolean useFuzzyQuery) {
-       /* return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
-            b.should(sb -> sb.match(m -> m.field("content_sr").query(content).analyzer("serbian_simple")));
-            b.should(sb -> sb.match(m -> m.field("content_en").query(content).analyzer("english")));
-            return b;
-        })))._toQuery();*/
         return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
             if (usePhraseQuery) {
                 b.should(sb -> sb.matchPhrase(m -> m.field("content_sr").query(content).analyzer("serbian_simple")));

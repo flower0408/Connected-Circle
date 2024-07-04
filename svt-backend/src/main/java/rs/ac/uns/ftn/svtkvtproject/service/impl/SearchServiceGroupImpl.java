@@ -100,62 +100,6 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
         return runQuery(searchQueryBuilder.build());
     }
 
-
-    /*private Query buildComplexSearchQuery(String name, String description, String pdfContent, String operation) {
-        return BoolQuery.of(q -> {
-            switch (operation) {
-                case "AND":
-                    q.must(mb -> mb.bool(b -> {
-                        if (name != null && !name.isEmpty()) {
-                            b.must(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
-                        }
-                        if (description != null && !description.isEmpty()) {
-                            b.must(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
-                        }
-                        if (pdfContent != null && !pdfContent.isEmpty()) {
-                            //b.must(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                            b.must(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
-                        }
-                        return b;
-                    }));
-                    break;
-                case "OR":
-                    q.should(mb -> mb.bool(b -> {
-                        if (name != null && !name.isEmpty()) {
-                            b.should(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
-                        }
-                        if (description != null && !description.isEmpty()) {
-                            b.should(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
-                        }
-                        if (pdfContent != null && !pdfContent.isEmpty()) {
-                            b.should(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                            b.should(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
-                        }
-                        return b;
-                    }));
-                    break;
-                case "NOT":
-                    q.must(mb -> mb.bool(b -> {
-                        if (name != null && !name.isEmpty()) {
-                            b.must(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
-                        }
-                        if (description != null && !description.isEmpty()) {
-                            b.must(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
-                        }
-                        if (pdfContent != null && !pdfContent.isEmpty()) {
-                            b.mustNot(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                            b.mustNot(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
-                        }
-                        return b;
-                    }));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid operation: " + operation);
-            }
-            return q;
-        })._toQuery();
-    }*/
-
     private Query buildComplexSearchQuery(String name, String description, String pdfContent, String operation, boolean usePhraseQuery, boolean useFuzzyQuery) {
         return BoolQuery.of(q -> {
             switch (operation) {
@@ -197,8 +141,6 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
                         if (usePhraseQuery) {
                             b.should(sb -> sb.matchPhrase(m -> m.field("name").query(name).analyzer("serbian_simple")));
                             b.should(sb -> sb.matchPhrase(m -> m.field("description").query(description).analyzer("serbian_simple")));
-                            //b.should(sb -> sb.matchPhrase(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                           // b.should(sb -> sb.matchPhrase(m -> m.field("content_en").query(pdfContent).analyzer("english")));
                             if (pdfContent != null && !pdfContent.isEmpty()) {
                                 b.should(sb -> sb.bool(bb -> bb
                                         .should(s -> s.matchPhrase(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")))
@@ -208,8 +150,6 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
                         } else if (useFuzzyQuery) {
                             b.should(sb -> sb.match(m -> m.field("name").query(name).fuzziness(Fuzziness.ONE.asString()).analyzer("serbian_simple")));
                             b.should(sb -> sb.match(m -> m.field("description").query(description).fuzziness(Fuzziness.ONE.asString()).analyzer("serbian_simple")));
-                           // b.should(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).fuzziness(String.valueOf(Fuzziness.ONE)).analyzer("serbian_simple")));
-                           // b.should(sb -> sb.match(m -> m.field("content_en").query(pdfContent).fuzziness(String.valueOf(Fuzziness.ONE)).analyzer("english")));
                             if (pdfContent != null && !pdfContent.isEmpty()) {
                                 b.should(sb -> sb.bool(bb -> bb
                                         .should(s -> s.match(m -> m.field("content_sr").query(pdfContent).fuzziness(Fuzziness.ONE.asString()).analyzer("serbian_simple")))
@@ -219,8 +159,6 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
                         } else {
                             b.should(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
                             b.should(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
-                            //b.should(sb -> sb.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")));
-                            //b.should(sb -> sb.match(m -> m.field("content_en").query(pdfContent).analyzer("english")));
                             if (pdfContent != null && !pdfContent.isEmpty()) {
                                 b.should(sb -> sb.bool(bb -> bb
                                         .should(s -> s.match(m -> m.field("content_sr").query(pdfContent).analyzer("serbian_simple")))
@@ -284,28 +222,6 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
         })))._toQuery();
     }
 
-
-    /*private Query simpleSearchForName(String name) {
-        return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
-            b.should(sb -> sb.match(m -> m.field("name").query(name).analyzer("serbian_simple")));
-            return b;
-        })))._toQuery();
-    }
-
-    private Query simpleSearchForDescription(String description) {
-        return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
-            b.should(sb -> sb.match(m -> m.field("description").query(description).analyzer("serbian_simple")));
-            return b;
-        })))._toQuery();
-    }
-
-    private Query simpleSearchForPDFDescription(String description) {
-        return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
-            b.should(sb -> sb.match(m -> m.field("content_sr").query(description).analyzer("serbian_simple")));
-            b.should(sb -> sb.match(m -> m.field("content_en").query(description).analyzer("english")));
-            return b;
-        })))._toQuery();
-    }*/
 
    /* private Query simpleSearchForName(String name, boolean usePhraseQuery, boolean useFuzzyQuery) {
         return BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {

@@ -1,6 +1,6 @@
 <br>
 <div class="centered-container">
-  <h1 style="font-style: italic;">~ Create post ~</h1>
+  <h1 style="font-style: italic;">~ Create group ~</h1>
   <br>
   <div class="postForm">
     <form [formGroup]="form" (ngSubmit)="submit()">
@@ -19,6 +19,9 @@
       </div>
       <div class="form-group">
         <input type="file" (change)="onFileChange($event)" />
+        <small class="text-danger" *ngIf="form.controls.attachedPDF.touched && form.controls.attachedPDF.errors?.required">
+          This field can't be empty!
+        </small>
       </div>
       <div class="center">
         <button  type="submit" class="btn btn1" [disabled]="!form.valid">Add Group</button>
