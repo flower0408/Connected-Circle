@@ -9,10 +9,9 @@ import java.util.List;
 @Service
 public interface SearchServieGroup {
 
-    List<GroupDocument> searchGroupsByName(String name);
-    List<GroupDocument> searchGroupsByDescription(String description);
-    List<GroupDocument> searchGroupsByPDFContent(String content);
+    List<GroupDocument> searchGroupsByName(String name, boolean usePhraseQuery, boolean useFuzzyQuery);
+    List<GroupDocument> searchGroupsByDescription(String description, boolean usePhraseQuery, boolean useFuzzyQuery);
+    List<GroupDocument> searchGroupsByPDFContent(String content, boolean usePhraseQuery, boolean useFuzzyQuery);
     List<GroupDocument> searchGroupsByPosts(SearchGroupByRangeOfPosts data);
-    //List<GroupDocument> searchGroupsCombined(String name, String description, String pdfContent, Boolean useAndOperator);
-    List<GroupDocument> searchGroupsBooleanQuery(String name, String description, String pdfContent,  String operation);
+    List<GroupDocument> searchGroupsBooleanQuery(String name, String description, String pdfContent,  String operation, boolean usePhraseQuery, boolean useFuzzyQuery);
 }

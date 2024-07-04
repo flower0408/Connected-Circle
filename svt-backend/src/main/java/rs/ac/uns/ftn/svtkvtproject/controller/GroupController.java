@@ -328,22 +328,25 @@ public class GroupController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<GroupDocument>> findByName(@PathVariable String name) {
-        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByName(name), HttpStatus.OK);
+    public ResponseEntity<List<GroupDocument>> findByName(@PathVariable String name, @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+                                                          @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByName(name, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
     @GetMapping("/description/{description}")
-    public ResponseEntity<List<GroupDocument>> findByDescription(@PathVariable String description) {
-        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByDescription(description), HttpStatus.OK);
+    public ResponseEntity<List<GroupDocument>> findByDescription(@PathVariable String description, @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+                                                                 @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByDescription(description, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
 
     @GetMapping("/pdf-content/{content}")
-    public ResponseEntity<List<GroupDocument>> findByPDFContent(@PathVariable String content) {
-        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPDFContent(content), HttpStatus.OK);
+    public ResponseEntity<List<GroupDocument>> findByPDFContent(@PathVariable String content, @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+                                                                @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPDFContent(content, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
-    @GetMapping("/based-on-posts")
+    @GetMapping("/number-of-posts")
     public ResponseEntity<List<GroupDocument>> findByPostsInGroups(@RequestBody SearchGroupByRangeOfPosts data) {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
     }
@@ -354,8 +357,10 @@ public class GroupController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String pdfContent,
-            @RequestParam(required = false, defaultValue = "OR") String operation) {
-        return new ResponseEntity<>(this.searchServieGroup.searchGroupsBooleanQuery(name, description, pdfContent, operation), HttpStatus.OK);
+            @RequestParam(required = false, defaultValue = "OR") String operation,
+            @RequestParam(required = false, defaultValue = "false") boolean usePhraseQuery,
+            @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsBooleanQuery(name, description, pdfContent, operation, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
 
     /*@PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
