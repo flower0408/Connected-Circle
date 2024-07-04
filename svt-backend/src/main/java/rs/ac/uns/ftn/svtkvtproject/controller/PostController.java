@@ -373,7 +373,7 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "false") boolean useFuzzyQuery) {
         return new ResponseEntity<>(this.searchServicePost.searchPostsBooleanQuery(title, content, pdfContent, operation, usePhraseQuery, useFuzzyQuery), HttpStatus.OK);
     }
-    
+
     @GetMapping("/number-of-comments")
     public ResponseEntity<List<PostDocument>> findPostsByComments(
             @RequestParam Integer greaterThan,

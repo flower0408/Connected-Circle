@@ -44,6 +44,13 @@
         <input id="lessThan" formControlName="lessThan" type="number">
         <button type="button" (click)="searchByPostsRange()">Search by Posts Range</button>
       </div>
+      <div class="form-group">
+        <label for="greaterThan2">Avg Likes Greater Than:</label>
+        <input id="greaterThan2" formControlName="greaterThan2" type="number">
+        <label for="lessThan2">Avg Likes Less Than:</label>
+        <input id="lessThan2" formControlName="lessThan2" type="number">
+        <button type="button" (click)="searchByPostsLikes()">Search by Avg Likes</button>
+      </div>
     </form>
   
     <div class="post-list">

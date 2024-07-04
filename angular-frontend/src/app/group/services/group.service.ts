@@ -144,6 +144,18 @@ export class GroupService {
     return this.http.get<GroupElastic[]>('api/groups/number-of-posts', { params });
   }
 
+  getElasticGroupsByAvgLikes(data: SearchGroupByRangeOfPosts): Observable<GroupElastic[]> {
+    let params = new HttpParams();
+    if (data.greaterThan !== null) {
+      params = params.set('greaterThan', data.greaterThan.toString());
+    }
+    if (data.lessThan !== null) {
+      params = params.set('lessThan', data.lessThan.toString());
+    }
+
+    return this.http.get<GroupElastic[]>('api/groups/avg-number-of-likes', { params });
+  }
+
   searchElasticGroups(name: string, description: string, pdfContent: string, operation: string, usePhraseQuery: boolean, useFuzzyQuery: boolean): Observable<GroupElastic[]> {
     const params = new HttpParams()
       .set('name', name)

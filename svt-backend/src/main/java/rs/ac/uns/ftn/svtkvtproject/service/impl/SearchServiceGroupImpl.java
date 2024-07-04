@@ -17,6 +17,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.json.JsonData;
 import rs.ac.uns.ftn.svtkvtproject.elasticmodel.GroupDocument;
+import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchGroupByAvgNumberOfLikes;
 import rs.ac.uns.ftn.svtkvtproject.model.dto.SearchGroupByRangeOfPosts;
 import rs.ac.uns.ftn.svtkvtproject.service.interfaces.SearchServieGroup;
 
@@ -56,12 +57,30 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
 
     }
 
+    @Override
+    public List<GroupDocument> searchGroupsByAvgLikes(SearchGroupByAvgNumberOfLikes data) {
+        var searchQueryBuilder =
+                new NativeQueryBuilder().withQuery(searchByAvgLikes(data.getGreaterThan(), data.getLessThan()));
+        return runQuery(searchQueryBuilder.build());
+    }
+
     private List<GroupDocument> runQuery(NativeQuery searchQuery) {
         SearchHits<GroupDocument> searchHits = elasticsearchTemplate.search(searchQuery, GroupDocument.class,
                 IndexCoordinates.of("groups"));
         return searchHits.get().map(SearchHit::getContent).collect(Collectors.toList());
     }
 
+    public Query searchByAvgLikes(Integer minLikes, Integer maxLikes) {
+        return RangeQuery.of(q -> {
+            if (minLikes != null) {
+                q.field("avgNumberOfLikes").gte(JsonData.of(minLikes));
+            }
+            if (maxLikes != null) {
+                q.field("avgNumberOfLikes").lte(JsonData.of(maxLikes));
+            }
+            return q;
+        })._toQuery();
+    }
 
     public Query searchByNumPostsRange(Integer minPosts, Integer maxPosts) {
         return RangeQuery.of(q -> {
@@ -80,6 +99,7 @@ public class SearchServiceGroupImpl implements SearchServieGroup {
         var searchQueryBuilder = new NativeQueryBuilder().withQuery(buildComplexSearchQuery(name, description, pdfContent, operation, usePhraseQuery, useFuzzyQuery));
         return runQuery(searchQueryBuilder.build());
     }
+
 
     /*private Query buildComplexSearchQuery(String name, String description, String pdfContent, String operation) {
         return BoolQuery.of(q -> {

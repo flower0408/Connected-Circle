@@ -361,6 +361,16 @@ public class GroupController {
         return new ResponseEntity<>(this.searchServieGroup.searchGroupsByPosts(data), HttpStatus.OK);
     }
 
+    @GetMapping("/avg-number-of-likes")
+    public ResponseEntity<List<GroupDocument>> searchGroupsByAvgLikes(@RequestParam(required = false) Integer greaterThan,
+                                                                   @RequestParam(required = false) Integer lessThan) {
+        SearchGroupByAvgNumberOfLikes data = new SearchGroupByAvgNumberOfLikes();
+        data.setGreaterThan(greaterThan);
+        data.setLessThan(lessThan);
+
+        return new ResponseEntity<>(this.searchServieGroup.searchGroupsByAvgLikes(data), HttpStatus.OK);
+    }
+
     //GET http://localhost:8080/api/groups/search?name=test&description=provera&pdfContent=natasa&operation=OR
     @GetMapping("/search")
     public ResponseEntity<List<GroupDocument>> searchGroupsBooleanQuery(

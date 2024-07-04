@@ -88,6 +88,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/groups/pdf-content/{content}").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/groups/number-of-posts").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/groups/search").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/groups/avg-number-of-likes").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/posts/title/{title}").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/posts/content/{content}").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/posts/pdf-content/{content}").permitAll()

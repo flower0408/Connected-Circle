@@ -19,6 +19,8 @@ export class SearchGroupsComponent implements OnInit {
         pdfContent: [''],
         greaterThan: [null],
         lessThan: [null],
+        greaterThan2: [null],
+        lessThan2: [null],
         operation: ['OR'],
         usePhraseQuery: [false],
         useFuzzyQuery: [false]
@@ -60,6 +62,13 @@ export class SearchGroupsComponent implements OnInit {
       const data = { greaterThan, lessThan };
       this.groupService.getElasticGroupsByPostsRange(data).subscribe(groups => this.groups = groups);
     }
+
+    searchByPostsLikes() {
+        const greaterThan = this.searchForm.get('greaterThan2')?.value;
+        const lessThan = this.searchForm.get('lessThan2')?.value;
+        const data = { greaterThan, lessThan };
+        this.groupService.getElasticGroupsByAvgLikes(data).subscribe(groups => this.groups = groups);
+      }
   
     searchBooleanQuery() {
       const name = this.searchForm.get('name')?.value;
